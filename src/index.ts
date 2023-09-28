@@ -1,3 +1,5 @@
+export const VERSION = "1.0.0";
+
 export { DeferredPromise, JsonStorage } from "./models";
 export {
     capitalize,
