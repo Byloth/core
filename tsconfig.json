@@ -26,7 +26,6 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "outDir": "types",
-    "paths": { "@/*": ["src/*"] },
     "types": ["vite/client"]
   },
   "include": ["src/**/*"],
