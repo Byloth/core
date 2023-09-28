@@ -1,6 +1,6 @@
 {
   "name": "@byloth/core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An unopinionated collection of useful functions and classes that I use widely in all my projects. 🔧",
   "keywords": [
     "Core",
@@ -60,7 +60,6 @@
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "@typescript-eslint/parser": "^6.7.3",
     "eslint": "^8.50.0",
-    "sass": "^1.68.0",
     "typescript": "^5.2.2",
     "vite": "^4.4.9"
   }

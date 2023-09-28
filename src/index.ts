@@ -1,4 +1,4 @@
-export const VERSION = "1.0.0";
+export const VERSION = "1.0.1";
 
 export { DeferredPromise, JsonStorage } from "./models";
 export {
@@ -13,4 +13,4 @@ export {
     unique
 } from "./utils";
 
-export type { Awaitable } from "./types";
+export type { Awaitable, PromiseExecutor, PromiseResolver, PromiseRejecter } from "./types";

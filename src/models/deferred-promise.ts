@@ -1,4 +1,4 @@
-import type { PromiseExecutor, PromiseResolver, PromiseRejecter } from "@/types/promise";
+import type { PromiseExecutor, PromiseResolver, PromiseRejecter } from "@/types";
 
 export default class DeferredPromise<T, E = unknown> extends Promise<T>
 {
