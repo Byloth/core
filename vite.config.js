@@ -1,0 +1,21 @@
+import { resolve } from "path";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  build: {
+    lib: {
+      entry: resolve(__dirname, "src/index.ts"),
+      name: "Core"
+    },
+    rollupOptions: {
+      output: {
+        exports: "named",
+        sourcemap: true
+      }
+    },
+    sourcemap: true
+  },
+  resolve: {
+    alias: { "@src": resolve(__dirname, "src") }
+  }
+});

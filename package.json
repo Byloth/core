@@ -1,0 +1,67 @@
+{
+  "name": "@byloth/core",
+  "version": "1.0.0",
+  "description": "An unopinionated collection of useful functions and classes that I use widely in all my projects. 🔧",
+  "keywords": [
+    "Core",
+    "Collection",
+    "Classes",
+    "Functions",
+    "Utils",
+    "JavaScript",
+    "TypeScript",
+    "Library"
+  ],
+  "homepage": "https://github.com/Byloth/core#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Byloth/core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Byloth/core/issues"
+  },
+  "author": {
+    "name": "Matteo Bilotta",
+    "email": "me@byloth.dev",
+    "url": "https://www.byloth.dev/"
+  },
+  "license": "Apache-2.0",
+  "type": "module",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "./dist/core.umd.cjs",
+  "module": "./dist/core.js",
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./dist/core.js",
+        "types": "./src/index.ts"
+      },
+      "require": {
+        "default": "./dist/core.umd.cjs",
+        "types": "./src/index.ts"
+      }
+    }
+  },
+  "types": "./src/index.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check:types": "tsc",
+    "lint": "eslint --ext .cjs,.js,.json,.ts --ignore-path .gitignore .",
+    "lint:prod": "export NODE_ENV=\"production\" && yarn lint",
+    "ci": "yarn install --frozen-lockfile"
+  },
+  "devDependencies": {
+    "@byloth/eslint-config-typescript": "^2.6.4",
+    "@typescript-eslint/eslint-plugin": "^6.7.3",
+    "@typescript-eslint/parser": "^6.7.3",
+    "eslint": "^8.50.0",
+    "sass": "^1.68.0",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9"
+  }
+}
