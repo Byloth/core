@@ -1,6 +1,6 @@
-export const VERSION = "1.0.3";
+export const VERSION = "1.0.4";
 
-export { DeferredPromise, JsonStorage } from "./models";
+export { DeferredPromise, Exception, JsonStorage, Subscribers } from "./models";
 export {
     capitalize,
     count,
@@ -11,6 +11,16 @@ export {
     range,
     sum,
     unique
+
 } from "./utils";
 
-export type { MaybePromise, PromiseExecutor, PromiseResolver, PromiseRejecter } from "./types";
+export type {
+    Constructor,
+    FulfilledHandler,
+    MaybePromise,
+    PromiseExecutor,
+    PromiseRejecter,
+    PromiseResolver,
+    RejectedHandler
+
+} from "./types";

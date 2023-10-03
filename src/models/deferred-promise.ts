@@ -1,4 +1,4 @@
-import type { PromiseExecutor, PromiseResolver, PromiseRejecter } from "../types";
+import type { PromiseExecutor, PromiseResolver, PromiseRejecter, FulfilledHandler, RejectedHandler } from "../types";
 
 export default class DeferredPromise<T, E = unknown> extends Promise<T>
 {
@@ -14,20 +14,55 @@ export default class DeferredPromise<T, E = unknown> extends Promise<T>
         return this._reject;
     }
 
-    public constructor(executor: PromiseExecutor<T>)
+    public constructor(executor?: PromiseExecutor<T>)
     {
-        let resolve: PromiseResolver<T>;
-        let reject: PromiseRejecter<E>;
+        let _resolve: PromiseResolver<T>;
+        let _reject: PromiseRejecter<E>;
 
-        super((res, rej) =>
+        let _executor: PromiseExecutor<T>;
+
+        if (executor)
         {
-            this._resolve = res;
-            this._reject = rej;
+            _executor = (resolve, reject) =>
+            {
+                _resolve = resolve;
+                _reject = reject;
 
-            executor(res, rej);
-        });
+                executor(resolve, reject);
+            };
+        }
+        else
+        {
+            _executor = (resolve, reject) =>
+            {
+                _resolve = resolve;
+                _reject = reject;
+            };
+        }
 
-        this._resolve = resolve!;
-        this._reject = reject!;
+        super(_executor);
+
+        this._resolve = _resolve!;
+        this._reject = _reject!;
+    }
+
+    public then<F = T, R = E>(onFulfilled?: FulfilledHandler<T, F> | null, onRejected?: RejectedHandler<E, R>)
+        : DeferredPromise<F, R>
+    {
+        super.then(onFulfilled, onRejected);
+
+        return (this as unknown) as DeferredPromise<F, R>;
+    }
+    public catch<R = E>(onRejected?: RejectedHandler<E, R>): DeferredPromise<T, R>
+    {
+        super.catch(onRejected);
+
+        return (this as unknown) as DeferredPromise<T, R>;
+    }
+    public finally(onFinally?: (() => void) | null): DeferredPromise<T, E>
+    {
+        super.finally(onFinally);
+
+        return this;
     }
 }
