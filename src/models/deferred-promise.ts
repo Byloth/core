@@ -1,4 +1,4 @@
-import type { PromiseExecutor, PromiseResolver, PromiseRejecter, FulfilledHandler, RejectedHandler } from "../types";
+import type { PromiseExecutor, PromiseResolver, PromiseRejecter, FulfilledHandler, RejectedHandler } from "../types.js";
 
 export default class DeferredPromise<T, E = unknown> extends Promise<T>
 {

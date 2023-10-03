@@ -1,6 +1,6 @@
-import DeferredPromise from "./deferred-promise";
-import Exception from "./exception";
-import JsonStorage from "./json-storage";
-import Subscribers from "./subscribers";
+import DeferredPromise from "./deferred-promise.js";
+import Exception from "./exception.js";
+import JsonStorage from "./json-storage.js";
+import Subscribers from "./subscribers.js";
 
 export { DeferredPromise, Exception, JsonStorage, Subscribers };
