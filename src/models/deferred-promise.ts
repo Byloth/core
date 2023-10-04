@@ -14,8 +14,8 @@ export default class DeferredPromise<T = void, E = unknown, F = T, R = never>
 
         const _promise = new Promise<T>((resolve, reject) =>
         {
-            _resolve = resolve;
-            _reject = reject;
+            _resolve = resolve as PromiseResolver<T>;
+            _reject = reject as PromiseRejecter<E>;
         });
 
         this._promise = _promise.then(onFulfilled, onRejected);
