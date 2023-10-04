@@ -1,4 +1,4 @@
-export const VERSION = "1.1.1";
+export const VERSION = "1.1.2";
 
 export { DeferredPromise, Exception, JsonStorage, Subscribers } from "./models/index.js";
 export {
