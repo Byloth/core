@@ -1,18 +1,18 @@
 import type { PromiseResolver, PromiseRejecter, FulfilledHandler, RejectedHandler, MaybePromise } from "../types.js";
 
-export default class DeferredPromise<T, E = never>
+export default class DeferredPromise<T = void, E = unknown, F = T, R = never>
 {
     protected _resolve!: PromiseResolver<T>;
-    protected _reject!: PromiseRejecter;
+    protected _reject!: PromiseRejecter<E>;
 
-    protected _promise: Promise<T | E>;
+    protected _promise: Promise<F | R>;
 
-    public constructor(onFulfilled?: FulfilledHandler<unknown, T>, onRejected?: RejectedHandler<unknown, E>)
+    public constructor(onFulfilled?: FulfilledHandler<T, F>, onRejected?: RejectedHandler<E, R>)
     {
         let _resolve: PromiseResolver<T>;
-        let _reject: PromiseRejecter;
+        let _reject: PromiseRejecter<E>;
 
-        const _promise = new Promise<T | E>((resolve, reject) =>
+        const _promise = new Promise<T>((resolve, reject) =>
         {
             _resolve = resolve;
             _reject = reject;
@@ -28,22 +28,21 @@ export default class DeferredPromise<T, E = never>
     {
         this._resolve(value);
     }
-    public reject(reason: unknown)
+    public reject(reason: E)
     {
         this._reject(reason);
     }
 
-    public then<F = T | E, R = never>(
-        onFulfilled?: FulfilledHandler<T | E, F>,
-        onRejected?: RejectedHandler<unknown, R>): Promise<F | R>
+    public then<N = F | R, H = R>(onFulfilled?: FulfilledHandler<F | R, N>, onRejected?: RejectedHandler<R, H>)
+        : Promise<N | H>
     {
         return this._promise.then(onFulfilled, onRejected);
     }
-    public catch<R = never>(onRejected?: RejectedHandler<unknown, R>): Promise<T | E | R>
+    public catch<H = R>(onRejected?: RejectedHandler<R, H>): Promise<F | R | H>
     {
         return this._promise.catch(onRejected);
     }
-    public finally(onFinally?: () => void): Promise<T | E>
+    public finally(onFinally?: () => void): Promise<F | R>
     {
         return this._promise.finally(onFinally);
     }
