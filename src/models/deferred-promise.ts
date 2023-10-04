@@ -1,68 +1,51 @@
-import type { PromiseExecutor, PromiseResolver, PromiseRejecter, FulfilledHandler, RejectedHandler } from "../types.js";
+import type {
+    PromiseExecutor,
+    PromiseResolver,
+    PromiseRejecter,
+    FulfilledHandler,
+    RejectedHandler,
+    MaybePromise
 
-export default class DeferredPromise<T, E = unknown> extends Promise<T>
+} from "../types.js";
+
+export default class DeferredPromise<T>
 {
-    protected _resolve: PromiseResolver<T>;
-    protected _reject: PromiseRejecter<E>;
+    protected _resolve!: PromiseResolver<T>;
+    protected _reject!: PromiseRejecter;
 
-    public get resolve(): PromiseResolver<T>
-    {
-        return this._resolve;
-    }
-    public get reject(): PromiseRejecter<E>
-    {
-        return this._reject;
-    }
+    protected _promise: Promise<T>;
 
     public constructor(executor?: PromiseExecutor<T>)
     {
-        let _resolve: PromiseResolver<T>;
-        let _reject: PromiseRejecter<E>;
-
-        let _executor: PromiseExecutor<T>;
-
-        if (executor)
+        this._promise = new Promise((resolve, reject) =>
         {
-            _executor = (resolve, reject) =>
-            {
-                _resolve = resolve;
-                _reject = reject;
+            this._resolve = resolve;
+            this._reject = reject;
 
-                executor(resolve, reject);
-            };
-        }
-        else
-        {
-            _executor = (resolve, reject) =>
-            {
-                _resolve = resolve;
-                _reject = reject;
-            };
-        }
-
-        super(_executor);
-
-        this._resolve = _resolve!;
-        this._reject = _reject!;
+            executor?.(resolve, reject);
+        });
     }
 
-    public then<F = T, R = E>(onFulfilled?: FulfilledHandler<T, F> | null, onRejected?: RejectedHandler<E, R>)
-        : DeferredPromise<F, R>
+    public resolve(value: MaybePromise<T>)
     {
-        super.then(onFulfilled, onRejected);
-
-        return (this as unknown) as DeferredPromise<F, R>;
+        this._resolve(value);
     }
-    public catch<R = E>(onRejected?: RejectedHandler<E, R>): DeferredPromise<T, R>
+    public reject(reason: unknown)
     {
-        super.catch(onRejected);
-
-        return (this as unknown) as DeferredPromise<T, R>;
+        this._reject(reason);
     }
-    public finally(onFinally?: (() => void) | null): DeferredPromise<T, E>
-    {
-        super.finally(onFinally);
 
-        return this;
+    public then<F = T, R = never>(onFulfilled?: FulfilledHandler<T, F>, onRejected?: RejectedHandler<unknown, R>)
+        : Promise<F | R>
+    {
+        return this._promise.then(onFulfilled, onRejected);
+    }
+    public catch<R = never>(onRejected?: RejectedHandler<unknown, R>): Promise<T | R>
+    {
+        return this._promise.catch(onRejected);
+    }
+    public finally(onFinally?: () => void): Promise<T>
+    {
+        return this._promise.finally(onFinally);
     }
 }

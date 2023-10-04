@@ -1,13 +1,18 @@
-export const VERSION = "1.1.0";
+export const VERSION = "1.1.1";
 
 export { DeferredPromise, Exception, JsonStorage, Subscribers } from "./models/index.js";
 export {
     capitalize,
     count,
     delay,
+    dateDifference,
+    dateRange,
+    dateRound,
+    DateUnit,
     hash,
     loadScript,
     nextAnimationFrame,
+    random,
     range,
     sum,
     unique

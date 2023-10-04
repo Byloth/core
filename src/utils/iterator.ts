@@ -1,6 +1,6 @@
 export function count<T>(elements: Iterable<T>): number
 {
-    if ("length" in elements) { return elements.length as number; }
+    if (Array.isArray(elements)) { return elements.length; }
 
     let _count = 0;
     for (const _ of elements) { _count += 1; }
@@ -8,12 +8,20 @@ export function count<T>(elements: Iterable<T>): number
     return _count;
 }
 
-export function* range(start: number, end: number, step?: number): Iterable<number>
+export function range(end: number): Generator<number, void>;
+export function range(start: number, end: number): Generator<number, void>;
+export function range(start: number, end: number, step: number): Generator<number, void>;
+export function* range(start: number, end?: number, step = 1): Generator<number, void>
 {
-    if (start > end) { step = step ?? -1; }
-    else { step = step ?? 1; }
+    if (end === undefined)
+    {
+        end = start;
+        start = 0;
+    }
 
-    for (let i = start; i < end; i += step) { yield i; }
+    if (start > end) { step = step ?? -1; }
+
+    for (let index = start; index < end; index += step) { yield index; }
 }
 
 export function sum<T extends number>(elements: Iterable<T>): number
