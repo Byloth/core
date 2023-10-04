@@ -1,4 +1,4 @@
-import type { PromiseResolver, PromiseRejecter, FulfilledHandler, RejectedHandler, MaybePromise } from "../types.js";
+import type { PromiseResolver, PromiseRejecter, FulfilledHandler, RejectedHandler } from "../types.js";
 
 export default class DeferredPromise<T = void, E = unknown, F = T, R = never>
 {
@@ -24,13 +24,13 @@ export default class DeferredPromise<T = void, E = unknown, F = T, R = never>
         this._reject = _reject!;
     }
 
-    public resolve(value: MaybePromise<T>)
+    public get resolve(): PromiseResolver<T>
     {
-        this._resolve(value);
+        return this._resolve;
     }
-    public reject(reason: E)
+    public get reject(): PromiseRejecter<E>
     {
-        this._reject(reason);
+        return this._reject;
     }
 
     public then<N = F | R, H = R>(onFulfilled?: FulfilledHandler<F | R, N>, onRejected?: RejectedHandler<R, H>)
