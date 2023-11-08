@@ -12,13 +12,12 @@ export default class DeferredPromise<T = void, E = unknown, F = T, R = never>
         let _resolve: PromiseResolver<T>;
         let _reject: PromiseRejecter<E>;
 
-        const _promise = new Promise<T>((resolve, reject) =>
+        this._promise = new Promise<T>((resolve, reject) =>
         {
             _resolve = resolve as PromiseResolver<T>;
             _reject = reject as PromiseRejecter<E>;
-        });
 
-        this._promise = _promise.then(onFulfilled, onRejected);
+        }).then(onFulfilled, onRejected);
 
         this._resolve = _resolve!;
         this._reject = _reject!;
@@ -46,6 +45,13 @@ export default class DeferredPromise<T = void, E = unknown, F = T, R = never>
     public finally(onFinally?: (() => void) | null): Promise<F | R>
     {
         return this._promise.finally(onFinally);
+    }
+
+    public watch(promise: Promise<T>): this
+    {
+        promise.then(this.resolve, this.reject);
+
+        return this;
     }
 
     public get [Symbol.toStringTag]()
