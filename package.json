@@ -56,7 +56,7 @@
     "ci": "yarn install --frozen-lockfile"
   },
   "devDependencies": {
-    "@byloth/eslint-config-typescript": "^2.6.6",
+    "@byloth/eslint-config-typescript": "^2.6.7",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "eslint": "^8.53.0",

@@ -7,17 +7,17 @@
   resolved "https://registry.yarnpkg.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz#bd9154aec9983f77b3a034ecaa015c2e4201f6cf"
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
-"@byloth/eslint-config-typescript@^2.6.6":
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/@byloth/eslint-config-typescript/-/eslint-config-typescript-2.6.6.tgz#4c3a2683b4b85cf36452ae49a942118b9fb2682c"
-  integrity sha512-w1bRJ/m5C6+VxFyC1pMDeSQlGZaknYfuMZHjOdsvaokKlPhnepHx80xw+NjJ9uLfVJIPAGPS13vq6pgHCpB2Uw==
+"@byloth/eslint-config-typescript@^2.6.7":
+  version "2.6.7"
+  resolved "https://registry.yarnpkg.com/@byloth/eslint-config-typescript/-/eslint-config-typescript-2.6.7.tgz#864d72f21a3100bd7d52b8d5d41bedb62dd18b37"
+  integrity sha512-qPu4amsxepXwVT0TneyeF0eRZNuY2wByB8w9WKrPSABHLLlrZxrj1U+dmEecObFJRch1+RGwhxGVYcLh/ohw0g==
   dependencies:
-    "@byloth/eslint-config" "^2.6.6"
+    "@byloth/eslint-config" "^2.6.7"
 
-"@byloth/eslint-config@^2.6.6":
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/@byloth/eslint-config/-/eslint-config-2.6.6.tgz#41ddac7345767f2764f22d4569e013bc91c01977"
-  integrity sha512-TD6HHpQbGIbILW9wIeDqJQg1Bc65ud5VPrTNiFmQu3eowyKwmCGmMqcmPxldCrhUe6E2hv5L3F2B8l4BN+dHPQ==
+"@byloth/eslint-config@^2.6.7":
+  version "2.6.7"
+  resolved "https://registry.yarnpkg.com/@byloth/eslint-config/-/eslint-config-2.6.7.tgz#b74421e4312624321b184dedceeef809b9b02d7a"
+  integrity sha512-zEQnlmW9FtPBvP4sZJOJUQPSAGRR12vwDzjiEhAp800MxZKH48cEQkHW4v+u30uw7aQRwL3eDi2PpWldHkr3+Q==
 
 "@esbuild/android-arm64@0.18.20":
   version "0.18.20"

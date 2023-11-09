@@ -1,14 +1,14 @@
 export function hash(value: string): number
 {
-    let hash = 0;
+    let hashedValue = 0;
     for (let i = 0; i < value.length; i++)
     {
         const char = value.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash |= 0;
+        hashedValue = ((hashedValue << 5) - hashedValue) + char;
+        hashedValue |= 0;
     }
 
-    return hash;
+    return hashedValue;
 }
 
 export function random(): number;
