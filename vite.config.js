@@ -8,10 +8,7 @@ export default defineConfig({
       name: "Core"
     },
     rollupOptions: {
-      output: {
-        exports: "named",
-        sourcemap: true
-      }
+      output: { exports: "named" }
     },
     sourcemap: true
   }

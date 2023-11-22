@@ -35,13 +35,10 @@ export default class JsonStorage
             }
             catch (error)
             {
-                if (import.meta.env.DEV)
-                {
-                    // eslint-disable-next-line no-console
-                    console.warn(
-                        `The "${propertyValue}" value for "${propertyName}"` +
-                        " property cannot be parsed. Clearing the storage...");
-                }
+                // eslint-disable-next-line no-console
+                console.warn(
+                    `The "${propertyValue}" value for "${propertyName}"` +
+                    " property cannot be parsed. Clearing the storage...");
 
                 storage.removeItem(propertyName);
             }
