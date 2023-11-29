@@ -24,6 +24,20 @@ export function* range(start: number, end?: number, step = 1): Generator<number,
     for (let index = start; index < end; index += step) { yield index; }
 }
 
+export function shuffle<T>(iterable: Iterable<T>): T[]
+{
+    const array = [...iterable];
+
+    for (let index = array.length - 1; index > 0; index -= 1)
+    {
+        const jndex = Math.floor(Math.random() * (index + 1));
+
+        [array[index], array[jndex]] = [array[jndex], array[index]];
+    }
+
+    return array;
+}
+
 export function sum<T extends number>(elements: Iterable<T>): number
 {
     let _sum = 0;

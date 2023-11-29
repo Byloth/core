@@ -14,6 +14,7 @@ export {
     nextAnimationFrame,
     random,
     range,
+    shuffle,
     sum,
     unique
 
