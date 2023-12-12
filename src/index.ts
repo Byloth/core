@@ -1,7 +1,8 @@
-export const VERSION = "1.1.7";
+export const VERSION = "1.1.8";
 
 export { DeferredPromise, Exception, JsonStorage, Subscribers } from "./models/index.js";
 export {
+    average,
     capitalize,
     count,
     delay,
@@ -16,7 +17,8 @@ export {
     range,
     shuffle,
     sum,
-    unique
+    unique,
+    zip
 
 } from "./utils/index.js";
 

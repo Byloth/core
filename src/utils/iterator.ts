@@ -38,15 +38,23 @@ export function shuffle<T>(iterable: Iterable<T>): T[]
     return array;
 }
 
-export function sum<T extends number>(elements: Iterable<T>): number
-{
-    let _sum = 0;
-    for (const value of elements) { _sum += value; }
-
-    return _sum;
-}
-
 export function unique<T>(elements: Iterable<T>): T[]
 {
     return [...new Set(elements)];
+}
+
+export function* zip<T, U>(first: Iterable<T>, second: Iterable<U>): Generator<[T, U], void>
+{
+    const firstIterator = first[Symbol.iterator]();
+    const secondIterator = second[Symbol.iterator]();
+
+    while (true)
+    {
+        const firstResult = firstIterator.next();
+        const secondResult = secondIterator.next();
+
+        if ((firstResult.done) || (secondResult.done)) { break; }
+
+        yield [firstResult.value, secondResult.value];
+    }
 }

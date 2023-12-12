@@ -1,3 +1,35 @@
+import { zip } from "./iterator.js";
+
+export function average<T extends number>(values: Iterable<T>): number;
+export function average<T extends number>(values: Iterable<T>, weights: Iterable<number>): number;
+export function average<T extends number>(values: Iterable<T>, weights?: Iterable<number>): number
+{
+    if (weights === undefined)
+    {
+        let _sum = 0;
+        let _count = 0;
+
+        for (const value of values)
+        {
+            _sum += value;
+            _count += 1;
+        }
+
+        return _sum / _count;
+    }
+
+    let _sum = 0;
+    let _count = 0;
+
+    for (const [value, weight] of zip(values, weights))
+    {
+        _sum += value * weight;
+        _count += weight;
+    }
+
+    return _sum / _count;
+}
+
 export function hash(value: string): number
 {
     let hashedValue = 0;
@@ -58,4 +90,12 @@ export function random(min: number = 1, max?: number, decimals?: boolean | numbe
     }
 
     return rounder(Math.random() * (max - min) + min);
+}
+
+export function sum<T extends number>(values: Iterable<T>): number
+{
+    let _sum = 0;
+    for (const value of values) { _sum += value; }
+
+    return _sum;
 }
