@@ -10,8 +10,6 @@
       "WebWorker"
     ],
     "strict": true,
-    "jsx": "preserve",
-    "declaration": true,
     "noEmit": true,
     "noImplicitThis": true,
     "noImplicitReturns": true,
@@ -22,13 +20,10 @@
     "verbatimModuleSyntax": true,
     "experimentalDecorators": true,
     "useDefineForClassFields": true,
-    "allowImportingTsExtensions": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
-    "outDir": "types",
-    "types": ["vite/client"]
+    "baseUrl": "."
   },
-  "include": ["src/**/*"],
+  "include": ["src"],
   "exclude": [
     "dist",
     "node_modules"
