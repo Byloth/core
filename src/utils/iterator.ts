@@ -1,3 +1,5 @@
+import { SmartIterator } from "../models/index.js";
+
 export function count<T>(elements: Iterable<T>): number
 {
     if (Array.isArray(elements)) { return elements.length; }
@@ -8,20 +10,23 @@ export function count<T>(elements: Iterable<T>): number
     return _count;
 }
 
-export function range(end: number): Generator<number, void>;
-export function range(start: number, end: number): Generator<number, void>;
-export function range(start: number, end: number, step: number): Generator<number, void>;
-export function* range(start: number, end?: number, step = 1): Generator<number, void>
+export function range(end: number): SmartIterator<number>;
+export function range(start: number, end: number): SmartIterator<number>;
+export function range(start: number, end: number, step: number): SmartIterator<number>;
+export function range(start: number, end?: number, step = 1): SmartIterator<number>
 {
-    if (end === undefined)
+    return new SmartIterator<number>(function* ()
     {
-        end = start;
-        start = 0;
-    }
+        if (end === undefined)
+        {
+            end = start;
+            start = 0;
+        }
 
-    if (start > end) { step = step ?? -1; }
+        if (start > end) { step = step ?? -1; }
 
-    for (let index = start; index < end; index += step) { yield index; }
+        for (let index = start; index < end; index += step) { yield index; }
+    });
 }
 
 export function shuffle<T>(iterable: Iterable<T>): T[]
@@ -38,23 +43,38 @@ export function shuffle<T>(iterable: Iterable<T>): T[]
     return array;
 }
 
-export function unique<T>(elements: Iterable<T>): T[]
+export function unique<T>(elements: Iterable<T>): SmartIterator<T>
 {
-    return [...new Set(elements)];
+    return new SmartIterator<T>(function* ()
+    {
+        const seen = new Set<T>();
+
+        for (const element of elements)
+        {
+            if (seen.has(element)) { continue; }
+
+            seen.add(element);
+
+            yield element;
+        }
+    });
 }
 
-export function* zip<T, U>(first: Iterable<T>, second: Iterable<U>): Generator<[T, U], void>
+export function zip<T, U>(first: Iterable<T>, second: Iterable<U>): SmartIterator<[T, U]>
 {
-    const firstIterator = first[Symbol.iterator]();
-    const secondIterator = second[Symbol.iterator]();
-
-    while (true)
+    return new SmartIterator<[T, U]>(function* ()
     {
-        const firstResult = firstIterator.next();
-        const secondResult = secondIterator.next();
+        const firstIterator = first[Symbol.iterator]();
+        const secondIterator = second[Symbol.iterator]();
 
-        if ((firstResult.done) || (secondResult.done)) { break; }
+        while (true)
+        {
+            const firstResult = firstIterator.next();
+            const secondResult = secondIterator.next();
 
-        yield [firstResult.value, secondResult.value];
-    }
+            if ((firstResult.done) || (secondResult.done)) { break; }
+
+            yield [firstResult.value, secondResult.value];
+        }
+    });
 }

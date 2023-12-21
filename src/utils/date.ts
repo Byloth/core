@@ -1,3 +1,5 @@
+import { SmartIterator } from "../models/index.js";
+
 export enum DateUnit
 {
     Second = 1000,
@@ -9,25 +11,28 @@ export enum DateUnit
     Year = 365 * Day
 }
 
-export function dateDifference(start: Date, end: Date, unit = DateUnit.Day)
+export function dateDifference(start: Date, end: Date, unit = DateUnit.Day): number
 {
     return Math.floor((end.getTime() - start.getTime()) / unit);
 }
 
-export function* dateRange(start: Date, end: Date, offset = DateUnit.Day)
+export function dateRange(start: Date, end: Date, offset = DateUnit.Day): SmartIterator<Date>
 {
-    const endTime = end.getTime();
-
-    let unixTime: number = start.getTime();
-    while (unixTime < endTime)
+    return new SmartIterator<Date>(function* ()
     {
-        yield new Date(unixTime);
+        const endTime = end.getTime();
 
-        unixTime += offset;
-    }
+        let unixTime: number = start.getTime();
+        while (unixTime < endTime)
+        {
+            yield new Date(unixTime);
+
+            unixTime += offset;
+        }
+    });
 }
 
-export function dateRound(date: Date, unit = DateUnit.Day)
+export function dateRound(date: Date, unit = DateUnit.Day): Date
 {
     return new Date(Math.floor(date.getTime() / unit) * unit);
 }

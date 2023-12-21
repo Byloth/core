@@ -1,4 +1,6 @@
-export type Constructor<T extends object, P extends Array<unknown> = []> = new (...args: P) => T;
+export type Constructor<T extends object, P extends unknown[] = []> = new (...args: P) => T;
+export type GeneratorFunction<T, R = void, N = undefined> = () => Generator<T, R, N>;
+
 export type MaybePromise<T> = T | PromiseLike<T>;
 
 export type FulfilledHandler<T = void, R = T> = (value: T) => MaybePromise<R>;
