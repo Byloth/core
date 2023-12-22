@@ -110,5 +110,10 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         return this._iterator.next(...values);
     }
 
+    public toArray(): T[]
+    {
+        return [...this];
+    }
+
     public [Symbol.iterator](): SmartIterator<T, R, N> { return this; }
 }
