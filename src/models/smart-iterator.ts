@@ -1,4 +1,4 @@
-import type { GeneratorFunction } from "../types.js";
+import type { GeneratorFunction, Iteratee, Reducer } from "../types.js";
 
 export default class SmartIterator<T, R = void, N = undefined> implements Iterator<T, R, N>
 {
@@ -29,7 +29,38 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         if (this._iterator.throw) { this.throw = (error?: unknown) => this._iterator.throw!(error); }
     }
 
-    public filter(callback: (value: T, index: number) => boolean): SmartIterator<T, R, N>
+    public every(iteratee: Iteratee<T, boolean>): boolean
+    {
+        let index = 0;
+
+        // eslint-disable-next-line no-constant-condition
+        while (true)
+        {
+            const result = this._iterator.next();
+
+            if (result.done) { return true; }
+            if (!(iteratee(result.value, index))) { return false; }
+
+            index += 1;
+        }
+    }
+    public some(iteratee: Iteratee<T, boolean>): boolean
+    {
+        let index = 0;
+
+        // eslint-disable-next-line no-constant-condition
+        while (true)
+        {
+            const result = this._iterator.next();
+
+            if (result.done) { return false; }
+            if (iteratee(result.value, index)) { return true; }
+
+            index += 1;
+        }
+    }
+
+    public filter(iteratee: Iteratee<T, boolean>): SmartIterator<T, R, N>
     {
         let index = 0;
         const iterator = this._iterator;
@@ -40,19 +71,16 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
                 while (true)
                 {
                     const result = iterator.next();
-                    if (result.done) { return result.value; }
 
-                    if (callback(result.value, index))
-                    {
-                        yield result.value;
-                    }
+                    if (result.done) { return result.value; }
+                    if (iteratee(result.value, index)) { yield result.value; }
 
                     index += 1;
                 }
             }
         });
     }
-    public map<V>(callback: (value: T, index: number) => V): SmartIterator<V, R>
+    public map<V>(iteratee: Iteratee<T, V>): SmartIterator<V, R>
     {
         let index = 0;
         const iterator = this._iterator;
@@ -65,14 +93,14 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
                     const result = iterator.next();
                     if (result.done) { return result.value; }
 
-                    yield callback(result.value, index);
+                    yield iteratee(result.value, index);
 
                     index += 1;
                 }
             }
         });
     }
-    public reduce<U>(callback: (accumulator: U, value: T, index: number) => U, initialValue: U): U
+    public reduce<A>(reducer: Reducer<T, A>, initialValue: A): A
     {
         let index = 0;
         let accumulator = initialValue;
@@ -83,13 +111,13 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
             const result = this._iterator.next();
             if (result.done) { return accumulator; }
 
-            accumulator = callback(accumulator, result.value, index);
+            accumulator = reducer(accumulator, result.value, index);
 
             index += 1;
         }
     }
 
-    public forEach(callback: (value: T, index: number) => void): void
+    public forEach(iteratee: Iteratee<T>): void
     {
         let index = 0;
 
@@ -99,7 +127,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
             const result = this._iterator.next();
             if (result.done) { return; }
 
-            callback(result.value, index);
+            iteratee(result.value, index);
 
             index += 1;
         }

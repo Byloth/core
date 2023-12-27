@@ -1,4 +1,4 @@
-export const VERSION = "1.2.0-rc.2";
+export const VERSION = "1.2.0-rc.3";
 
 export { DeferredPromise, Exception, JsonStorage, SmartIterator, Subscribers } from "./models/index.js";
 export {
@@ -25,10 +25,13 @@ export {
 export type {
     Constructor,
     FulfilledHandler,
+    GeneratorFunction,
+    Iteratee,
     MaybePromise,
     PromiseExecutor,
     PromiseRejecter,
     PromiseResolver,
+    Reducer,
     RejectedHandler
 
 } from "./types.js";

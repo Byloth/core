@@ -1,5 +1,8 @@
 export type Constructor<T extends object, P extends unknown[] = []> = new (...args: P) => T;
+
 export type GeneratorFunction<T, R = void, N = undefined> = () => Generator<T, R, N>;
+export type Iteratee<T, R = void> = (value: T, index: number) => R;
+export type Reducer<T, A> = (accumulator: A, value: T, index: number) => A;
 
 export type MaybePromise<T> = T | PromiseLike<T>;
 
