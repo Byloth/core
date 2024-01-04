@@ -10,26 +10,26 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     public constructor(iterable: Iterable<T>);
     public constructor(iterator: Iterator<T, R, N>);
     public constructor(generatorFn: GeneratorFunction<T, R, N>);
-    public constructor(iterable: Iterable<T> | Iterator<T, R, N> | GeneratorFunction<T, R, N>)
+    public constructor(argument: Iterable<T> | Iterator<T, R, N> | GeneratorFunction<T, R, N>)
     {
-        if (iterable instanceof Function)
+        if (argument instanceof Function)
         {
-            this._iterator = iterable();
+            this._iterator = argument();
         }
-        else if (Symbol.iterator in iterable)
+        else if (Symbol.iterator in argument)
         {
-            this._iterator = iterable[Symbol.iterator]() as Iterator<T, R, N>;
+            this._iterator = argument[Symbol.iterator]() as Iterator<T, R, N>;
         }
         else
         {
-            this._iterator = iterable;
+            this._iterator = argument;
         }
 
         if (this._iterator.return) { this.return = (value?: R) => this._iterator.return!(value); }
         if (this._iterator.throw) { this.throw = (error?: unknown) => this._iterator.throw!(error); }
     }
 
-    public every(iteratee: Iteratee<T, boolean>): boolean
+    public every(predicate: Iteratee<T, boolean>): boolean
     {
         let index = 0;
 
@@ -39,12 +39,12 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
             const result = this._iterator.next();
 
             if (result.done) { return true; }
-            if (!(iteratee(result.value, index))) { return false; }
+            if (!(predicate(result.value, index))) { return false; }
 
             index += 1;
         }
     }
-    public some(iteratee: Iteratee<T, boolean>): boolean
+    public some(predicate: Iteratee<T, boolean>): boolean
     {
         let index = 0;
 
@@ -54,29 +54,27 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
             const result = this._iterator.next();
 
             if (result.done) { return false; }
-            if (iteratee(result.value, index)) { return true; }
+            if (predicate(result.value, index)) { return true; }
 
             index += 1;
         }
     }
 
-    public filter(iteratee: Iteratee<T, boolean>): SmartIterator<T, R, N>
+    public filter(predicate: Iteratee<T, boolean>): SmartIterator<T, R, N>
     {
         let index = 0;
         const iterator = this._iterator;
 
-        return new SmartIterator<T, R, N>({
-            *[Symbol.iterator]()
+        return new SmartIterator<T, R, N>(function* ()
+        {
+            while (true)
             {
-                while (true)
-                {
-                    const result = iterator.next();
+                const result = iterator.next();
 
-                    if (result.done) { return result.value; }
-                    if (iteratee(result.value, index)) { yield result.value; }
+                if (result.done) { return result.value; }
+                if (predicate(result.value, index)) { yield result.value; }
 
-                    index += 1;
-                }
+                index += 1;
             }
         });
     }
@@ -85,18 +83,16 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         let index = 0;
         const iterator = this._iterator;
 
-        return new SmartIterator<V, R>({
-            *[Symbol.iterator]()
+        return new SmartIterator<V, R>(function* ()
+        {
+            while (true)
             {
-                while (true)
-                {
-                    const result = iterator.next();
-                    if (result.done) { return result.value; }
+                const result = iterator.next();
+                if (result.done) { return result.value; }
 
-                    yield iteratee(result.value, index);
+                yield iteratee(result.value, index);
 
-                    index += 1;
-                }
+                index += 1;
             }
         });
     }

@@ -1,4 +1,5 @@
-export type Constructor<T extends object, P extends unknown[] = []> = new (...args: P) => T;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Constructor<T extends object, P extends unknown[] = any[]> = new (...args: P) => T;
 
 export type GeneratorFunction<T, R = void, N = undefined> = () => Generator<T, R, N>;
 export type Iteratee<T, R = void> = (value: T, index: number) => R;
