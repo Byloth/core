@@ -62,13 +62,13 @@ export function unique<T>(elements: Iterable<T>): SmartIterator<T>
 {
     return new SmartIterator<T>(function* ()
     {
-        const seen = new Set<T>();
+        const values = new Set<T>();
 
         for (const element of elements)
         {
-            if (seen.has(element)) { continue; }
+            if (values.has(element)) { continue; }
 
-            seen.add(element);
+            values.add(element);
 
             yield element;
         }

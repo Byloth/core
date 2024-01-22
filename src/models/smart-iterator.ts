@@ -10,6 +10,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     public constructor(iterable: Iterable<T>);
     public constructor(iterator: Iterator<T, R, N>);
     public constructor(generatorFn: GeneratorFunction<T, R, N>);
+    public constructor(argument: Iterable<T> | Iterator<T, R, N> | GeneratorFunction<T, R, N>);
     public constructor(argument: Iterable<T> | Iterator<T, R, N> | GeneratorFunction<T, R, N>)
     {
         if (argument instanceof Function)
@@ -62,11 +63,12 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
 
     public filter(predicate: Iteratee<T, boolean>): SmartIterator<T, R>
     {
-        let index = 0;
         const iterator = this._iterator;
 
         return new SmartIterator<T, R>(function* ()
         {
+            let index = 0;
+
             while (true)
             {
                 const result = iterator.next();
@@ -80,11 +82,12 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     }
     public map<V>(iteratee: Iteratee<T, V>): SmartIterator<V, R>
     {
-        let index = 0;
         const iterator = this._iterator;
 
         return new SmartIterator<V, R>(function* ()
         {
+            let index = 0;
+
             while (true)
             {
                 const result = iterator.next();
@@ -127,24 +130,38 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     }
     public unique(): SmartIterator<T, R>
     {
-        const seen = new Set<T>();
+        const iterator = this._iterator;
 
-        return this.filter((value) =>
+        return new SmartIterator<T, R>(function* ()
         {
-            if (seen.has(value)) { return false; }
+            const values = new Set<T>();
 
-            seen.add(value);
+            while (true)
+            {
+                const result = iterator.next();
 
-            return true;
+                if (result.done) { return result.value; }
+                if (values.has(result.value)) { continue; }
+
+                values.add(result.value);
+
+                yield result.value;
+            }
         });
     }
 
     public count(): number
     {
         let index = 0;
-        this.forEach(() => { index += 1; });
 
-        return index;
+        // eslint-disable-next-line no-constant-condition
+        while (true)
+        {
+            const result = this._iterator.next();
+            if (result.done) { return index; }
+
+            index += 1;
+        }
     }
     public forEach(iteratee: Iteratee<T>): void
     {

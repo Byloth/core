@@ -1,32 +1,45 @@
-import AggregateIterator from "./aggregate-iterator.js";
+import AggregatedIterator from "./aggregated-iterator.js";
 import ReducedIterator from "./reduced-iterator.js";
 import SmartIterator from "../smart-iterator.js";
 
-import type { Iteratee } from "../../types.js";
+import type { GeneratorFunction, Iteratee } from "../../types.js";
 
 export default class Aggregator<T>
 {
     protected _elements: SmartIterator<T>;
 
-    public constructor(elements: SmartIterator<T>)
+    public constructor(iterable: Iterable<T>);
+    public constructor(iterator: Iterator<T>);
+    public constructor(generatorFn: GeneratorFunction<T>);
+    public constructor(argument: Iterable<T> | Iterator<T> | GeneratorFunction<T>);
+    public constructor(argument: Iterable<T> | Iterator<T> | GeneratorFunction<T>)
     {
-        this._elements = elements;
+        this._elements = new SmartIterator(argument);
     }
 
-    public byKey<K extends PropertyKey>(iteratee: Iteratee<T, K>): AggregateIterator<T, K>
+    public filter(predicate: Iteratee<T, boolean>): Aggregator<T>
     {
-        const elements = this._elements;
+        return new Aggregator(this._elements.filter(predicate));
+    }
+    public map<V>(iteratee: Iteratee<T, V>): Aggregator<V>
+    {
+        return new Aggregator(this._elements.map(iteratee));
+    }
 
-        return new AggregateIterator(function* ()
+    public unique(): Aggregator<T>
+    {
+        return new Aggregator(this._elements.unique());
+    }
+
+    public byKey<K extends PropertyKey>(iteratee: Iteratee<T, K>): AggregatedIterator<T, K>
+    {
+        return new AggregatedIterator(this._elements.map((element, index) =>
         {
-            for (const [index, element] of elements.enumerate())
-            {
-                const key = iteratee(element, index);
+            const key = iteratee(element, index);
 
-                yield [key, element];
-            }
-        });
+            return [key, element];
+        }));
     }
 }
 
-export { AggregateIterator, ReducedIterator };
+export { AggregatedIterator, ReducedIterator };

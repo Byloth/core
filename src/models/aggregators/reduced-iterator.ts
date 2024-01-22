@@ -7,9 +7,13 @@ export default class ReducedIterator<T, K extends PropertyKey>
 {
     protected _elements: SmartIterator<[K, T]>;
 
-    public constructor(generatorFn: GeneratorFunction<[K, T]>)
+    public constructor(iterable: Iterable<[K, T]>);
+    public constructor(iterator: Iterator<[K, T]>);
+    public constructor(generatorFn: GeneratorFunction<[K, T]>);
+    public constructor(argument: Iterable<[K, T]> | Iterator<[K, T]> | GeneratorFunction<[K, T]>);
+    public constructor(argument: Iterable<[K, T]> | Iterator<[K, T]> | GeneratorFunction<[K, T]>)
     {
-        this._elements = new SmartIterator(generatorFn);
+        this._elements = new SmartIterator(argument);
     }
 
     public filter(predicate: KeyIteratee<T, K, boolean>): ReducedIterator<T, K>
@@ -50,13 +54,6 @@ export default class ReducedIterator<T, K extends PropertyKey>
     }
     public toObject(): Record<K, T>
     {
-        const groups = { } as Record<K, T>;
-
-        for (const [key, element] of this._elements)
-        {
-            groups[key] = element;
-        }
-
-        return groups;
+        return Object.fromEntries(this._elements.toArray()) as Record<K, T>;
     }
 }
