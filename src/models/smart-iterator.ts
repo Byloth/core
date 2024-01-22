@@ -96,10 +96,18 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
             }
         });
     }
-    public reduce<A>(reducer: Reducer<T, A>, initialValue: A): A
+    public reduce<A>(reducer: Reducer<T, A>, initialValue?: A): A
     {
         let index = 0;
         let accumulator = initialValue;
+        if (accumulator === undefined)
+        {
+            const result = this._iterator.next();
+            if (result.done) { throw new TypeError("Reduce of empty iterator with no initial value"); }
+
+            accumulator = (result.value as unknown) as A;
+            index += 1;
+        }
 
         // eslint-disable-next-line no-constant-condition
         while (true)
