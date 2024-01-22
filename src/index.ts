@@ -1,6 +1,17 @@
 export const VERSION = "1.2.1-rc.1";
 
-export { DeferredPromise, Exception, JsonStorage, SmartIterator, Subscribers } from "./models/index.js";
+export {
+    AggregatedIterator,
+    Aggregator,
+    DeferredPromise,
+    Exception,
+    JsonStorage,
+    ReducedIterator,
+    SmartIterator,
+    Subscribers
+
+} from "./models/index.js";
+
 export {
     average,
     capitalize,
