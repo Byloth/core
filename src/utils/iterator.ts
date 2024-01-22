@@ -10,6 +10,21 @@ export function count<T>(elements: Iterable<T>): number
     return _count;
 }
 
+export function enumerate<T>(elements: Iterable<T>): SmartIterator<[number, T]>
+{
+    return new SmartIterator<[number, T]>(function* ()
+    {
+        let index = 0;
+
+        for (const element of elements)
+        {
+            yield [index, element];
+
+            index += 1;
+        }
+    });
+}
+
 export function range(end: number): SmartIterator<number>;
 export function range(start: number, end: number): SmartIterator<number>;
 export function range(start: number, end: number, step: number): SmartIterator<number>;
@@ -31,7 +46,7 @@ export function range(start: number, end?: number, step = 1): SmartIterator<numb
 
 export function shuffle<T>(iterable: Iterable<T>): T[]
 {
-    const array = [...iterable];
+    const array = Array.from(iterable);
 
     for (let index = array.length - 1; index > 0; index -= 1)
     {

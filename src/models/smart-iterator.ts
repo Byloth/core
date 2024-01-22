@@ -60,12 +60,12 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         }
     }
 
-    public filter(predicate: Iteratee<T, boolean>): SmartIterator<T, R, N>
+    public filter(predicate: Iteratee<T, boolean>): SmartIterator<T, R>
     {
         let index = 0;
         const iterator = this._iterator;
 
-        return new SmartIterator<T, R, N>(function* ()
+        return new SmartIterator<T, R>(function* ()
         {
             while (true)
             {
@@ -113,6 +113,31 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         }
     }
 
+    public enumerate(): SmartIterator<[number, T], R>
+    {
+        return this.map((value, index) => [index, value]);
+    }
+    public unique(): SmartIterator<T, R>
+    {
+        const seen = new Set<T>();
+
+        return this.filter((value) =>
+        {
+            if (seen.has(value)) { return false; }
+
+            seen.add(value);
+
+            return true;
+        });
+    }
+
+    public count(): number
+    {
+        let index = 0;
+        this.forEach(() => { index += 1; });
+
+        return index;
+    }
     public forEach(iteratee: Iteratee<T>): void
     {
         let index = 0;
@@ -136,7 +161,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
 
     public toArray(): T[]
     {
-        return [...this];
+        return Array.from(this as Iterable<T>);
     }
 
     public [Symbol.iterator](): SmartIterator<T, R, N> { return this; }
