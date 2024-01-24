@@ -1,4 +1,4 @@
-export const VERSION = "1.2.1-rc.1";
+export const VERSION = "1.3.0-rc.1";
 
 export {
     AggregatedIterator,
@@ -24,7 +24,7 @@ export {
     hash,
     loadScript,
     nextAnimationFrame,
-    random,
+    Random,
     range,
     shuffle,
     sum,
