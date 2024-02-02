@@ -13,3 +13,6 @@ export type RejectedHandler<E = unknown, R = never> = (reason: E) => MaybePromis
 export type PromiseResolver<T = void> = (result?: MaybePromise<T>) => void;
 export type PromiseRejecter<E = unknown> = (reason?: MaybePromise<E>) => void;
 export type PromiseExecutor<T = void, E = unknown> = (resolve: PromiseResolver<T>, reject: PromiseRejecter<E>) => void;
+
+export type Interval = ReturnType<typeof setInterval>;
+export type Timeout = ReturnType<typeof setTimeout>;

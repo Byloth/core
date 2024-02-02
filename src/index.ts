@@ -1,4 +1,4 @@
-export const VERSION = "1.3.0-rc.1";
+export const VERSION = "1.3.0-rc.2";
 
 export {
     AggregatedIterator,
@@ -37,12 +37,14 @@ export type {
     Constructor,
     FulfilledHandler,
     GeneratorFunction,
+    Interval,
     Iteratee,
     MaybePromise,
     PromiseExecutor,
     PromiseRejecter,
     PromiseResolver,
     Reducer,
-    RejectedHandler
+    RejectedHandler,
+    Timeout
 
 } from "./types.js";
