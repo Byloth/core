@@ -1,4 +1,4 @@
-export const VERSION = "1.3.0";
+export const VERSION = "1.3.1";
 
 export {
     AggregatedIterator,
@@ -8,6 +8,7 @@ export {
     JsonStorage,
     ReducedIterator,
     SmartIterator,
+    SmartPromise,
     Subscribers
 
 } from "./models/index.js";
