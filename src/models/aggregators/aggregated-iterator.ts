@@ -178,6 +178,42 @@ export default class AggregatedIterator<T, K extends PropertyKey>
             }
         });
     }
+    public first(): ReducedIterator<T, K>
+    {
+        const firsts = new Map<K, T>();
+
+        for (const [key, element] of this._elements)
+        {
+            if (firsts.has(key)) { continue; }
+
+            firsts.set(key, element);
+        }
+
+        return new ReducedIterator(function* ()
+        {
+            for (const [key, element] of firsts)
+            {
+                yield [key, element];
+            }
+        });
+    }
+    public last(): ReducedIterator<T, K>
+    {
+        const lasts = new Map<K, T>();
+
+        for (const [key, element] of this._elements)
+        {
+            lasts.set(key, element);
+        }
+
+        return new ReducedIterator(function* ()
+        {
+            for (const [key, element] of lasts)
+            {
+                yield [key, element];
+            }
+        });
+    }
 
     public toArray(): T[][]
     {
