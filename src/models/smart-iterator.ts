@@ -99,6 +99,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
             }
         });
     }
+    public reduce(reducer: Reducer<T, T>): T;
+    public reduce<A>(reducer: Reducer<T, A>, initialValue: A): A;
     public reduce<A>(reducer: Reducer<T, A>, initialValue?: A): A
     {
         let index = 0;

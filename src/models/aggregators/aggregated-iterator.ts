@@ -96,7 +96,9 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             }
         });
     }
-    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue?: A): ReducedIterator<K, A>
+    public reduce(reducer: KeyReducer<K, T, T>): ReducedIterator<K, T>;
+    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue: (key: K) => A): ReducedIterator<K, A>;
+    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue?: (key: K) => A): ReducedIterator<K, A>
     {
         const accumulators = new Map<K, [number, A]>();
 
@@ -114,7 +116,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             else if (initialValue !== undefined)
             {
                 index = 0;
-                accumulator = initialValue;
+                accumulator = initialValue(key);
             }
             else
             {
