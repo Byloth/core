@@ -3,7 +3,7 @@ import SmartIterator from "../smart-iterator.js";
 import type { KeyIteratee } from "./types.js";
 import type { GeneratorFunction } from "../../types.js";
 
-export default class ReducedIterator<T, K extends PropertyKey>
+export default class ReducedIterator<K extends PropertyKey, T>
 {
     protected _elements: SmartIterator<[K, T]>;
 
@@ -16,7 +16,7 @@ export default class ReducedIterator<T, K extends PropertyKey>
         this._elements = new SmartIterator(argument);
     }
 
-    public filter(predicate: KeyIteratee<T, K, boolean>): ReducedIterator<T, K>
+    public filter(predicate: KeyIteratee<K, T, boolean>): ReducedIterator<K, T>
     {
         const elements = this._elements;
 
@@ -31,7 +31,7 @@ export default class ReducedIterator<T, K extends PropertyKey>
             }
         });
     }
-    public map<V>(iteratee: KeyIteratee<T, K, V>): ReducedIterator<V, K>
+    public map<V>(iteratee: KeyIteratee<K, T, V>): ReducedIterator<K, V>
     {
         const elements = this._elements;
 

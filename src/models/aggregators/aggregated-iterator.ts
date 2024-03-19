@@ -4,7 +4,7 @@ import SmartIterator from "../smart-iterator.js";
 import type { KeyIteratee, KeyReducer } from "./types.js";
 import type { GeneratorFunction } from "../../types.js";
 
-export default class AggregatedIterator<T, K extends PropertyKey>
+export default class AggregatedIterator<K extends PropertyKey, T>
 {
     protected _elements: SmartIterator<[K, T]>;
 
@@ -17,7 +17,7 @@ export default class AggregatedIterator<T, K extends PropertyKey>
         this._elements = new SmartIterator(argument);
     }
 
-    public every(predicate: KeyIteratee<T, K, boolean>): ReducedIterator<boolean, K>
+    public every(predicate: KeyIteratee<K, T, boolean>): ReducedIterator<K, boolean>
     {
         const indexes = new Map<K, [number, boolean]>();
 
@@ -38,7 +38,7 @@ export default class AggregatedIterator<T, K extends PropertyKey>
             }
         });
     }
-    public some(predicate: KeyIteratee<T, K, boolean>): ReducedIterator<boolean, K>
+    public some(predicate: KeyIteratee<K, T, boolean>): ReducedIterator<K, boolean>
     {
         const indexes = new Map<K, [number, boolean]>();
 
@@ -60,7 +60,7 @@ export default class AggregatedIterator<T, K extends PropertyKey>
         });
     }
 
-    public filter(predicate: KeyIteratee<T, K, boolean>): AggregatedIterator<T, K>
+    public filter(predicate: KeyIteratee<K, T, boolean>): AggregatedIterator<K, T>
     {
         const elements = this._elements;
 
@@ -78,7 +78,7 @@ export default class AggregatedIterator<T, K extends PropertyKey>
             }
         });
     }
-    public map<V>(iteratee: KeyIteratee<T, K, V>): AggregatedIterator<V, K>
+    public map<V>(iteratee: KeyIteratee<K, T, V>): AggregatedIterator<K, V>
     {
         const elements = this._elements;
 
@@ -96,7 +96,7 @@ export default class AggregatedIterator<T, K extends PropertyKey>
             }
         });
     }
-    public reduce<A>(reducer: KeyReducer<T, K, A>, initialValue?: A): ReducedIterator<A, K>
+    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue?: A): ReducedIterator<K, A>
     {
         const accumulators = new Map<K, [number, A]>();
 
@@ -137,7 +137,7 @@ export default class AggregatedIterator<T, K extends PropertyKey>
         });
     }
 
-    public unique(): AggregatedIterator<T, K>
+    public unique(): AggregatedIterator<K, T>
     {
         const elements = this._elements;
 
@@ -159,7 +159,7 @@ export default class AggregatedIterator<T, K extends PropertyKey>
         });
     }
 
-    public count(): ReducedIterator<number, K>
+    public count(): ReducedIterator<K, number>
     {
         const counters = new Map<K, number>();
 
@@ -178,7 +178,7 @@ export default class AggregatedIterator<T, K extends PropertyKey>
             }
         });
     }
-    public first(): ReducedIterator<T, K>
+    public first(): ReducedIterator<K, T>
     {
         const firsts = new Map<K, T>();
 
@@ -197,7 +197,7 @@ export default class AggregatedIterator<T, K extends PropertyKey>
             }
         });
     }
-    public last(): ReducedIterator<T, K>
+    public last(): ReducedIterator<K, T>
     {
         const lasts = new Map<K, T>();
 

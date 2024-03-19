@@ -31,7 +31,7 @@ export default class Aggregator<T>
         return new Aggregator(this._elements.unique());
     }
 
-    public byKey<K extends PropertyKey>(iteratee: Iteratee<T, K>): AggregatedIterator<T, K>
+    public byKey<K extends PropertyKey>(iteratee: Iteratee<T, K>): AggregatedIterator<K, T>
     {
         return new AggregatedIterator(this._elements.map((element, index) =>
         {
