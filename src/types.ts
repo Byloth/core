@@ -2,6 +2,7 @@
 export type Constructor<T extends object, P extends unknown[] = any[]> = new (...args: P) => T;
 
 export type GeneratorFunction<T, R = void, N = undefined> = () => Generator<T, R, N>;
+export type AsyncGeneratorFunction<T, R = void, N = undefined> = () => AsyncGenerator<T, R, N>;
 export type Iteratee<T, R = void> = (value: T, index: number) => R;
 export type Reducer<T, A> = (accumulator: A, value: T, index: number) => A;
 

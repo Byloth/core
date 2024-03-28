@@ -30,4 +30,6 @@ export default class Subscribers<P extends unknown[] = [], R = void, T extends (
             .slice()
             .map((subscriber) => subscriber(...args));
     }
+
+    public get [Symbol.toStringTag]() { return "Subscribers"; }
 }

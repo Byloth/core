@@ -191,5 +191,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         return Array.from(this as Iterable<T>);
     }
 
+    public get [Symbol.toStringTag]() { return "SmartIterator"; }
+
     public [Symbol.iterator](): SmartIterator<T, R, N> { return this; }
 }

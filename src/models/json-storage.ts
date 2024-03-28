@@ -238,4 +238,6 @@ export default class JsonStorage
         this._volatile.removeItem(propertyName);
         this._persistent.removeItem(propertyName);
     }
+
+    public get [Symbol.toStringTag]() { return "JsonStorage"; }
 }

@@ -217,6 +217,35 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
+    public keys(): SmartIterator<K>
+    {
+        const elements = this._elements;
+
+        return new SmartIterator<K>(function* ()
+        {
+            for (const [key] of elements)
+            {
+                yield key;
+            }
+        });
+    }
+    public items(): SmartIterator<[K, T]>
+    {
+        return this._elements;
+    }
+    public values(): SmartIterator<T>
+    {
+        const elements = this._elements;
+
+        return new SmartIterator<T>(function* ()
+        {
+            for (const [_, element] of elements)
+            {
+                yield element;
+            }
+        });
+    }
+
     public toArray(): T[][]
     {
         return Array.from(this.toMap().values());
@@ -249,4 +278,6 @@ export default class AggregatedIterator<K extends PropertyKey, T>
 
         return groups;
     }
+
+    public get [Symbol.toStringTag]() { return "AggregatedIterator"; }
 }

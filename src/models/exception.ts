@@ -38,4 +38,6 @@ export default class Exception extends Error
             }
         }
     }
+
+    public get [Symbol.toStringTag]() { return "Exception"; }
 }

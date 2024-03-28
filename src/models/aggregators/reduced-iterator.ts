@@ -44,16 +44,47 @@ export default class ReducedIterator<K extends PropertyKey, T>
         });
     }
 
+    public keys(): SmartIterator<K>
+    {
+        const elements = this._elements;
+
+        return new SmartIterator<K>(function* ()
+        {
+            for (const [key] of elements)
+            {
+                yield key;
+            }
+        });
+    }
+    public items(): SmartIterator<[K, T]>
+    {
+        return this._elements;
+    }
+    public values(): SmartIterator<T>
+    {
+        const elements = this._elements;
+
+        return new SmartIterator<T>(function* ()
+        {
+            for (const [_, element] of elements)
+            {
+                yield element;
+            }
+        });
+    }
+
     public toArray(): T[]
     {
-        return Array.from(this.toMap().values());
+        return Array.from(this.values());
     }
     public toMap(): Map<K, T>
     {
-        return new Map(this._elements.toArray());
+        return new Map(this.items());
     }
     public toObject(): Record<K, T>
     {
-        return Object.fromEntries(this._elements.toArray()) as Record<K, T>;
+        return Object.fromEntries(this.items()) as Record<K, T>;
     }
+
+    public get [Symbol.toStringTag]() { return "ReducedIterator"; }
 }
