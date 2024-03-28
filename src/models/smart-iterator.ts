@@ -1,4 +1,4 @@
-import type { GeneratorFunction, Iteratee, Reducer } from "../types.js";
+import type { GeneratorFunction, Iteratee, TypeGuardIteratee, Reducer } from "../types.js";
 
 export default class SmartIterator<T, R = void, N = undefined> implements Iterator<T, R, N>
 {
@@ -61,6 +61,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         }
     }
 
+    public filter(predicate: Iteratee<T, boolean>): SmartIterator<T, R>;
+    public filter<S extends T>(predicate: TypeGuardIteratee<T, S>): SmartIterator<T, S>;
     public filter(predicate: Iteratee<T, boolean>): SmartIterator<T, R>
     {
         const iterator = this._iterator;

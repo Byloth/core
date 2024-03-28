@@ -2,7 +2,7 @@ import AggregatedIterator from "./aggregated-iterator.js";
 import ReducedIterator from "./reduced-iterator.js";
 import SmartIterator from "../smart-iterator.js";
 
-import type { GeneratorFunction, Iteratee } from "../../types.js";
+import type { GeneratorFunction, Iteratee, TypeGuardIteratee } from "../../types.js";
 
 export default class Aggregator<T>
 {
@@ -17,6 +17,8 @@ export default class Aggregator<T>
         this._elements = new SmartIterator(argument);
     }
 
+    public filter(predicate: Iteratee<T, boolean>): Aggregator<T>;
+    public filter<S extends T>(predicate: TypeGuardIteratee<T, S>): Aggregator<S>;
     public filter(predicate: Iteratee<T, boolean>): Aggregator<T>
     {
         return new Aggregator(this._elements.filter(predicate));
@@ -45,3 +47,4 @@ export default class Aggregator<T>
 }
 
 export { AggregatedIterator, ReducedIterator };
+export type { KeyIteratee, KeyReducer, KeyTypeGuardIteratee } from "./types.js";

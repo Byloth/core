@@ -1,4 +1,4 @@
-export const VERSION = "1.4.0";
+export const VERSION = "1.4.1";
 
 export {
     AggregatedIterator,
@@ -12,6 +12,7 @@ export {
     Subscribers
 
 } from "./models/index.js";
+export type { KeyIteratee, KeyReducer, KeyTypeGuardIteratee } from "./models/index.js";
 
 export {
     average,
@@ -35,6 +36,7 @@ export {
 } from "./utils/index.js";
 
 export type {
+    AsyncGeneratorFunction,
     Constructor,
     FulfilledHandler,
     GeneratorFunction,
@@ -46,6 +48,7 @@ export type {
     PromiseResolver,
     Reducer,
     RejectedHandler,
-    Timeout
+    Timeout,
+    TypeGuardIteratee
 
 } from "./types.js";

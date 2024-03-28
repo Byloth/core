@@ -1,6 +1,6 @@
 import SmartIterator from "../smart-iterator.js";
 
-import type { KeyIteratee } from "./types.js";
+import type { KeyIteratee, KeyTypeGuardIteratee } from "./types.js";
 import type { GeneratorFunction } from "../../types.js";
 
 export default class ReducedIterator<K extends PropertyKey, T>
@@ -16,6 +16,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
         this._elements = new SmartIterator(argument);
     }
 
+    public filter(predicate: KeyIteratee<K, T, boolean>): ReducedIterator<K, T>;
+    public filter<S extends T>(predicate: KeyTypeGuardIteratee<K, T, S>): ReducedIterator<K, S>;
     public filter(predicate: KeyIteratee<K, T, boolean>): ReducedIterator<K, T>
     {
         const elements = this._elements;
