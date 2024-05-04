@@ -1,4 +1,4 @@
-export const VERSION = "1.4.1";
+export const VERSION = "1.5.0-rc.1";
 
 export {
     AggregatedIterator,
@@ -7,9 +7,12 @@ export {
     Exception,
     JsonStorage,
     ReducedIterator,
+    ReferenceException,
     SmartIterator,
     SmartPromise,
-    Subscribers
+    Subscribers,
+    TimedPromise,
+    TimeoutException
 
 } from "./models/index.js";
 export type { KeyIteratee, KeyReducer, KeyTypeGuardIteratee } from "./models/index.js";

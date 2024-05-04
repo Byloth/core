@@ -39,7 +39,7 @@ export default class Aggregator<T>
         {
             const key = iteratee(element, index);
 
-            return [key, element];
+            return [key, element] as [K, T];
         }));
     }
 

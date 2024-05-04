@@ -1,6 +1,6 @@
 {
   "name": "@byloth/core",
-  "version": "1.4.1",
+  "version": "1.5.0-rc.1",
   "description": "An unopinionated collection of useful functions and classes that I use widely in all my projects. 🔧",
   "keywords": [
     "Core",
@@ -56,11 +56,11 @@
     "ci": "yarn install --frozen-lockfile"
   },
   "devDependencies": {
-    "@byloth/eslint-config-typescript": "^2.7.0",
-    "@typescript-eslint/eslint-plugin": "^7.4.0",
-    "@typescript-eslint/parser": "^7.4.0",
+    "@byloth/eslint-config-typescript": "^2.8.1",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
     "eslint": "^8.57.0",
-    "typescript": "^5.4.3",
-    "vite": "^5.2.6"
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11"
   }
 }

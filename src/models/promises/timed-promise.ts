@@ -1,6 +1,7 @@
 import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "../../types.js";
+import { TimeoutException } from "../exceptions/index.js";
 
-export default class SmartPromise<T = void, E = unknown>
+export default class TimedPromise<T = void, E = unknown>
 {
     protected _isPending: boolean;
     protected _isFulfilled: boolean;
@@ -8,7 +9,7 @@ export default class SmartPromise<T = void, E = unknown>
 
     protected _promise: Promise<T | E>;
 
-    public constructor(executor: PromiseExecutor<T, E>)
+    public constructor(executor: PromiseExecutor<T, E>, timeout: number)
     {
         this._isPending = true;
         this._isFulfilled = false;
@@ -29,7 +30,14 @@ export default class SmartPromise<T = void, E = unknown>
             return reason;
         };
 
-        this._promise = new Promise<T>(executor)
+        const _executor = new Promise<T>(executor);
+        const _timeout = new Promise<never>((_, reject) => setTimeout(() =>
+        {
+            reject(new TimeoutException("The operation has timed out."));
+
+        }, timeout));
+
+        this._promise = Promise.race([_executor, _timeout])
             .then(_onFulfilled, _onRejected);
     }
 
@@ -55,10 +63,11 @@ export default class SmartPromise<T = void, E = unknown>
     {
         return this._promise.catch(onRejected);
     }
+
     public finally(onFinally?: (() => void) | null): Promise<T | E>
     {
         return this._promise.finally(onFinally);
     }
 
-    public get [Symbol.toStringTag]() { return "SmartPromise"; }
+    public get [Symbol.toStringTag]() { return "TimedPromise"; }
 }

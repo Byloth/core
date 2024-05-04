@@ -1,11 +1,4 @@
-import type {
-    PromiseResolver,
-    PromiseRejecter,
-    FulfilledHandler,
-    RejectedHandler,
-    PromiseExecutor
-
-} from "../../types.js";
+import type { PromiseResolver, PromiseRejecter, FulfilledHandler, RejectedHandler } from "../../types.js";
 
 export default class DeferredPromise<T = void, E = unknown, F = T, R = never>
 {
@@ -23,15 +16,6 @@ export default class DeferredPromise<T = void, E = unknown, F = T, R = never>
         this._isPending = true;
         this._isFulfilled = false;
         this._isRejected = false;
-
-        let _resolve: PromiseResolver<T>;
-        let _reject: PromiseRejecter<E>;
-
-        const executor: PromiseExecutor<T, E> = (resolve, reject) =>
-        {
-            _resolve = resolve;
-            _reject = reject;
-        };
 
         let _onFulfilled: FulfilledHandler<T, F>;
         if (onFulfilled)
@@ -77,11 +61,11 @@ export default class DeferredPromise<T = void, E = unknown, F = T, R = never>
             };
         }
 
-        this._promise = new Promise<T>(executor)
-            .then(_onFulfilled, _onRejected);
+        const { promise, resolve, reject } = Promise.withResolvers<T>();
 
-        this._resolve = _resolve!;
-        this._reject = _reject!;
+        this._promise = promise.then(_onFulfilled, _onRejected);
+        this._resolve = resolve;
+        this._reject = reject;
     }
 
     public get isPending(): boolean { return this._isPending; }
@@ -91,12 +75,20 @@ export default class DeferredPromise<T = void, E = unknown, F = T, R = never>
     public get resolve(): PromiseResolver<T> { return this._resolve; }
     public get reject(): PromiseRejecter<E> { return this._reject; }
 
+    public then(onFulfilled?: null): Promise<F | R>;
+    public then<N = F | R>(onFulfilled: FulfilledHandler<F | R, N>, onRejected?: null): Promise<N>;
+    public then<N = F, H = R>(
+        onFulfilled: FulfilledHandler<F, N>,
+        onRejected: RejectedHandler<R, H>): Promise<N | H>;
     public then<N = F | R, H = R>(
-        onFulfilled?: FulfilledHandler<F | R, N> | null,
+        onFulfilled?: FulfilledHandler<F, N> | null,
         onRejected?: RejectedHandler<R, H> | null): Promise<N | H>
     {
-        return this._promise.then(onFulfilled, onRejected);
+        return this._promise.then(onFulfilled as FulfilledHandler<F | R, N>, onRejected);
     }
+
+    public catch(onRejected?: null): Promise<F | R>;
+    public catch<H = R>(onRejected: RejectedHandler<R, H>): Promise<F | H>;
     public catch<H = R>(onRejected?: RejectedHandler<R, H> | null): Promise<F | R | H>
     {
         return this._promise.catch(onRejected);
@@ -106,9 +98,9 @@ export default class DeferredPromise<T = void, E = unknown, F = T, R = never>
         return this._promise.finally(onFinally);
     }
 
-    public watch(promise: Promise<T>): this
+    public watch(promise: Promise<T | E>): this
     {
-        promise.then(this.resolve, this.reject);
+        promise.then(this.resolve as PromiseResolver<T | E>, this.reject);
 
         return this;
     }

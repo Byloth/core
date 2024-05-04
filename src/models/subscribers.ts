@@ -1,4 +1,4 @@
-import Exception from "./exception.js";
+import { ReferenceException } from "./exceptions/index.js";
 
 export default class Subscribers<P extends unknown[] = [], R = void, T extends (...args: P) => R = (...args: P) => R>
 {
@@ -18,7 +18,7 @@ export default class Subscribers<P extends unknown[] = [], R = void, T extends (
         const index = this._subscribers.indexOf(subscriber);
         if (index < 0)
         {
-            throw new Exception("Unable to remove the requested subscriber. It was not found.");
+            throw new ReferenceException("Unable to remove the requested subscriber. It was not found.");
         }
 
         this._subscribers.splice(index, 1);
