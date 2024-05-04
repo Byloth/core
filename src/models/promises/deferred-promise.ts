@@ -57,7 +57,7 @@ export default class DeferredPromise<T = void, E = unknown, F = T, R = never>
                 this._isPending = false;
                 this._isRejected = true;
 
-                return (reason as unknown) as R;
+                throw reason;
             };
         }
 

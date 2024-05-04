@@ -6,7 +6,7 @@ export default class SmartPromise<T = void, E = unknown>
     protected _isFulfilled: boolean;
     protected _isRejected: boolean;
 
-    protected _promise: Promise<T | E>;
+    protected _promise: Promise<T>;
 
     public constructor(executor: PromiseExecutor<T, E>)
     {
@@ -21,12 +21,12 @@ export default class SmartPromise<T = void, E = unknown>
 
             return result;
         };
-        const _onRejected = (reason: E): E =>
+        const _onRejected = (reason: E): never =>
         {
             this._isPending = false;
             this._isRejected = true;
 
-            return reason;
+            throw reason;
         };
 
         this._promise = new Promise<T>(executor)
