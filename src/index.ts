@@ -1,4 +1,4 @@
-export const VERSION = "1.5.0-rc.4";
+export const VERSION = "1.5.0-rc.5";
 
 export {
     AggregatedIterator,
