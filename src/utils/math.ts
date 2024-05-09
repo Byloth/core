@@ -1,3 +1,4 @@
+import { ValueException } from "../models/exceptions/index.js";
 import { zip } from "./iterator.js";
 
 export function average<T extends number>(values: Iterable<T>): number;
@@ -7,25 +8,32 @@ export function average<T extends number>(values: Iterable<T>, weights?: Iterabl
     if (weights === undefined)
     {
         let _sum = 0;
-        let _count = 0;
+        let _index = 0;
 
         for (const value of values)
         {
             _sum += value;
-            _count += 1;
+            _index += 1;
         }
 
-        return _sum / _count;
+        if (_index === 0) { throw new ValueException("You must provide at least one value."); }
+
+        return _sum / _index;
     }
 
     let _sum = 0;
     let _count = 0;
+    let _index = 0;
 
     for (const [value, weight] of zip(values, weights))
     {
         _sum += value * weight;
         _count += weight;
+        _index += 1;
     }
+
+    if (_index === 0) { throw new ValueException("You must provide at least one value and weight."); }
+    if (_count === 0) { throw new ValueException("The sum of weights must be greater than zero."); }
 
     return _sum / _count;
 }

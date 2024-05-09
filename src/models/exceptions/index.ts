@@ -18,5 +18,14 @@ export class TimeoutException extends Exception
 
     public get [Symbol.toStringTag]() { return "TimeoutException"; }
 }
+export class ValueException extends Exception
+{
+    public constructor(message: string, cause?: unknown, name = "ValueException")
+    {
+        super(message, cause, name);
+    }
+
+    public get [Symbol.toStringTag]() { return "ValueException"; }
+}
 
 export { Exception };

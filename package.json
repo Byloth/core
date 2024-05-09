@@ -1,6 +1,6 @@
 {
   "name": "@byloth/core",
-  "version": "1.5.0-rc.2",
+  "version": "1.5.0-rc.3",
   "description": "An unopinionated collection of useful functions and classes that I use widely in all my projects. 🔧",
   "keywords": [
     "Core",

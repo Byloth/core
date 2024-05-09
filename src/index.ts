@@ -1,4 +1,4 @@
-export const VERSION = "1.5.0-rc.2";
+export const VERSION = "1.5.0-rc.3";
 
 export {
     AggregatedIterator,
@@ -12,7 +12,8 @@ export {
     SmartPromise,
     Subscribers,
     TimedPromise,
-    TimeoutException
+    TimeoutException,
+    ValueException
 
 } from "./models/index.js";
 export type { KeyIteratee, KeyReducer, KeyTypeGuardIteratee } from "./models/index.js";

@@ -1,7 +1,7 @@
 import Aggregator, { AggregatedIterator, ReducedIterator } from "./aggregators/index.js";
 export type { KeyIteratee, KeyReducer, KeyTypeGuardIteratee } from "./aggregators/index.js";
 
-export { Exception, ReferenceException, TimeoutException } from "./exceptions/index.js";
+export { Exception, ReferenceException, TimeoutException, ValueException } from "./exceptions/index.js";
 
 import JsonStorage from "./json-storage.js";
 import SmartIterator from "./smart-iterator.js";
