@@ -1,4 +1,4 @@
-import type { GeneratorFunction, Iteratee, TypeGuardIteratee, Reducer } from "../types.js";
+import type { GeneratorFunction, Iteratee, TypeGuardIteratee, Reducer } from "./types.js";
 
 export default class SmartIterator<T, R = void, N = undefined> implements Iterator<T, R, N>
 {

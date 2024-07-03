@@ -1,7 +1,7 @@
-import type { MaybePromise, PromiseExecutor } from "../../types.js";
 import { TimeoutException } from "../exceptions/index.js";
 
 import SmartPromise from "./smart-promise.js";
+import type { MaybePromise, PromiseExecutor } from "./types.js";
 
 export default class TimedPromise<T = void> extends SmartPromise<T>
 {

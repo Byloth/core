@@ -1,5 +1,16 @@
 import { SmartIterator } from "../models/index.js";
 
+export function chain<T>(...iterables: Iterable<T>[]): SmartIterator<T>
+{
+    return new SmartIterator<T>(function* ()
+    {
+        for (const iterable of iterables)
+        {
+            for (const element of iterable) { yield element; }
+        }
+    });
+}
+
 export function count<T>(elements: Iterable<T>): number
 {
     if (Array.isArray(elements)) { return elements.length; }

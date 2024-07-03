@@ -1,6 +1,6 @@
 {
   "name": "@byloth/core",
-  "version": "1.5.0-rc.5",
+  "version": "1.5.0-rc.6",
   "description": "An unopinionated collection of useful functions and classes that I use widely in all my projects. 🔧",
   "keywords": [
     "Core",
@@ -57,10 +57,11 @@
   },
   "devDependencies": {
     "@byloth/eslint-config-typescript": "^2.8.1",
-    "@typescript-eslint/eslint-plugin": "^7.8.0",
-    "@typescript-eslint/parser": "^7.8.0",
+    "@typescript-eslint/eslint-plugin": "^7.15.0",
+    "@typescript-eslint/parser": "^7.15.0",
     "eslint": "^8.57.0",
-    "typescript": "^5.4.5",
-    "vite": "^5.2.11"
-  }
+    "typescript": "^5.5.3",
+    "vite": "^5.3.3"
+  },
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }

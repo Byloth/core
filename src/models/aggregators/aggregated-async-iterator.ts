@@ -1,33 +1,33 @@
-import { SmartIterator } from "../iterators/index.js";
-import type { GeneratorFunction } from "../iterators/types.js";
+import { SmartAsyncIterator } from "../iterators/index.js";
+import type { AsyncGeneratorFunction } from "../iterators/types.js";
 
 import ReducedIterator from "./reduced-iterator.js";
-import type { KeyIteratee, KeyTypeGuardIteratee, KeyReducer } from "./types.js";
+import type { MaybeAsyncKeyIteratee, MaybeAsyncKeyTypeGuardIteratee, MaybeAsyncKeyReducer } from "./types.js";
 
-export default class AggregatedIterator<K extends PropertyKey, T>
+export default class AggregatedAsyncIterator<K extends PropertyKey, T>
 {
-    protected _elements: SmartIterator<[K, T]>;
+    protected _elements: SmartAsyncIterator<[K, T]>;
 
-    public constructor(iterable: Iterable<[K, T]>);
-    public constructor(iterator: Iterator<[K, T]>);
-    public constructor(generatorFn: GeneratorFunction<[K, T]>);
-    public constructor(argument: Iterable<[K, T]> | Iterator<[K, T]> | GeneratorFunction<[K, T]>);
-    public constructor(argument: Iterable<[K, T]> | Iterator<[K, T]> | GeneratorFunction<[K, T]>)
+    public constructor(iterable: AsyncIterable<[K, T]>);
+    public constructor(iterator: AsyncIterator<[K, T]>);
+    public constructor(generatorFn: AsyncGeneratorFunction<[K, T]>);
+    public constructor(argument: AsyncIterable<[K, T]> | AsyncIterator<[K, T]> | AsyncGeneratorFunction<[K, T]>);
+    public constructor(argument: AsyncIterable<[K, T]> | AsyncIterator<[K, T]> | AsyncGeneratorFunction<[K, T]>)
     {
-        this._elements = new SmartIterator(argument);
+        this._elements = new SmartAsyncIterator(argument);
     }
 
-    public every(predicate: KeyIteratee<K, T, boolean>): ReducedIterator<K, boolean>
+    public async every(predicate: MaybeAsyncKeyIteratee<K, T, boolean>): Promise<ReducedIterator<K, boolean>>
     {
         const indexes = new Map<K, [number, boolean]>();
 
-        for (const [key, element] of this._elements)
+        for await (const [key, element] of this._elements)
         {
             const [index, result] = indexes.get(key) ?? [0, true];
 
             if (!(result)) { continue; }
 
-            indexes.set(key, [index + 1, predicate(key, element, index)]);
+            indexes.set(key, [index + 1, await predicate(key, element, index)]);
         }
 
         return new ReducedIterator(function* ()
@@ -38,17 +38,17 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             }
         });
     }
-    public some(predicate: KeyIteratee<K, T, boolean>): ReducedIterator<K, boolean>
+    public async some(predicate: MaybeAsyncKeyIteratee<K, T, boolean>): Promise<ReducedIterator<K, boolean>>
     {
         const indexes = new Map<K, [number, boolean]>();
 
-        for (const [key, element] of this._elements)
+        for await (const [key, element] of this._elements)
         {
             const [index, result] = indexes.get(key) ?? [0, false];
 
             if (result) { continue; }
 
-            indexes.set(key, [index + 1, predicate(key, element, index)]);
+            indexes.set(key, [index + 1, await predicate(key, element, index)]);
         }
 
         return new ReducedIterator(function* ()
@@ -60,17 +60,17 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
-    public filter(predicate: KeyIteratee<K, T, boolean>): AggregatedIterator<K, T>;
-    public filter<S extends T>(predicate: KeyTypeGuardIteratee<K, T, S>): AggregatedIterator<K, S>;
-    public filter(predicate: KeyIteratee<K, T, boolean>): AggregatedIterator<K, T>
+    public filter(predicate: MaybeAsyncKeyIteratee<K, T, boolean>): AggregatedAsyncIterator<K, T>;
+    public filter<S extends T>(predicate: MaybeAsyncKeyTypeGuardIteratee<K, T, S>): AggregatedAsyncIterator<K, S>;
+    public filter(predicate: MaybeAsyncKeyIteratee<K, T, boolean>): AggregatedAsyncIterator<K, T>
     {
         const elements = this._elements;
 
-        return new AggregatedIterator(function* ()
+        return new AggregatedAsyncIterator(async function* ()
         {
             const indexes = new Map<K, number>();
 
-            for (const [key, element] of elements)
+            for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
 
@@ -80,31 +80,33 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             }
         });
     }
-    public map<V>(iteratee: KeyIteratee<K, T, V>): AggregatedIterator<K, V>
+    public map<V>(iteratee: MaybeAsyncKeyIteratee<K, T, V>): AggregatedAsyncIterator<K, V>
     {
         const elements = this._elements;
 
-        return new AggregatedIterator(function* ()
+        return new AggregatedAsyncIterator(async function* ()
         {
             const indexes = new Map<K, number>();
 
-            for (const [key, element] of elements)
+            for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
 
                 indexes.set(key, index + 1);
 
-                yield [key, iteratee(key, element, index)];
+                yield [key, await iteratee(key, element, index)];
             }
         });
     }
-    public reduce(reducer: KeyReducer<K, T, T>): ReducedIterator<K, T>;
-    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue: (key: K) => A): ReducedIterator<K, A>;
-    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue?: (key: K) => A): ReducedIterator<K, A>
+    public async reduce(reducer: MaybeAsyncKeyReducer<K, T, T>): Promise<ReducedIterator<K, T>>;
+    public async reduce<A>(reducer: MaybeAsyncKeyReducer<K, T, A>, initialValue: (key: K) => A)
+        : Promise<ReducedIterator<K, A>>;
+    public async reduce<A>(reducer: MaybeAsyncKeyReducer<K, T, A>, initialValue?: (key: K) => A)
+        : Promise<ReducedIterator<K, A>>
     {
         const accumulators = new Map<K, [number, A]>();
 
-        for (const [key, element] of this._elements)
+        for await (const [key, element] of this._elements)
         {
             let index: number;
             let accumulator: A;
@@ -127,7 +129,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
                 continue;
             }
 
-            accumulator = reducer(key, accumulator, element, index);
+            accumulator = await reducer(key, accumulator, element, index);
 
             accumulators.set(key, [index, accumulator]);
         }
@@ -141,15 +143,15 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
-    public unique(): AggregatedIterator<K, T>
+    public unique(): AggregatedAsyncIterator<K, T>
     {
         const elements = this._elements;
 
-        return new AggregatedIterator(function* ()
+        return new AggregatedAsyncIterator(async function* ()
         {
             const keys = new Map<K, Set<T>>();
 
-            for (const [key, element] of elements)
+            for await (const [key, element] of elements)
             {
                 const values = keys.get(key) ?? new Set<T>();
 
@@ -163,11 +165,11 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
-    public count(): ReducedIterator<K, number>
+    public async count(): Promise<ReducedIterator<K, number>>
     {
         const counters = new Map<K, number>();
 
-        for (const [key] of this._elements)
+        for await (const [key] of this._elements)
         {
             const count = counters.get(key) ?? 0;
 
@@ -182,11 +184,11 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             }
         });
     }
-    public first(): ReducedIterator<K, T>
+    public async first(): Promise<ReducedIterator<K, T>>
     {
         const firsts = new Map<K, T>();
 
-        for (const [key, element] of this._elements)
+        for await (const [key, element] of this._elements)
         {
             if (firsts.has(key)) { continue; }
 
@@ -201,11 +203,11 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             }
         });
     }
-    public last(): ReducedIterator<K, T>
+    public async last(): Promise<ReducedIterator<K, T>>
     {
         const lasts = new Map<K, T>();
 
-        for (const [key, element] of this._elements)
+        for await (const [key, element] of this._elements)
         {
             lasts.set(key, element);
         }
@@ -219,44 +221,46 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
-    public keys(): SmartIterator<K>
+    public keys(): SmartAsyncIterator<K>
     {
         const elements = this._elements;
 
-        return new SmartIterator<K>(function* ()
+        return new SmartAsyncIterator<K>(async function* ()
         {
-            for (const [key] of elements)
+            for await (const [key] of elements)
             {
                 yield key;
             }
         });
     }
-    public items(): SmartIterator<[K, T]>
+    public items(): SmartAsyncIterator<[K, T]>
     {
         return this._elements;
     }
-    public values(): SmartIterator<T>
+    public values(): SmartAsyncIterator<T>
     {
         const elements = this._elements;
 
-        return new SmartIterator<T>(function* ()
+        return new SmartAsyncIterator<T>(async function* ()
         {
-            for (const [_, element] of elements)
+            for await (const [_, element] of elements)
             {
                 yield element;
             }
         });
     }
 
-    public toArray(): T[][]
+    public async toArray(): Promise<T[][]>
     {
-        return Array.from(this.toMap().values());
+        const map = await this.toMap();
+
+        return Array.from(map.values());
     }
-    public toMap(): Map<K, T[]>
+    public async toMap(): Promise<Map<K, T[]>>
     {
         const groups = new Map<K, T[]>();
 
-        for (const [key, element] of this._elements)
+        for await (const [key, element] of this._elements)
         {
             const value = groups.get(key) ?? [];
 
@@ -266,11 +270,11 @@ export default class AggregatedIterator<K extends PropertyKey, T>
 
         return groups;
     }
-    public toObject(): Record<K, T[]>
+    public async toObject(): Promise<Record<K, T[]>>
     {
         const groups = { } as Record<K, T[]>;
 
-        for (const [key, element] of this._elements)
+        for await (const [key, element] of this._elements)
         {
             const value = groups[key] ?? [];
 
@@ -281,5 +285,5 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         return groups;
     }
 
-    public get [Symbol.toStringTag]() { return "AggregatedIterator"; }
+    public get [Symbol.toStringTag]() { return "AggregatedAsyncIterator"; }
 }

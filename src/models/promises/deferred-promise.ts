@@ -1,4 +1,4 @@
-import type { PromiseResolver, PromiseRejecter, FulfilledHandler, RejectedHandler } from "../../types.js";
+import type { PromiseResolver, PromiseRejecter, FulfilledHandler, RejectedHandler } from "./types.js";
 
 import SmartPromise from "./smart-promise.js";
 

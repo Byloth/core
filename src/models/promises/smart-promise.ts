@@ -1,4 +1,4 @@
-import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "../../types.js";
+import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "./types.js";
 
 export default class SmartPromise<T = void> implements Promise<T>
 {

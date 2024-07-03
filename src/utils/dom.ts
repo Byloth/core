@@ -1,4 +1,4 @@
-export async function loadScript(scriptUrl: string, scriptType = "text/javascript"): Promise<void>
+export function loadScript(scriptUrl: string, scriptType = "text/javascript"): Promise<void>
 {
     return new Promise<void>((resolve, reject) =>
     {

@@ -27,13 +27,18 @@ export function average<T extends number>(values: Iterable<T>, weights?: Iterabl
 
     for (const [value, weight] of zip(values, weights))
     {
+        if (weight <= 0)
+        {
+            throw new ValueException(`The weight for the value #${_index} must be greater than zero.`);
+        }
+
         _sum += value * weight;
         _count += weight;
         _index += 1;
     }
 
     if (_index === 0) { throw new ValueException("You must provide at least one value and weight."); }
-    if (_count === 0) { throw new ValueException("The sum of weights must be greater than zero."); }
+    if (_count > 0) { throw new ValueException("The sum of weights must be greater than zero."); }
 
     return _sum / _count;
 }
