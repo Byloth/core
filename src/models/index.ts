@@ -7,7 +7,21 @@ export {
 
 } from "./aggregators/index.js";
 
-export { Exception, ReferenceException, TimeoutException, ValueException } from "./exceptions/index.js";
+export {
+    Exception,
+    FatalErrorException,
+    NotImplementedException,
+    FileNotFoundException,
+    NetworkException,
+    PermissionException,
+    ReferenceException,
+    RuntimeException,
+    TimeoutException,
+    TypeException,
+    ValueException
+
+} from "./exceptions/index.js";
+
 export { SmartIterator, SmartAsyncIterator } from "./iterators/index.js";
 
 import JsonStorage from "./json-storage.js";

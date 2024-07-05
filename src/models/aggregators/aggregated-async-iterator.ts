@@ -227,8 +227,13 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
 
         return new SmartAsyncIterator<K>(async function* ()
         {
+            const keys = new Set<K>();
+
             for await (const [key] of elements)
             {
+                if (keys.has(key)) { continue; }
+                keys.add(key);
+
                 yield key;
             }
         });

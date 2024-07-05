@@ -41,3 +41,34 @@ export default class Exception extends Error
 
     public get [Symbol.toStringTag]() { return "Exception"; }
 }
+
+export class FatalErrorException extends Exception
+{
+    public constructor(message?: string, cause?: unknown, name = "FatalErrorException")
+    {
+        if (message === undefined)
+        {
+            message = "The routine has encountered an unrecoverable error and cannot continue as expected. " +
+                "Please, refresh the page and try again. If the problem persists, contact the support team.";
+        }
+
+        super(message, cause, name);
+    }
+
+    public get [Symbol.toStringTag]() { return "FatalErrorException"; }
+}
+
+export class NotImplementedException extends Exception
+{
+    public constructor(message?: string, cause?: unknown, name = "NotImplementedException")
+    {
+        if (message === undefined)
+        {
+            message = "This feature is not implemented yet. Please, try again later.";
+        }
+
+        super(message, cause, name);
+    }
+
+    public get [Symbol.toStringTag]() { return "NotImplementedException"; }
+}

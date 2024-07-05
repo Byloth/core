@@ -225,8 +225,13 @@ export default class AggregatedIterator<K extends PropertyKey, T>
 
         return new SmartIterator<K>(function* ()
         {
+            const keys = new Set<K>();
+
             for (const [key] of elements)
             {
+                if (keys.has(key)) { continue; }
+                keys.add(key);
+
                 yield key;
             }
         });

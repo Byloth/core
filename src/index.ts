@@ -1,4 +1,4 @@
-export const VERSION = "1.5.0-rc.6";
+export const VERSION = "1.5.0-rc.7";
 
 export type { Constructor, Interval, Timeout } from "./core/types.js";
 
@@ -9,15 +9,18 @@ export {
     AsyncAggregator,
     DeferredPromise,
     Exception,
+    FatalErrorException,
+    FileNotFoundException,
     JsonStorage,
     ReducedIterator,
-    ReferenceException,
+    RuntimeException,
     SmartIterator,
     SmartAsyncIterator,
     SmartPromise,
     Subscribers,
-    TimedPromise,
     TimeoutException,
+    TimedPromise,
+    TypeException,
     ValueException
 
 } from "./models/index.js";

@@ -1,7 +1,7 @@
 import { SmartIterator } from "../iterators/index.js";
 import type { GeneratorFunction } from "../iterators/types.js";
 
-import type { KeyIteratee, KeyTypeGuardIteratee } from "./types.js";
+import type { KeyIteratee, KeyReducer, KeyTypeGuardIteratee } from "./types.js";
 
 export default class ReducedIterator<K extends PropertyKey, T>
 {
@@ -44,6 +44,38 @@ export default class ReducedIterator<K extends PropertyKey, T>
                 yield [key, iteratee(key, element, index)];
             }
         });
+    }
+    public reduce(reducer: KeyReducer<K, T, T>): T;
+    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue: A): A;
+    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue?: A): A
+    {
+        let index = 0;
+        let accumulator: A;
+
+        if (initialValue !== undefined)
+        {
+            accumulator = initialValue;
+        }
+        else
+        {
+            const firstElement = this._elements.next();
+            if (firstElement.done)
+            {
+                throw new TypeError("Reduce of empty iterator with no initial value");
+            }
+
+            index += 1;
+            accumulator = (firstElement.value[1] as unknown) as A;
+        }
+
+        for (const [key, element] of this._elements)
+        {
+            accumulator = reducer(key, accumulator, element, index);
+
+            index += 1;
+        }
+
+        return accumulator;
     }
 
     public keys(): SmartIterator<K>
