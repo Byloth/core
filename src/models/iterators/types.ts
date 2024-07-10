@@ -12,3 +12,9 @@ export type MaybeAsyncTypeGuardIteratee<T, R extends T> = (value: MaybePromise<T
 
 export type Reducer<T, A> = (accumulator: A, value: T, index: number) => A;
 export type MaybeAsyncReducer<T, A> = (accumulator: A, value: T, index: number) => MaybePromise<A>;
+
+export type Iterables<T, R = void, N = undefined> = Iterable<T> | Iterator<T, R, N> | GeneratorFunction<T, R, N>;
+export type AsyncIterables<T, R = void, N = undefined> =
+    AsyncIterable<T> | AsyncIterator<T, R, N> | AsyncGeneratorFunction<T, R, N>;
+
+export type MaybeAsyncIterables<T, R = void, N = undefined> = Iterables<T, R, N> | AsyncIterables<T, R, N>;

@@ -7,29 +7,33 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Source code clone
+      - name: Cloning source code
         uses: actions/checkout@v4
-      - name: Node.js 20 (LTS) setup
+      - name: Configuring Node.js 20 (LTS)
         uses: actions/setup-node@v4
         with:
+          cache: pnpm
           node-version: 20
 
-      - name: Dependencies installation
-        run: yarn ci
-      - name: Coding standard check
-        run: yarn lint:prod
-      - name: Types integrity check
-        run: yarn check:types
-      - name: Source code build
-        run: yarn build
-      - name: Artifact creation
+      - name: Installing dependencies
+        run: pnpm ci
+      - name: Linting the source code
+        run: pnpm lint
+        env:
+          NODE_ENV: production
+
+      - name: Checking type consistency
+        run: pnpm typecheck
+      - name: Building the source code
+        run: pnpm build
+      - name: Creating the artifact
         run: |
           PACKAGE_VERSION=`node -e "console.log(require('./package.json').version);"`
           PACKAGE_NAME="byloth-core-v${PACKAGE_VERSION}.tgz"
-          yarn pack
+          pnpm pack
           tar -xzvf "${PACKAGE_NAME}" -C "."
 
-      - name: Artifact upload
+      - name: Uploading the artifact
         uses: actions/upload-artifact@v4
         with:
           name: byloth-core

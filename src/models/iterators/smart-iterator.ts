@@ -1,4 +1,4 @@
-import type { GeneratorFunction, Iteratee, TypeGuardIteratee, Reducer } from "./types.js";
+import type { GeneratorFunction, Iteratee, TypeGuardIteratee, Reducer, Iterables } from "./types.js";
 
 export default class SmartIterator<T, R = void, N = undefined> implements Iterator<T, R, N>
 {
@@ -10,8 +10,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     public constructor(iterable: Iterable<T>);
     public constructor(iterator: Iterator<T, R, N>);
     public constructor(generatorFn: GeneratorFunction<T, R, N>);
-    public constructor(argument: Iterable<T> | Iterator<T, R, N> | GeneratorFunction<T, R, N>);
-    public constructor(argument: Iterable<T> | Iterator<T, R, N> | GeneratorFunction<T, R, N>)
+    public constructor(argument: Iterables<T, R, N>);
+    public constructor(argument: Iterables<T, R, N>)
     {
         if (argument instanceof Function)
         {
@@ -62,7 +62,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     }
 
     public filter(predicate: Iteratee<T, boolean>): SmartIterator<T, R>;
-    public filter<S extends T>(predicate: TypeGuardIteratee<T, S>): SmartIterator<T, S>;
+    public filter<S extends T>(predicate: TypeGuardIteratee<T, S>): SmartIterator<S, R>;
     public filter(predicate: Iteratee<T, boolean>): SmartIterator<T, R>
     {
         const iterator = this._iterator;

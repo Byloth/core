@@ -1,3 +1,4 @@
+import { TypeException } from "../exceptions/index.js";
 import { SmartIterator } from "../iterators/index.js";
 import type { GeneratorFunction } from "../iterators/types.js";
 
@@ -61,7 +62,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
             const firstElement = this._elements.next();
             if (firstElement.done)
             {
-                throw new TypeError("Reduce of empty iterator with no initial value");
+                throw new TypeException("Reduce of empty iterator with no initial value");
             }
 
             index += 1;

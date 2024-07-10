@@ -1,4 +1,12 @@
-import type { AsyncGeneratorFunction, MaybeAsyncIteratee, MaybeAsyncReducer, TypeGuardIteratee } from "./types.js";
+import type {
+    AsyncGeneratorFunction,
+    GeneratorFunction,
+    MaybeAsyncIteratee,
+    MaybeAsyncReducer,
+    MaybeAsyncIterables,
+    MaybeAsyncTypeGuardIteratee
+
+} from "./types.js";
 
 export default class SmartAsyncIterator<T, R = void, N = undefined> implements AsyncIterator<T, R, N>
 {
@@ -7,23 +15,73 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     public return?: (value?: R) => Promise<IteratorResult<T, R>>;
     public throw?: (error?: unknown) => Promise<IteratorResult<T, R>>;
 
+    public constructor(iterable: Iterable<T>);
     public constructor(iterable: AsyncIterable<T>);
+    public constructor(iterator: Iterator<T, R, N>);
     public constructor(iterator: AsyncIterator<T, R, N>);
-    public constructor(generatorFn: () => AsyncGenerator<T, R, N>);
-    public constructor(argument: AsyncIterable<T> | AsyncIterator<T, R, N> | AsyncGeneratorFunction<T, R, N>);
-    public constructor(argument: AsyncIterable<T> | AsyncIterator<T, R, N> | AsyncGeneratorFunction<T, R, N>)
+    public constructor(generatorFn: GeneratorFunction<T, R, N>);
+    public constructor(generatorFn: AsyncGeneratorFunction<T, R, N>);
+    public constructor(argument: MaybeAsyncIterables<T, R, N>);
+    public constructor(argument: MaybeAsyncIterables<T, R, N>)
     {
         if (argument instanceof Function)
         {
-            this._iterator = argument();
+            const generator = argument();
+            if (Symbol.asyncIterator in generator)
+            {
+                this._iterator = generator;
+            }
+            else
+            {
+                this._iterator = (async function* ()
+                {
+                    let next: [] | [N] = [];
+
+                    while (true)
+                    {
+                        const result = generator.next(...next);
+                        if (result.done) { return result.value; }
+
+                        next = [yield result.value];
+                    }
+
+                })();
+            }
         }
         else if (Symbol.asyncIterator in argument)
         {
             this._iterator = argument[Symbol.asyncIterator]() as AsyncIterator<T, R, N>;
         }
+        else if (Symbol.iterator in argument)
+        {
+            const iterator = argument[Symbol.iterator]();
+            this._iterator = (async function* ()
+            {
+                while (true)
+                {
+                    const result = iterator.next();
+                    if (result.done) { return result.value; }
+
+                    yield result.value;
+                }
+
+            })();
+        }
         else
         {
-            this._iterator = argument;
+            this._iterator = (async function* ()
+            {
+                let next: [] | [N] = [];
+
+                while (true)
+                {
+                    const result: IteratorResult<T, R> = await argument.next(...next);
+                    if (result.done) { return result.value; }
+
+                    next = [yield result.value];
+                }
+
+            })();
         }
 
         if (this._iterator.return) { this.return = (value?: R) => this._iterator.return!(value); }
@@ -62,7 +120,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     public filter(predicate: MaybeAsyncIteratee<T, boolean>): SmartAsyncIterator<T, R>;
-    public filter<S extends T>(predicate: TypeGuardIteratee<T, S>): SmartAsyncIterator<T, S>;
+    public filter<S extends T>(predicate: MaybeAsyncTypeGuardIteratee<T, S>): SmartAsyncIterator<S, R>;
     public filter(predicate: MaybeAsyncIteratee<T, boolean>): SmartAsyncIterator<T, R>
     {
         const iterator = this._iterator;

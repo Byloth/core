@@ -1,5 +1,6 @@
 import { SmartAsyncIterator } from "../iterators/index.js";
-import type { AsyncGeneratorFunction } from "../iterators/types.js";
+import type { AsyncGeneratorFunction, GeneratorFunction, MaybeAsyncIterables } from "../iterators/types.js";
+import type { MaybePromise } from "../types.js";
 
 import ReducedIterator from "./reduced-iterator.js";
 import type { MaybeAsyncKeyIteratee, MaybeAsyncKeyTypeGuardIteratee, MaybeAsyncKeyReducer } from "./types.js";
@@ -8,11 +9,14 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
 {
     protected _elements: SmartAsyncIterator<[K, T]>;
 
+    public constructor(iterable: Iterable<[K, T]>);
     public constructor(iterable: AsyncIterable<[K, T]>);
+    public constructor(iterator: Iterator<[K, T]>);
     public constructor(iterator: AsyncIterator<[K, T]>);
+    public constructor(generatorFn: GeneratorFunction<[K, T]>);
     public constructor(generatorFn: AsyncGeneratorFunction<[K, T]>);
-    public constructor(argument: AsyncIterable<[K, T]> | AsyncIterator<[K, T]> | AsyncGeneratorFunction<[K, T]>);
-    public constructor(argument: AsyncIterable<[K, T]> | AsyncIterator<[K, T]> | AsyncGeneratorFunction<[K, T]>)
+    public constructor(argument: MaybeAsyncIterables<[K, T]>);
+    public constructor(argument: MaybeAsyncIterables<[K, T]>)
     {
         this._elements = new SmartAsyncIterator(argument);
     }
@@ -66,7 +70,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     {
         const elements = this._elements;
 
-        return new AggregatedAsyncIterator(async function* ()
+        return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, T]>
         {
             const indexes = new Map<K, number>();
 
@@ -76,7 +80,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
 
                 indexes.set(key, index + 1);
 
-                if (predicate(key, element, index)) { yield [key, element]; }
+                if (await predicate(key, element, index)) { yield [key, element]; }
             }
         });
     }
@@ -84,7 +88,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     {
         const elements = this._elements;
 
-        return new AggregatedAsyncIterator(async function* ()
+        return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, V]>
         {
             const indexes = new Map<K, number>();
 
@@ -99,9 +103,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         });
     }
     public async reduce(reducer: MaybeAsyncKeyReducer<K, T, T>): Promise<ReducedIterator<K, T>>;
-    public async reduce<A>(reducer: MaybeAsyncKeyReducer<K, T, A>, initialValue: (key: K) => A)
+    public async reduce<A>(reducer: MaybeAsyncKeyReducer<K, T, A>, initialValue: (key: K) => MaybePromise<A>)
         : Promise<ReducedIterator<K, A>>;
-    public async reduce<A>(reducer: MaybeAsyncKeyReducer<K, T, A>, initialValue?: (key: K) => A)
+    public async reduce<A>(reducer: MaybeAsyncKeyReducer<K, T, A>, initialValue?: (key: K) => MaybePromise<A>)
         : Promise<ReducedIterator<K, A>>
     {
         const accumulators = new Map<K, [number, A]>();
@@ -120,7 +124,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
             else if (initialValue !== undefined)
             {
                 index = 0;
-                accumulator = initialValue(key);
+                accumulator = await initialValue(key);
             }
             else
             {
@@ -147,7 +151,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     {
         const elements = this._elements;
 
-        return new AggregatedAsyncIterator(async function* ()
+        return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, T]>
         {
             const keys = new Map<K, Set<T>>();
 

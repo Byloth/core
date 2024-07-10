@@ -17,12 +17,15 @@ Desktop.ini
 /*.tgz
 
 /tsconfig.tsbuildinfo
-/yarn-error.log
 
 # Environmental files
 #
 .env
 .gitkeep
+
+# Log files
+#
+*.log
 
 # Files with sensitive data
 #

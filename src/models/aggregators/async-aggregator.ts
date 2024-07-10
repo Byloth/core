@@ -1,17 +1,27 @@
 import AggregatedAsyncIterator from "./aggregated-async-iterator.js";
 
 import { SmartAsyncIterator } from "../iterators/index.js";
-import type { AsyncGeneratorFunction, MaybeAsyncIteratee, MaybeAsyncTypeGuardIteratee } from "../iterators/types.js";
+import type {
+    AsyncGeneratorFunction,
+    GeneratorFunction,
+    MaybeAsyncIterables,
+    MaybeAsyncIteratee,
+    MaybeAsyncTypeGuardIteratee
+
+} from "../iterators/types.js";
 
 export default class AsyncAggregator<T>
 {
     protected _elements: SmartAsyncIterator<T>;
 
+    public constructor(iterable: Iterable<T>);
     public constructor(iterable: AsyncIterable<T>);
+    public constructor(iterator: Iterator<T>);
     public constructor(iterator: AsyncIterator<T>);
+    public constructor(generatorFn: GeneratorFunction<T>);
     public constructor(generatorFn: AsyncGeneratorFunction<T>);
-    public constructor(argument: AsyncIterable<T> | AsyncIterator<T> | AsyncGeneratorFunction<T>);
-    public constructor(argument: AsyncIterable<T> | AsyncIterator<T> | AsyncGeneratorFunction<T>)
+    public constructor(argument: MaybeAsyncIterables<T>);
+    public constructor(argument: MaybeAsyncIterables<T>)
     {
         this._elements = new SmartAsyncIterator(argument);
     }

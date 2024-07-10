@@ -28,7 +28,7 @@ Desktop.ini
 
 # Log files
 #
-/yarn-error.log
+*.log
 
 # Not ignored
 #
