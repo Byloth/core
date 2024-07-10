@@ -21,14 +21,14 @@ jobs:
           node-version: 20
 
       - name: Installing dependencies
-        run: pnpm ci
+        run: pnpm run ci
       - name: Linting the source code
-        run: pnpm lint
+        run: pnpm run lint
         env:
           NODE_ENV: production
 
       - name: Checking type consistency
-        run: pnpm typecheck
+        run: pnpm run typecheck
       - name: Building the source code
         run: pnpm build
       - name: Creating the artifact
