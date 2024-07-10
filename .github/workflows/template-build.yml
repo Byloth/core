@@ -34,7 +34,7 @@ jobs:
       - name: Creating the artifact
         run: |
           PACKAGE_VERSION=`node -e "console.log(require('./package.json').version);"`
-          PACKAGE_NAME="byloth-core-v${PACKAGE_VERSION}.tgz"
+          PACKAGE_NAME="byloth-core-${PACKAGE_VERSION}.tgz"
           pnpm pack
           tar -xzvf "${PACKAGE_NAME}" -C "."
 
