@@ -4,7 +4,7 @@ import { SmartAsyncIterator } from "../iterators/index.js";
 import type {
     AsyncGeneratorFunction,
     GeneratorFunction,
-    MaybeAsyncIterables,
+    MaybeAsyncIterLike,
     MaybeAsyncIteratee,
     MaybeAsyncTypeGuardIteratee
 
@@ -20,8 +20,8 @@ export default class AsyncAggregator<T>
     public constructor(iterator: AsyncIterator<T>);
     public constructor(generatorFn: GeneratorFunction<T>);
     public constructor(generatorFn: AsyncGeneratorFunction<T>);
-    public constructor(argument: MaybeAsyncIterables<T>);
-    public constructor(argument: MaybeAsyncIterables<T>)
+    public constructor(argument: MaybeAsyncIterLike<T>);
+    public constructor(argument: MaybeAsyncIterLike<T>)
     {
         this._elements = new SmartAsyncIterator(argument);
     }

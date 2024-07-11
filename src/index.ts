@@ -1,4 +1,4 @@
-export const VERSION = "1.5.0-rc.7";
+export const VERSION = "1.5.0";
 
 export type { Constructor, Interval, Timeout } from "./core/types.js";
 
@@ -12,7 +12,11 @@ export {
     FatalErrorException,
     FileNotFoundException,
     JsonStorage,
+    NotImplementedException,
+    NetworkException,
+    PermissionException,
     ReducedIterator,
+    ReferenceException,
     RuntimeException,
     SmartIterator,
     SmartAsyncIterator,
@@ -26,32 +30,43 @@ export {
 } from "./models/index.js";
 
 export type {
-    GeneratorFunction,
     AsyncGeneratorFunction,
-    Iteratee,
-    MaybeAsyncIteratee,
-    TypeGuardIteratee,
-    MaybeAsyncTypeGuardIteratee,
-    Reducer,
-    MaybeAsyncReducer,
-    MaybePromise,
+    AsyncIterLike,
     FulfilledHandler,
-    RejectedHandler,
-    PromiseResolver,
+    GeneratorFunction,
+    Iteratee,
+    IterLike,
+    KeyIteratee,
+    KeyReducer,
+    KeyTypeGuardIteratee,
+    MaybeAsyncKeyIteratee,
+    MaybeAsyncKeyReducer,
+    MaybeAsyncKeyTypeGuardIteratee,
+    MaybeAsyncReducer,
+    MaybeAsyncIteratee,
+    MaybeAsyncIterLike,
+    MaybeAsyncTypeGuardIteratee,
+    MaybePromise,
+    PromiseExecutor,
     PromiseRejecter,
-    PromiseExecutor
+    PromiseResolver,
+    Reducer,
+    RejectedHandler,
+    TypeGuardIteratee
 
 } from "./models/types.js";
 
 export {
     average,
     capitalize,
+    chain,
     count,
     delay,
     dateDifference,
     dateRange,
     dateRound,
     DateUnit,
+    enumerate,
     hash,
     loadScript,
     nextAnimationFrame,

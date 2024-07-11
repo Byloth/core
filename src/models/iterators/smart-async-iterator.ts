@@ -3,7 +3,7 @@ import type {
     GeneratorFunction,
     MaybeAsyncIteratee,
     MaybeAsyncReducer,
-    MaybeAsyncIterables,
+    MaybeAsyncIterLike,
     MaybeAsyncTypeGuardIteratee
 
 } from "./types.js";
@@ -21,8 +21,8 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     public constructor(iterator: AsyncIterator<T, R, N>);
     public constructor(generatorFn: GeneratorFunction<T, R, N>);
     public constructor(generatorFn: AsyncGeneratorFunction<T, R, N>);
-    public constructor(argument: MaybeAsyncIterables<T, R, N>);
-    public constructor(argument: MaybeAsyncIterables<T, R, N>)
+    public constructor(argument: MaybeAsyncIterLike<T, R, N>);
+    public constructor(argument: MaybeAsyncIterLike<T, R, N>)
     {
         if (argument instanceof Function)
         {

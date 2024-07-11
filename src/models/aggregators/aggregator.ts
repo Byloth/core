@@ -1,7 +1,7 @@
 import AggregatedIterator from "./aggregated-iterator.js";
 
 import { SmartIterator } from "../iterators/index.js";
-import type { GeneratorFunction, Iteratee, Iterables, TypeGuardIteratee } from "../iterators/types.js";
+import type { GeneratorFunction, Iteratee, IterLike, TypeGuardIteratee } from "../iterators/types.js";
 
 export default class Aggregator<T>
 {
@@ -10,8 +10,8 @@ export default class Aggregator<T>
     public constructor(iterable: Iterable<T>);
     public constructor(iterator: Iterator<T>);
     public constructor(generatorFn: GeneratorFunction<T>);
-    public constructor(argument: Iterables<T>);
-    public constructor(argument: Iterables<T>)
+    public constructor(argument: IterLike<T>);
+    public constructor(argument: IterLike<T>)
     {
         this._elements = new SmartIterator(argument);
     }

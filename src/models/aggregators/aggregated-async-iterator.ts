@@ -1,5 +1,5 @@
 import { SmartAsyncIterator } from "../iterators/index.js";
-import type { AsyncGeneratorFunction, GeneratorFunction, MaybeAsyncIterables } from "../iterators/types.js";
+import type { AsyncGeneratorFunction, GeneratorFunction, MaybeAsyncIterLike } from "../iterators/types.js";
 import type { MaybePromise } from "../types.js";
 
 import ReducedIterator from "./reduced-iterator.js";
@@ -15,8 +15,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     public constructor(iterator: AsyncIterator<[K, T]>);
     public constructor(generatorFn: GeneratorFunction<[K, T]>);
     public constructor(generatorFn: AsyncGeneratorFunction<[K, T]>);
-    public constructor(argument: MaybeAsyncIterables<[K, T]>);
-    public constructor(argument: MaybeAsyncIterables<[K, T]>)
+    public constructor(argument: MaybeAsyncIterLike<[K, T]>);
+    public constructor(argument: MaybeAsyncIterLike<[K, T]>)
     {
         this._elements = new SmartAsyncIterator(argument);
     }
