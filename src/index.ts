@@ -1,4 +1,4 @@
-export const VERSION = "1.5.0";
+export const VERSION = "1.5.1";
 
 export type { Constructor, Interval, Timeout } from "./core/types.js";
 
