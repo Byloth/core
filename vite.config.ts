@@ -1,10 +1,10 @@
-import { resolve } from "path";
+import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 
 export default defineConfig({
   build: {
     lib: {
-      entry: resolve(__dirname, "src/index.ts"),
+      entry: fileURLToPath(new URL("src/index.ts", import.meta.url)),
       name: "Core"
     },
     rollupOptions: {
