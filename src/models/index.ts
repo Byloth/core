@@ -12,6 +12,7 @@ export {
     FatalErrorException,
     NotImplementedException,
     FileNotFoundException,
+    KeyException,
     NetworkException,
     PermissionException,
     ReferenceException,

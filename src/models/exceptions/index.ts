@@ -9,6 +9,15 @@ export class FileNotFoundException extends Exception
 
     public get [Symbol.toStringTag]() { return "FileNotFoundException"; }
 }
+export class KeyException extends Exception
+{
+    public constructor(message: string, cause?: unknown, name = "KeyException")
+    {
+        super(message, cause, name);
+    }
+
+    public get [Symbol.toStringTag]() { return "KeyException"; }
+}
 export class NetworkException extends Exception
 {
     public constructor(message: string, cause?: unknown, name = "NetworkException")
