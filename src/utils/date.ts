@@ -12,13 +12,19 @@ export enum DateUnit
     Year = 365 * Day
 }
 
-export function dateDifference(start: Date, end: Date, unit = DateUnit.Day): number
+export function dateDifference(start: string | Date, end: string | Date, unit = DateUnit.Day): number
 {
+    start = new Date(start);
+    end = new Date(end);
+
     return Math.floor((end.getTime() - start.getTime()) / unit);
 }
 
-export function dateRange(start: Date, end: Date, offset = DateUnit.Day): SmartIterator<Date>
+export function dateRange(start: string | Date, end: string | Date, offset = DateUnit.Day): SmartIterator<Date>
 {
+    start = new Date(start);
+    end = new Date(end);
+
     return new SmartIterator<Date>(function* ()
     {
         const endTime = end.getTime();
@@ -33,7 +39,9 @@ export function dateRange(start: Date, end: Date, offset = DateUnit.Day): SmartI
     });
 }
 
-export function dateRound(date: Date, unit = DateUnit.Day): Date
+export function dateRound(date: string | Date, unit = DateUnit.Day): Date
 {
+    date = new Date(date);
+
     return new Date(Math.floor(date.getTime() / unit) * unit);
 }
