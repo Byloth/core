@@ -1,12 +1,14 @@
 /* eslint-disable no-trailing-spaces */
 
+import type { JSONValue } from "../core/types.js";
+
 /**
  * A wrapper around the `Storage` API to store and retrieve JSON values.
  *
  * It allows to handle either the `sessionStorage` or the `localStorage`
  * storage at the same time, depending on the required use case.
  */
-export default class JsonStorage
+export default class JSONStorage
 {
     protected _preferPersistence: boolean;
 
@@ -21,10 +23,10 @@ export default class JsonStorage
         this._persistent = window.localStorage;
     }
 
-    protected _get<T>(storage: Storage, propertyName: string): T | undefined;
-    protected _get<T>(storage: Storage, propertyName: string, defaultValue: T): T;
-    protected _get<T>(storage: Storage, propertyName: string, defaultValue?: T): T | undefined;
-    protected _get<T>(storage: Storage, propertyName: string, defaultValue?: T): T | undefined
+    protected _get<T extends JSONValue>(storage: Storage, propertyName: string): T | undefined;
+    protected _get<T extends JSONValue>(storage: Storage, propertyName: string, defaultValue: T): T;
+    protected _get<T extends JSONValue>(storage: Storage, propertyName: string, defaultValue?: T): T | undefined;
+    protected _get<T extends JSONValue>(storage: Storage, propertyName: string, defaultValue?: T): T | undefined
     {
         const propertyValue = storage.getItem(propertyName);
         if (propertyValue)
@@ -46,7 +48,7 @@ export default class JsonStorage
 
         return defaultValue;
     }
-    protected _set<T>(storage: Storage, propertyName: string, newValue?: T): void
+    protected _set<T extends JSONValue>(storage: Storage, propertyName: string, newValue?: T): void
     {
         const encodedValue = JSON.stringify(newValue);
         if (encodedValue)
@@ -68,10 +70,11 @@ export default class JsonStorage
      *
      * @returns The value of the property or the default value if the property does not exist.
      */
-    public get<T>(propertyName: string, defaultValue: undefined, persistent?: boolean): T | undefined;
-    public get<T>(propertyName: string, defaultValue: T, persistent?: boolean): T ;
-    public get<T>(propertyName: string, defaultValue?: T, persistent?: boolean): T | undefined;
-    public get<T>(propertyName: string, defaultValue?: T, persistent = this._preferPersistence): T | undefined
+    public get<T extends JSONValue>(propertyName: string, defaultValue: undefined, persistent?: boolean): T | undefined;
+    public get<T extends JSONValue>(propertyName: string, defaultValue: T, persistent?: boolean): T ;
+    public get<T extends JSONValue>(propertyName: string, defaultValue?: T, persistent?: boolean): T | undefined;
+    public get<T extends JSONValue>(propertyName: string, defaultValue?: T, persistent = this._preferPersistence)
+        : T | undefined
     {
         const storage = persistent ? this._persistent : this._volatile;
 
@@ -85,10 +88,10 @@ export default class JsonStorage
      *
      * @returns The value of the property or the default value if the property does not exist.
      */
-    public recall<T>(propertyName: string): T | undefined;
-    public recall<T>(propertyName: string, defaultValue: T): T;
-    public recall<T>(propertyName: string, defaultValue?: T): T | undefined;
-    public recall<T>(propertyName: string, defaultValue?: T): T | undefined
+    public recall<T extends JSONValue>(propertyName: string): T | undefined;
+    public recall<T extends JSONValue>(propertyName: string, defaultValue: T): T;
+    public recall<T extends JSONValue>(propertyName: string, defaultValue?: T): T | undefined;
+    public recall<T extends JSONValue>(propertyName: string, defaultValue?: T): T | undefined
     {
         return this._get<T>(this._volatile, propertyName, defaultValue);
     }
@@ -101,10 +104,10 @@ export default class JsonStorage
      *
      * @returns The value of the property or the default value if the property does not exist.
      */
-    public retrieve<T>(propertyName: string): T | undefined;
-    public retrieve<T>(propertyName: string, defaultValue: T): T;
-    public retrieve<T>(propertyName: string, defaultValue?: T): T | undefined;
-    public retrieve<T>(propertyName: string, defaultValue?: T): T | undefined
+    public retrieve<T extends JSONValue>(propertyName: string): T | undefined;
+    public retrieve<T extends JSONValue>(propertyName: string, defaultValue: T): T;
+    public retrieve<T extends JSONValue>(propertyName: string, defaultValue?: T): T | undefined;
+    public retrieve<T extends JSONValue>(propertyName: string, defaultValue?: T): T | undefined
     {
         return this.recall<T>(propertyName) ?? this.read<T>(propertyName, defaultValue);
     }
@@ -116,10 +119,10 @@ export default class JsonStorage
      *
      * @returns The value of the property or the default value if the property does not exist.
      */
-    public read<T>(propertyName: string): T | undefined;
-    public read<T>(propertyName: string, defaultValue: T): T;
-    public read<T>(propertyName: string, defaultValue?: T): T | undefined;
-    public read<T>(propertyName: string, defaultValue?: T): T | undefined
+    public read<T extends JSONValue>(propertyName: string): T | undefined;
+    public read<T extends JSONValue>(propertyName: string, defaultValue: T): T;
+    public read<T extends JSONValue>(propertyName: string, defaultValue?: T): T | undefined;
+    public read<T extends JSONValue>(propertyName: string, defaultValue?: T): T | undefined
     {
         return this._get<T>(this._persistent, propertyName, defaultValue);
     }
@@ -181,7 +184,7 @@ export default class JsonStorage
      * @param newValue The new value to set.
      * @param persistent Whether to use the persistent `localStorage` or the volatile `sessionStorage`.
      */
-    public set<T>(propertyName: string, newValue?: T, persistent = this._preferPersistence): void
+    public set<T extends JSONValue>(propertyName: string, newValue?: T, persistent = this._preferPersistence): void
     {
         const storage = persistent ? this._persistent : this._volatile;
 
@@ -194,7 +197,7 @@ export default class JsonStorage
      * @param propertyName The name of the property to set.
      * @param newValue The new value to set.
      */
-    public remember<T>(propertyName: string, newValue?: T): void
+    public remember<T extends JSONValue>(propertyName: string, newValue?: T): void
     {
         this._set<T>(this._volatile, propertyName, newValue);
     }
@@ -205,7 +208,7 @@ export default class JsonStorage
      * @param propertyName The name of the property to set.
      * @param newValue The new value to set.
      */
-    public write<T>(propertyName: string, newValue?: T): void
+    public write<T extends JSONValue>(propertyName: string, newValue?: T): void
     {
         this._set<T>(this._persistent, propertyName, newValue);
     }
@@ -239,5 +242,5 @@ export default class JsonStorage
         this._persistent.removeItem(propertyName);
     }
 
-    public get [Symbol.toStringTag]() { return "JsonStorage"; }
+    public get [Symbol.toStringTag]() { return "JSONStorage"; }
 }

@@ -1,6 +1,6 @@
 export const VERSION = "1.5.3";
 
-export type { Constructor, Interval, Timeout } from "./core/types.js";
+export type { Constructor, Interval, JSONArray, JSONObject, JSONValue, Timeout } from "./core/types.js";
 
 export {
     AggregatedIterator,
@@ -11,7 +11,7 @@ export {
     Exception,
     FatalErrorException,
     FileNotFoundException,
-    JsonStorage,
+    JSONStorage,
     KeyException,
     NotImplementedException,
     NetworkException,

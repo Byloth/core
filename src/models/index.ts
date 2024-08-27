@@ -25,9 +25,9 @@ export {
 
 export { SmartIterator, SmartAsyncIterator } from "./iterators/index.js";
 
-import JsonStorage from "./json-storage.js";
+import JSONStorage from "./json-storage.js";
 import Subscribers from "./subscribers.js";
 
 export { DeferredPromise, SmartPromise, TimedPromise } from "./promises/index.js";
 
-export { JsonStorage, Subscribers };
+export { JSONStorage, Subscribers };
