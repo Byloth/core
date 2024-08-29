@@ -1,6 +1,6 @@
 import { SmartIterator } from "../models/index.js";
 
-export enum DateUnit
+export enum TimeUnit
 {
     Millisecond = 1,
     Second = 1000,
@@ -12,7 +12,7 @@ export enum DateUnit
     Year = 365 * Day
 }
 
-export function dateDifference(start: string | Date, end: string | Date, unit = DateUnit.Day): number
+export function dateDifference(start: string | Date, end: string | Date, unit = TimeUnit.Day): number
 {
     start = new Date(start);
     end = new Date(end);
@@ -20,7 +20,7 @@ export function dateDifference(start: string | Date, end: string | Date, unit = 
     return Math.floor((end.getTime() - start.getTime()) / unit);
 }
 
-export function dateRange(start: string | Date, end: string | Date, offset = DateUnit.Day): SmartIterator<Date>
+export function dateRange(start: string | Date, end: string | Date, offset = TimeUnit.Day): SmartIterator<Date>
 {
     start = new Date(start);
     end = new Date(end);
@@ -39,7 +39,7 @@ export function dateRange(start: string | Date, end: string | Date, offset = Dat
     });
 }
 
-export function dateRound(date: string | Date, unit = DateUnit.Day): Date
+export function dateRound(date: string | Date, unit = TimeUnit.Day): Date
 {
     date = new Date(date);
 

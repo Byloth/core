@@ -48,8 +48,8 @@ export class FatalErrorException extends Exception
     {
         if (message === undefined)
         {
-            message = "The routine has encountered an unrecoverable error and cannot continue as expected. " +
-                "Please, refresh the page and try again. If the problem persists, contact the support team.";
+            message = "The program has encountered an unrecoverable error and cannot continue as expected. " +
+                "Please, try again later. If the problem persists, contact the support team.";
         }
 
         super(message, cause, name);
@@ -57,8 +57,7 @@ export class FatalErrorException extends Exception
 
     public get [Symbol.toStringTag]() { return "FatalErrorException"; }
 }
-
-export class NotImplementedException extends Exception
+export class NotImplementedException extends FatalErrorException
 {
     public constructor(message?: string, cause?: unknown, name = "NotImplementedException")
     {

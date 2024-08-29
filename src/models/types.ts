@@ -24,6 +24,13 @@ export type {
 } from "./iterators/types.js";
 
 export type {
+    JSONArray,
+    JSONObject,
+    JSONValue
+
+} from "./json/types.js";
+
+export type {
     MaybePromise,
     FulfilledHandler,
     RejectedHandler,
@@ -32,3 +39,5 @@ export type {
     PromiseExecutor
 
 } from "./promises/types.js";
+
+export type { Subscriber } from "./publisher.js";

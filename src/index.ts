@@ -1,28 +1,35 @@
 export const VERSION = "1.5.3";
 
-export type { Constructor, Interval, JSONArray, JSONObject, JSONValue, Timeout } from "./core/types.js";
+export type { Constructor, Interval, Timeout } from "./core/types.js";
+
+export { isBrowser, isNode, isWebWorker } from "./helpers.js";
 
 export {
     AggregatedIterator,
     AggregatedAsyncIterator,
     Aggregator,
     AsyncAggregator,
+    Clock,
+    Countdown,
     DeferredPromise,
     Exception,
     FatalErrorException,
+    FileException,
+    FileExistsException,
     FileNotFoundException,
     JSONStorage,
     KeyException,
     NotImplementedException,
     NetworkException,
     PermissionException,
+    Publisher,
+    RangeException,
     ReducedIterator,
     ReferenceException,
     RuntimeException,
     SmartIterator,
     SmartAsyncIterator,
     SmartPromise,
-    Subscribers,
     TimeoutException,
     TimedPromise,
     TypeException,
@@ -37,6 +44,9 @@ export type {
     GeneratorFunction,
     Iteratee,
     IterLike,
+    JSONArray,
+    JSONObject,
+    JSONValue,
     KeyIteratee,
     KeyReducer,
     KeyTypeGuardIteratee,
@@ -53,6 +63,7 @@ export type {
     PromiseResolver,
     Reducer,
     RejectedHandler,
+    Subscriber,
     TypeGuardIteratee
 
 } from "./models/types.js";
@@ -66,7 +77,7 @@ export {
     dateDifference,
     dateRange,
     dateRound,
-    DateUnit,
+    TimeUnit,
     enumerate,
     hash,
     loadScript,

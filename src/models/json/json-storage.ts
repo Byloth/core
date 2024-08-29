@@ -1,6 +1,9 @@
 /* eslint-disable no-trailing-spaces */
 
-import type { JSONValue } from "../core/types.js";
+import { isBrowser } from "../../helpers.js";
+import { EnvironmentException } from "../exceptions/index.js";
+
+import type { JSONValue } from "./types.js";
 
 /**
  * A wrapper around the `Storage` API to store and retrieve JSON values.
@@ -18,6 +21,13 @@ export default class JSONStorage
     public constructor(preferPersistence = true)
     {
         this._preferPersistence = preferPersistence;
+
+        if (!(isBrowser))
+        {
+            throw new EnvironmentException(
+                "The `JSONStorage` class can only be instantiated within a browser environment."
+            );
+        }
 
         this._volatile = window.sessionStorage;
         this._persistent = window.localStorage;

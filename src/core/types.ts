@@ -3,7 +3,3 @@ export type Constructor<T extends object, P extends unknown[] = any[]> = new (..
 
 export type Interval = ReturnType<typeof setInterval>;
 export type Timeout = ReturnType<typeof setTimeout>;
-
-export type JSONValue = boolean | number | string | null | JSONObject | JSONArray;
-export type JSONObject = { [key: string]: JSONValue };
-export type JSONArray = JSONValue[];

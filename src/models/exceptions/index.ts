@@ -1,6 +1,24 @@
 import Exception from "./core.js";
 
-export class FileNotFoundException extends Exception
+export class FileException extends Exception
+{
+    public constructor(message: string, cause?: unknown, name = "FileException")
+    {
+        super(message, cause, name);
+    }
+
+    public get [Symbol.toStringTag]() { return "FileException"; }
+}
+export class FileExistsException extends FileException
+{
+    public constructor(message: string, cause?: unknown, name = "FileExistsException")
+    {
+        super(message, cause, name);
+    }
+
+    public get [Symbol.toStringTag]() { return "FileExistsException"; }
+}
+export class FileNotFoundException extends FileException
 {
     public constructor(message: string, cause?: unknown, name = "FileNotFoundException")
     {
@@ -9,6 +27,7 @@ export class FileNotFoundException extends Exception
 
     public get [Symbol.toStringTag]() { return "FileNotFoundException"; }
 }
+
 export class KeyException extends Exception
 {
     public constructor(message: string, cause?: unknown, name = "KeyException")
@@ -45,6 +64,7 @@ export class ReferenceException extends Exception
 
     public get [Symbol.toStringTag]() { return "ReferenceException"; }
 }
+
 export class RuntimeException extends Exception
 {
     public constructor(message: string, cause?: unknown, name = "RuntimeException")
@@ -54,6 +74,16 @@ export class RuntimeException extends Exception
 
     public get [Symbol.toStringTag]() { return "RuntimeException"; }
 }
+export class EnvironmentException extends RuntimeException
+{
+    public constructor(message: string, cause?: unknown, name = "EnvironmentException")
+    {
+        super(message, cause, name);
+    }
+
+    public get [Symbol.toStringTag]() { return "EnvironmentException"; }
+}
+
 export class TimeoutException extends Exception
 {
     public constructor(message: string, cause?: unknown, name = "TimeoutException")
@@ -72,6 +102,7 @@ export class TypeException extends Exception
 
     public get [Symbol.toStringTag]() { return "TypeException"; }
 }
+
 export class ValueException extends Exception
 {
     public constructor(message: string, cause?: unknown, name = "ValueException")
@@ -80,6 +111,15 @@ export class ValueException extends Exception
     }
 
     public get [Symbol.toStringTag]() { return "ValueException"; }
+}
+export class RangeException extends ValueException
+{
+    public constructor(message: string, cause?: unknown, name = "RangeException")
+    {
+        super(message, cause, name);
+    }
+
+    public get [Symbol.toStringTag]() { return "RangeException"; }
 }
 
 export { Exception };
