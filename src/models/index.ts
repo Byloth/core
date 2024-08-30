@@ -26,11 +26,14 @@ export {
 
 } from "./exceptions/index.js";
 
+import GameLoop from "./game-loop.js";
+
 export { SmartIterator, SmartAsyncIterator } from "./iterators/index.js";
 export { JSONStorage } from "./json/index.js";
 export { DeferredPromise, SmartPromise, TimedPromise } from "./promises/index.js";
 
 import Publisher from "./publisher.js";
 
-export { Publisher };
 export { Clock, Countdown } from "./timers/index.js";
+
+export { GameLoop, Publisher };

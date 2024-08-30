@@ -1,6 +1,8 @@
 import { isBrowser } from "../helpers.js";
 import { TimeUnit } from "../utils/date.js";
 
+import { FatalErrorException, RuntimeException } from "./exceptions/index.js";
+
 export default class GameLoop
 {
     protected _handle?: number;
@@ -62,7 +64,7 @@ export default class GameLoop
 
     public start(elapsedTime = 0): void
     {
-        if (this._isRunning) { return; }
+        if (this._isRunning) { throw new RuntimeException("The game loop has already been started."); }
 
         this._startTime = performance.now() - elapsedTime;
         this._start();
@@ -71,8 +73,8 @@ export default class GameLoop
 
     public stop(): void
     {
-        if (!(this._isRunning)) { return; }
-        if (!(this._handle)) { return; }
+        if (!(this._isRunning)) { throw new RuntimeException("The game loop hadn't yet started."); }
+        if (!(this._handle)) { throw new FatalErrorException(); }
 
         this._stop();
         this._handle = undefined;

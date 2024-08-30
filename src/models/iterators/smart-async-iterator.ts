@@ -1,3 +1,5 @@
+import { ValueException } from "../exceptions/index.js";
+
 import type {
     AsyncGeneratorFunction,
     GeneratorFunction,
@@ -168,7 +170,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         if (accumulator === undefined)
         {
             const result = await this._iterator.next();
-            if (result.done) { throw new TypeError("Reduce of empty iterator with no initial value"); }
+            if (result.done) { throw new ValueException("Cannot reduce an empty iterator without an initial value."); }
 
             accumulator = (result.value as unknown) as A;
             index += 1;

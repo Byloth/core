@@ -1,6 +1,6 @@
 import { TimeUnit } from "../../utils/date.js";
 
-import { RangeException } from "../exceptions/index.js";
+import { FatalErrorException, RangeException, RuntimeException } from "../exceptions/index.js";
 import { DeferredPromise } from "../promises/index.js";
 
 import GameLoop from "../game-loop.js";
@@ -42,7 +42,8 @@ export default class Countdown extends GameLoop
 
     public start(remainingTime: number = this.duration): DeferredPromise<void>
     {
-        if (!(this._isRunning)) { return; }
+        if (this._isRunning) { throw new RuntimeException("The countdown has already been started."); }
+        if (this._deferrer) { throw new FatalErrorException(); }
 
         this._deferrer = new DeferredPromise(() => this.stop());
         super.start(this.duration - remainingTime);
@@ -51,7 +52,8 @@ export default class Countdown extends GameLoop
     }
     public stop(reason?: unknown): void
     {
-        if (!(this._deferrer)) { return; }
+        if (!(this._isRunning)) { throw new RuntimeException("The countdown hadn't yet started."); }
+        if (!(this._deferrer)) { throw new FatalErrorException(); }
 
         super.stop();
 

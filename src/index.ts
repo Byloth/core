@@ -1,4 +1,4 @@
-export const VERSION = "1.5.3";
+export const VERSION = "2.0.0-rc.1";
 
 export type { Constructor, Interval, Timeout } from "./core/types.js";
 
@@ -17,6 +17,7 @@ export {
     FileException,
     FileExistsException,
     FileNotFoundException,
+    GameLoop,
     JSONStorage,
     KeyException,
     NotImplementedException,

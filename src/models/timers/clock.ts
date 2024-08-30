@@ -1,6 +1,6 @@
 import { TimeUnit } from "../../utils/date.js";
 
-import { RangeException } from "../exceptions/index.js";
+import { RangeException, RuntimeException } from "../exceptions/index.js";
 import GameLoop from "../game-loop.js";
 import Publisher from "../publisher.js";
 
@@ -13,6 +13,20 @@ export default class Clock extends GameLoop
         super((elapsedTime) => this._publisher.publish(elapsedTime), fpsIfNotBrowser);
 
         this._publisher = new Publisher();
+    }
+
+    public start(elapsedTime = 0): void
+    {
+        if (this._isRunning) { throw new RuntimeException("The clock has already been started."); }
+
+        super.start(elapsedTime);
+    }
+
+    public stop(): void
+    {
+        if (!(this._isRunning)) { throw new RuntimeException("The clock hadn't yet started."); }
+
+        super.stop();
     }
 
     public onTick(callback: (elapsedTime: number) => void, tickStep = 0): () => void
