@@ -1,6 +1,4 @@
 export {
-    Aggregator,
-    AsyncAggregator,
     AggregatedIterator,
     AggregatedAsyncIterator,
     ReducedIterator

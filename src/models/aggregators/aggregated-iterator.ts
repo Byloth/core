@@ -1,8 +1,8 @@
 import { SmartIterator } from "../iterators/index.js";
-import type { GeneratorFunction } from "../iterators/types.js";
+import type { GeneratorFunction, IteratorLike } from "../iterators/types.js";
 
 import ReducedIterator from "./reduced-iterator.js";
-import type { KeyIteratee, KeyTypeGuardIteratee, KeyReducer } from "./types.js";
+import type { KeyedIteratee, KeyedTypeGuardIteratee, KeyedReducer } from "./types.js";
 
 export default class AggregatedIterator<K extends PropertyKey, T>
 {
@@ -11,13 +11,13 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     public constructor(iterable: Iterable<[K, T]>);
     public constructor(iterator: Iterator<[K, T]>);
     public constructor(generatorFn: GeneratorFunction<[K, T]>);
-    public constructor(argument: Iterable<[K, T]> | Iterator<[K, T]> | GeneratorFunction<[K, T]>);
-    public constructor(argument: Iterable<[K, T]> | Iterator<[K, T]> | GeneratorFunction<[K, T]>)
+    public constructor(argument: IteratorLike<[K, T]> | GeneratorFunction<[K, T]>);
+    public constructor(argument: IteratorLike<[K, T]> | GeneratorFunction<[K, T]>)
     {
         this._elements = new SmartIterator(argument);
     }
 
-    public every(predicate: KeyIteratee<K, T, boolean>): ReducedIterator<K, boolean>
+    public every(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, boolean>
     {
         const indexes = new Map<K, [number, boolean]>();
 
@@ -38,7 +38,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             }
         });
     }
-    public some(predicate: KeyIteratee<K, T, boolean>): ReducedIterator<K, boolean>
+    public some(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, boolean>
     {
         const indexes = new Map<K, [number, boolean]>();
 
@@ -60,9 +60,9 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
-    public filter(predicate: KeyIteratee<K, T, boolean>): AggregatedIterator<K, T>;
-    public filter<S extends T>(predicate: KeyTypeGuardIteratee<K, T, S>): AggregatedIterator<K, S>;
-    public filter(predicate: KeyIteratee<K, T, boolean>): AggregatedIterator<K, T>
+    public filter(predicate: KeyedIteratee<K, T, boolean>): AggregatedIterator<K, T>;
+    public filter<S extends T>(predicate: KeyedTypeGuardIteratee<K, T, S>): AggregatedIterator<K, S>;
+    public filter(predicate: KeyedIteratee<K, T, boolean>): AggregatedIterator<K, T>
     {
         const elements = this._elements;
 
@@ -73,14 +73,14 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             for (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
-
-                indexes.set(key, index + 1);
 
                 if (predicate(key, element, index)) { yield [key, element]; }
+
+                indexes.set(key, index + 1);
             }
         });
     }
-    public map<V>(iteratee: KeyIteratee<K, T, V>): AggregatedIterator<K, V>
+    public map<V>(iteratee: KeyedIteratee<K, T, V>): AggregatedIterator<K, V>
     {
         const elements = this._elements;
 
@@ -92,15 +92,15 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             {
                 const index = indexes.get(key) ?? 0;
 
-                indexes.set(key, index + 1);
-
                 yield [key, iteratee(key, element, index)];
+
+                indexes.set(key, index + 1);
             }
         });
     }
-    public reduce(reducer: KeyReducer<K, T, T>): ReducedIterator<K, T>;
-    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue: (key: K) => A): ReducedIterator<K, A>;
-    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue?: (key: K) => A): ReducedIterator<K, A>
+    public reduce(reducer: KeyedReducer<K, T, T>): ReducedIterator<K, T>;
+    public reduce<A>(reducer: KeyedReducer<K, T, A>, initialValue: (key: K) => A): ReducedIterator<K, A>;
+    public reduce<A>(reducer: KeyedReducer<K, T, A>, initialValue?: (key: K) => A): ReducedIterator<K, A>
     {
         const accumulators = new Map<K, [number, A]>();
 
@@ -109,12 +109,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             let index: number;
             let accumulator: A;
 
-            if (accumulators.has(key))
-            {
-                [index, accumulator] = accumulators.get(key)!;
-
-                index += 1;
-            }
+            if (accumulators.has(key)) { [index, accumulator] = accumulators.get(key)!; }
             else if (initialValue !== undefined)
             {
                 index = 0;
@@ -129,7 +124,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
 
             accumulator = reducer(key, accumulator, element, index);
 
-            accumulators.set(key, [index, accumulator]);
+            accumulators.set(key, [index + 1, accumulator]);
         }
 
         return new ReducedIterator(function* ()
@@ -141,6 +136,107 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
+    public flatMap<V>(iteratee: KeyedIteratee<K, T, Iterable<V>>): AggregatedIterator<K, V>
+    {
+        const elements = this._elements;
+
+        return new AggregatedIterator(function* ()
+        {
+            const indexes = new Map<K, number>();
+
+            for (const [key, element] of elements)
+            {
+                const index = indexes.get(key) ?? 0;
+
+                for (const value of iteratee(key, element, index))
+                {
+                    yield [key, value];
+                }
+
+                indexes.set(key, index + 1);
+            }
+        });
+    }
+
+    public drop(count: number): AggregatedIterator<K, T>
+    {
+        const elements = this._elements;
+
+        return new AggregatedIterator(function* ()
+        {
+            const indexes = new Map<K, number>();
+
+            for (const [key, element] of elements)
+            {
+                const index = indexes.get(key) ?? 0;
+                if (index < count)
+                {
+                    indexes.set(key, index + 1);
+
+                    continue;
+                }
+
+                yield [key, element];
+            }
+        });
+    }
+    public take(limit: number): AggregatedIterator<K, T>
+    {
+        const elements = this._elements;
+
+        return new AggregatedIterator(function* ()
+        {
+            const indexes = new Map<K, number>();
+
+            for (const [key, element] of elements)
+            {
+                const index = indexes.get(key) ?? 0;
+                if (index >= limit)
+                {
+                    if (indexes.values().every((value) => value >= limit)) { break; }
+
+                    continue;
+                }
+
+                indexes.set(key, index + 1);
+
+                yield [key, element];
+            }
+        });
+    }
+
+    public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | void>;
+    public find<S extends T>(predicate: KeyedTypeGuardIteratee<K, T, S>): ReducedIterator<K, S | void>;
+    public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | void>
+    {
+        const elements = this._elements;
+
+        return new ReducedIterator(function* ()
+        {
+            const indexes = new Map<K, number>();
+            const findings = new Set<K>();
+
+            for (const [key, element] of elements)
+            {
+                if (findings.has(key)) { continue; }
+
+                const index = indexes.get(key) ?? 0;
+                if (predicate(key, element, index))
+                {
+                    yield [key, element];
+
+                    findings.add(key);
+                }
+
+                indexes.set(key, index + 1);
+            }
+        });
+    }
+
+    public enumerate(): AggregatedIterator<K, [number, T]>
+    {
+        return this.map((_, value, index) => [index, value]);
+    }
     public unique(): AggregatedIterator<K, T>
     {
         const elements = this._elements;
@@ -182,6 +278,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             }
         });
     }
+
     public first(): ReducedIterator<K, T>
     {
         const firsts = new Map<K, T>();

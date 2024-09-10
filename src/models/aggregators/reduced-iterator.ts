@@ -2,7 +2,7 @@ import { ValueException } from "../exceptions/index.js";
 import { SmartIterator } from "../iterators/index.js";
 import type { GeneratorFunction } from "../iterators/types.js";
 
-import type { KeyIteratee, KeyReducer, KeyTypeGuardIteratee } from "./types.js";
+import type { KeyedIteratee, KeyedReducer, KeyedTypeGuardIteratee } from "./types.js";
 
 export default class ReducedIterator<K extends PropertyKey, T>
 {
@@ -17,9 +17,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
         this._elements = new SmartIterator(argument);
     }
 
-    public filter(predicate: KeyIteratee<K, T, boolean>): ReducedIterator<K, T>;
-    public filter<S extends T>(predicate: KeyTypeGuardIteratee<K, T, S>): ReducedIterator<K, S>;
-    public filter(predicate: KeyIteratee<K, T, boolean>): ReducedIterator<K, T>
+    public filter(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T>;
+    public filter<S extends T>(predicate: KeyedTypeGuardIteratee<K, T, S>): ReducedIterator<K, S>;
+    public filter(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T>
     {
         const elements = this._elements;
 
@@ -34,7 +34,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
             }
         });
     }
-    public map<V>(iteratee: KeyIteratee<K, T, V>): ReducedIterator<K, V>
+    public map<V>(iteratee: KeyedIteratee<K, T, V>): ReducedIterator<K, V>
     {
         const elements = this._elements;
 
@@ -46,9 +46,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
             }
         });
     }
-    public reduce(reducer: KeyReducer<K, T, T>): T;
-    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue: A): A;
-    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue?: A): A
+    public reduce(reducer: KeyedReducer<K, T, T>): T;
+    public reduce<A>(reducer: KeyedReducer<K, T, A>, initialValue: A): A;
+    public reduce<A>(reducer: KeyedReducer<K, T, A>, initialValue?: A): A
     {
         let index = 0;
         let accumulator: A;

@@ -1,11 +1,14 @@
+import AggregatedAsyncIterator from "../aggregators/aggregated-async-iterator.js";
 import { ValueException } from "../exceptions/index.js";
 
 import type {
-    AsyncGeneratorFunction,
     GeneratorFunction,
+    AsyncGeneratorFunction,
+    MaybeAsyncGeneratorFunction,
     MaybeAsyncIteratee,
     MaybeAsyncReducer,
-    MaybeAsyncIterLike,
+    MaybeAsyncIterable,
+    MaybeAsyncIteratorLike,
     MaybeAsyncTypeGuardIteratee
 
 } from "./types.js";
@@ -23,8 +26,8 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     public constructor(iterator: AsyncIterator<T, R, N>);
     public constructor(generatorFn: GeneratorFunction<T, R, N>);
     public constructor(generatorFn: AsyncGeneratorFunction<T, R, N>);
-    public constructor(argument: MaybeAsyncIterLike<T, R, N>);
-    public constructor(argument: MaybeAsyncIterLike<T, R, N>)
+    public constructor(argument: MaybeAsyncIteratorLike<T, R, N> | MaybeAsyncGeneratorFunction<T, R, N>);
+    public constructor(argument: MaybeAsyncIteratorLike<T, R, N> | MaybeAsyncGeneratorFunction<T, R, N>)
     {
         if (argument instanceof Function)
         {
@@ -100,7 +103,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
             const result = await this._iterator.next();
 
             if (result.done) { return true; }
-            if (!(predicate(result.value, index))) { return false; }
+            if (!(await predicate(result.value, index))) { return false; }
 
             index += 1;
         }
@@ -115,7 +118,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
             const result = await this._iterator.next();
 
             if (result.done) { return false; }
-            if (predicate(result.value, index)) { return true; }
+            if (await predicate(result.value, index)) { return true; }
 
             index += 1;
         }
@@ -136,7 +139,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
                 const result = await iterator.next();
 
                 if (result.done) { return result.value; }
-                if (predicate(result.value, index)) { yield result.value; }
+                if (await predicate(result.value, index)) { yield result.value; }
 
                 index += 1;
             }
@@ -155,7 +158,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
                 const result = await iterator.next();
                 if (result.done) { return result.value; }
 
-                yield iteratee(result.value, index);
+                yield await iteratee(result.value, index);
 
                 index += 1;
             }
@@ -183,6 +186,94 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
             if (result.done) { return accumulator; }
 
             accumulator = await reducer(accumulator, result.value, index);
+
+            index += 1;
+        }
+    }
+
+    public flatMap<V>(iteratee: MaybeAsyncIteratee<T, MaybeAsyncIterable<V>>): SmartAsyncIterator<V, R>
+    {
+        const iterator = this._iterator;
+
+        return new SmartAsyncIterator<V, R>(async function* ()
+        {
+            let index = 0;
+
+            while (true)
+            {
+                const result = await iterator.next();
+                if (result.done) { return result.value; }
+
+                const elements = await iteratee(result.value, index);
+
+                for await (const element of elements)
+                {
+                    yield element;
+                }
+
+                index += 1;
+            }
+        });
+    }
+
+    public drop(count: number): SmartAsyncIterator<T, R | void>
+    {
+        const iterator = this._iterator;
+
+        return new SmartAsyncIterator<T, R | void>(async function* ()
+        {
+            let index = 0;
+
+            while (index < count)
+            {
+                const result = await iterator.next();
+                if (result.done) { return; }
+
+                index += 1;
+            }
+
+            while (true)
+            {
+                const result = await iterator.next();
+                if (result.done) { return result.value; }
+
+                yield result.value;
+            }
+        });
+    }
+    public take(limit: number): SmartAsyncIterator<T, R | void>
+    {
+        const iterator = this._iterator;
+
+        return new SmartAsyncIterator<T, R | void>(async function* ()
+        {
+            let index = 0;
+
+            while (index < limit)
+            {
+                const result = await iterator.next();
+                if (result.done) { return result.value; }
+
+                yield result.value;
+
+                index += 1;
+            }
+
+            return;
+        });
+    }
+
+    public async find(predicate: MaybeAsyncIteratee<T, boolean>): Promise<T | void>
+    {
+        let index = 0;
+
+        // eslint-disable-next-line no-constant-condition
+        while (true)
+        {
+            const result = await this._iterator.next();
+
+            if (result.done) { return; }
+            if (await predicate(result.value, index)) { return result.value; }
 
             index += 1;
         }
@@ -248,18 +339,19 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return this._iterator.next(...values);
     }
 
+    public groupBy<K extends PropertyKey>(iteratee: MaybeAsyncIteratee<T, K>): AggregatedAsyncIterator<K, T>
+    {
+        return new AggregatedAsyncIterator(this.map(async (element, index) =>
+        {
+            const key = await iteratee(element, index);
+
+            return [key, element] as [K, T];
+        }));
+    }
+
     public async toArray(): Promise<T[]>
     {
-        const elements: T[] = [];
-
-        // eslint-disable-next-line no-constant-condition
-        while (true)
-        {
-            const result = await this._iterator.next();
-            if (result.done) { return elements; }
-
-            elements.push(result.value);
-        }
+        return Array.fromAsync(this as AsyncIterable<T>);
     }
 
     public get [Symbol.toStringTag]() { return "SmartAsyncIterator"; }
