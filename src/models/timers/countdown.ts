@@ -1,7 +1,7 @@
 import { TimeUnit } from "../../utils/date.js";
 
 import { FatalErrorException, RangeException, RuntimeException } from "../exceptions/index.js";
-import { DeferredPromise } from "../promises/index.js";
+import { DeferredPromise, SmartPromise } from "../promises/index.js";
 
 import GameLoop from "../game-loop.js";
 import Publisher from "../publisher.js";
@@ -22,12 +22,10 @@ export default class Countdown extends GameLoop
         return this._duration - this.elapsedTime;
     }
 
-    public constructor(duration: number, fpsIfNotBrowser = TimeUnit.Second)
+    public constructor(duration: number, fpsIfNotBrowser: number = TimeUnit.Second)
     {
-        const callback = (elapsedTime: number) =>
+        const callback = () =>
         {
-            this._duration -= elapsedTime;
-
             const remainingTime = this.remainingTime;
             this._publisher.publish(remainingTime);
 
@@ -40,12 +38,12 @@ export default class Countdown extends GameLoop
         this._duration = duration;
     }
 
-    public start(remainingTime: number = this.duration): DeferredPromise<void>
+    public start(remainingTime: number = this.duration): SmartPromise<void>
     {
         if (this._isRunning) { throw new RuntimeException("The countdown has already been started."); }
         if (this._deferrer) { throw new FatalErrorException(); }
 
-        this._deferrer = new DeferredPromise(() => this.stop());
+        this._deferrer = new DeferredPromise();
         super.start(this.duration - remainingTime);
 
         return this._deferrer;
