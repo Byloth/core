@@ -349,7 +349,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         }));
     }
 
-    public async toArray(): Promise<T[]>
+    public toArray(): Promise<T[]>
     {
         return Array.fromAsync(this as AsyncIterable<T>);
     }

@@ -56,14 +56,14 @@
     "ci": "pnpm install --frozen-lockfile"
   },
   "devDependencies": {
-    "@byloth/eslint-config-typescript": "^2.8.2",
+    "@byloth/eslint-config-typescript": "^2.8.3",
     "@types/node": "^20.16.5",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
-    "eslint": "^8.57.0",
-    "husky": "^9.1.5",
+    "eslint": "^8.57.1",
+    "husky": "^9.1.6",
     "typescript": "^5.6.2",
-    "vite": "^5.4.3"
+    "vite": "^5.4.6"
   },
   "packageManager": "pnpm@9.3.0+sha512.ee7b93e0c2bd11409c6424f92b866f31d3ea1bef5fbe47d3c7500cdc3c9668833d2e55681ad66df5b640c61fa9dc25d546efa54d76d7f8bf54b13614ac293631"
 }

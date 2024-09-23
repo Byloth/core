@@ -19,44 +19,38 @@ export default class AggregatedIterator<K extends PropertyKey, T>
 
     public every(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, boolean>
     {
-        const indexes = new Map<K, [number, boolean]>();
+        const values = new Map<K, [number, boolean]>();
 
         for (const [key, element] of this._elements)
         {
-            const [index, result] = indexes.get(key) ?? [0, true];
+            const [index, result] = values.get(key) ?? [0, true];
 
             if (!(result)) { continue; }
 
-            indexes.set(key, [index + 1, predicate(key, element, index)]);
+            values.set(key, [index + 1, predicate(key, element, index)]);
         }
 
         return new ReducedIterator(function* ()
         {
-            for (const [key, [_, result]] of indexes)
-            {
-                yield [key, result];
-            }
+            for (const [key, [_, result]] of values) { yield [key, result]; }
         });
     }
     public some(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, boolean>
     {
-        const indexes = new Map<K, [number, boolean]>();
+        const values = new Map<K, [number, boolean]>();
 
         for (const [key, element] of this._elements)
         {
-            const [index, result] = indexes.get(key) ?? [0, false];
+            const [index, result] = values.get(key) ?? [0, false];
 
             if (result) { continue; }
 
-            indexes.set(key, [index + 1, predicate(key, element, index)]);
+            values.set(key, [index + 1, predicate(key, element, index)]);
         }
 
         return new ReducedIterator(function* ()
         {
-            for (const [key, [_, result]] of indexes)
-            {
-                yield [key, result];
-            }
+            for (const [key, [_, result]] of values) { yield [key, result]; }
         });
     }
 
@@ -102,14 +96,14 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     public reduce<A>(reducer: KeyedReducer<K, T, A>, initialValue: (key: K) => A): ReducedIterator<K, A>;
     public reduce<A>(reducer: KeyedReducer<K, T, A>, initialValue?: (key: K) => A): ReducedIterator<K, A>
     {
-        const accumulators = new Map<K, [number, A]>();
+        const values = new Map<K, [number, A]>();
 
         for (const [key, element] of this._elements)
         {
             let index: number;
             let accumulator: A;
 
-            if (accumulators.has(key)) { [index, accumulator] = accumulators.get(key)!; }
+            if (values.has(key)) { [index, accumulator] = values.get(key)!; }
             else if (initialValue !== undefined)
             {
                 index = 0;
@@ -117,22 +111,17 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             }
             else
             {
-                accumulators.set(key, [0, (element as unknown) as A]);
+                values.set(key, [0, (element as unknown) as A]);
 
                 continue;
             }
 
-            accumulator = reducer(key, accumulator, element, index);
-
-            accumulators.set(key, [index + 1, accumulator]);
+            values.set(key, [index + 1, reducer(key, accumulator, element, index)]);
         }
 
         return new ReducedIterator(function* ()
         {
-            for (const [key, [_, accumulator]] of accumulators)
-            {
-                yield [key, accumulator];
-            }
+            for (const [key, [_, accumulator]] of values) { yield [key, accumulator]; }
         });
     }
 
@@ -147,11 +136,9 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             for (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
+                const values = iteratee(key, element, index);
 
-                for (const value of iteratee(key, element, index))
-                {
-                    yield [key, value];
-                }
+                for (const value of values) { yield [key, value]; }
 
                 indexes.set(key, index + 1);
             }
@@ -198,9 +185,9 @@ export default class AggregatedIterator<K extends PropertyKey, T>
                     continue;
                 }
 
-                indexes.set(key, index + 1);
-
                 yield [key, element];
+
+                indexes.set(key, index + 1);
             }
         });
     }
@@ -209,27 +196,21 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     public find<S extends T>(predicate: KeyedTypeGuardIteratee<K, T, S>): ReducedIterator<K, S | void>;
     public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | void>
     {
-        const elements = this._elements;
+        const values = new Map<K, [number, T | undefined]>();
+
+        for (const [key, element] of this._elements)
+        {
+            let [index, finding] = values.get(key) ?? [0, undefined];
+
+            if (finding !== undefined) { continue; }
+            if (predicate(key, element, index)) { finding = element; }
+
+            values.set(key, [index + 1, finding]);
+        }
 
         return new ReducedIterator(function* ()
         {
-            const indexes = new Map<K, number>();
-            const findings = new Set<K>();
-
-            for (const [key, element] of elements)
-            {
-                if (findings.has(key)) { continue; }
-
-                const index = indexes.get(key) ?? 0;
-                if (predicate(key, element, index))
-                {
-                    yield [key, element];
-
-                    findings.add(key);
-                }
-
-                indexes.set(key, index + 1);
-            }
+            for (const [key, [_, finding]] of values) { yield [key, finding]; }
         });
     }
 
@@ -272,48 +253,22 @@ export default class AggregatedIterator<K extends PropertyKey, T>
 
         return new ReducedIterator(function* ()
         {
-            for (const [key, count] of counters)
-            {
-                yield [key, count];
-            }
+            for (const [key, count] of counters) { yield [key, count]; }
         });
     }
 
-    public first(): ReducedIterator<K, T>
+    public forEach(iteratee: KeyedIteratee<K, T>): void
     {
-        const firsts = new Map<K, T>();
+        const indexes = new Map<K, number>();
 
         for (const [key, element] of this._elements)
         {
-            if (firsts.has(key)) { continue; }
+            const index = indexes.get(key) ?? 0;
 
-            firsts.set(key, element);
+            iteratee(key, element, index);
+
+            indexes.set(key, index + 1);
         }
-
-        return new ReducedIterator(function* ()
-        {
-            for (const [key, element] of firsts)
-            {
-                yield [key, element];
-            }
-        });
-    }
-    public last(): ReducedIterator<K, T>
-    {
-        const lasts = new Map<K, T>();
-
-        for (const [key, element] of this._elements)
-        {
-            lasts.set(key, element);
-        }
-
-        return new ReducedIterator(function* ()
-        {
-            for (const [key, element] of lasts)
-            {
-                yield [key, element];
-            }
-        });
     }
 
     public keys(): SmartIterator<K>
@@ -343,16 +298,15 @@ export default class AggregatedIterator<K extends PropertyKey, T>
 
         return new SmartIterator<T>(function* ()
         {
-            for (const [_, element] of elements)
-            {
-                yield element;
-            }
+            for (const [_, element] of elements) { yield element; }
         });
     }
 
     public toArray(): T[][]
     {
-        return Array.from(this.toMap().values());
+        const map = this.toMap();
+
+        return Array.from(map.values());
     }
     public toMap(): Map<K, T[]>
     {
