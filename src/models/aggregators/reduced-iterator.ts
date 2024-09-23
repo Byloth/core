@@ -2,7 +2,8 @@ import { ValueException } from "../exceptions/index.js";
 import { SmartIterator } from "../iterators/index.js";
 import type { GeneratorFunction } from "../iterators/types.js";
 
-import type { KeyIteratee, KeyReducer, KeyTypeGuardIteratee } from "./types.js";
+import AggregatedIterator from "./aggregated-iterator.js";
+import type { KeyedIteratee, KeyedReducer, KeyedTypeGuardIteratee } from "./types.js";
 
 export default class ReducedIterator<K extends PropertyKey, T>
 {
@@ -17,56 +18,64 @@ export default class ReducedIterator<K extends PropertyKey, T>
         this._elements = new SmartIterator(argument);
     }
 
-    public filter(predicate: KeyIteratee<K, T, boolean>): ReducedIterator<K, T>;
-    public filter<S extends T>(predicate: KeyTypeGuardIteratee<K, T, S>): ReducedIterator<K, S>;
-    public filter(predicate: KeyIteratee<K, T, boolean>): ReducedIterator<K, T>
+    public every(predicate: KeyedIteratee<K, T, boolean>): boolean
     {
-        const elements = this._elements;
+        for (const [index, [key, element]] of this._elements.enumerate())
+        {
+            if (!(predicate(key, element, index))) { return false; }
+        }
+
+        return true;
+    }
+    public some(predicate: KeyedIteratee<K, T, boolean>): boolean
+    {
+        for (const [index, [key, element]] of this._elements.enumerate())
+        {
+            if (predicate(key, element, index)) { return true; }
+        }
+
+        return false;
+    }
+
+    public filter(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T>;
+    public filter<S extends T>(predicate: KeyedTypeGuardIteratee<K, T, S>): ReducedIterator<K, S>;
+    public filter(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T>
+    {
+        const elements = this._elements.enumerate();
 
         return new ReducedIterator(function* ()
         {
-            for (const [index, [key, element]] of elements.enumerate())
+            for (const [index, [key, element]] of elements)
             {
-                if (predicate(key, element, index))
-                {
-                    yield [key, element];
-                }
+                if (predicate(key, element, index)) { yield [key, element]; }
             }
         });
     }
-    public map<V>(iteratee: KeyIteratee<K, T, V>): ReducedIterator<K, V>
+    public map<V>(iteratee: KeyedIteratee<K, T, V>): ReducedIterator<K, V>
     {
-        const elements = this._elements;
+        const elements = this._elements.enumerate();
 
         return new ReducedIterator(function* ()
         {
-            for (const [index, [key, element]] of elements.enumerate())
+            for (const [index, [key, element]] of elements)
             {
                 yield [key, iteratee(key, element, index)];
             }
         });
     }
-    public reduce(reducer: KeyReducer<K, T, T>): T;
-    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue: A): A;
-    public reduce<A>(reducer: KeyReducer<K, T, A>, initialValue?: A): A
+    public reduce(reducer: KeyedReducer<K, T, T>): T;
+    public reduce<A>(reducer: KeyedReducer<K, T, A>, initialValue: A): A;
+    public reduce<A>(reducer: KeyedReducer<K, T, A>, initialValue?: A): A
     {
         let index = 0;
-        let accumulator: A;
-
-        if (initialValue !== undefined)
+        let accumulator = initialValue;
+        if (accumulator === undefined)
         {
-            accumulator = initialValue;
-        }
-        else
-        {
-            const firstElement = this._elements.next();
-            if (firstElement.done)
-            {
-                throw new ValueException("Cannot reduce an empty iterator without an initial value.");
-            }
+            const result = this._elements.next();
+            if (result.done) { throw new ValueException("Cannot reduce an empty iterator without an initial value."); }
 
+            accumulator = (result.value[1] as unknown) as A;
             index += 1;
-            accumulator = (firstElement.value[1] as unknown) as A;
         }
 
         for (const [key, element] of this._elements)
@@ -77,6 +86,85 @@ export default class ReducedIterator<K extends PropertyKey, T>
         }
 
         return accumulator;
+    }
+
+    public flatMap<V>(iteratee: KeyedIteratee<K, T, Iterable<V>>): AggregatedIterator<K, V>
+    {
+        const elements = this._elements.enumerate();
+
+        return new AggregatedIterator(function* ()
+        {
+            for (const [index, [key, element]] of elements)
+            {
+                for (const value of iteratee(key, element, index)) { yield [key, value]; }
+            }
+        });
+    }
+
+    public drop(count: number): ReducedIterator<K, T>
+    {
+        const elements = this._elements.enumerate();
+
+        return new ReducedIterator(function* ()
+        {
+            for (const [index, [key, element]] of elements)
+            {
+                if (index >= count) { yield [key, element]; }
+            }
+        });
+    }
+    public take(count: number): ReducedIterator<K, T>
+    {
+        const elements = this._elements.enumerate();
+
+        return new ReducedIterator(function* ()
+        {
+            for (const [index, [key, element]] of elements)
+            {
+                if (index >= count) { break; }
+
+                yield [key, element];
+            }
+        });
+    }
+
+    public enumerate(): ReducedIterator<K, [number, T]>
+    {
+        return this.map((_, element, index) => [index, element]);
+    }
+    public unique(): ReducedIterator<K, T>
+    {
+        const elements = this._elements;
+
+        return new ReducedIterator(function* ()
+        {
+            const values = new Set<T>();
+
+            for (const [key, element] of elements)
+            {
+                if (values.has(element)) { continue; }
+                values.add(element);
+
+                yield [key, element];
+            }
+        });
+    }
+
+    public count(): number
+    {
+        let index = 0;
+
+        for (const _ of this._elements) { index += 1; }
+
+        return index;
+    }
+
+    public forEach(iteratee: KeyedIteratee<K, T>): void
+    {
+        for (const [index, [key, element]] of this._elements.enumerate())
+        {
+            iteratee(key, element, index);
+        }
     }
 
     public keys(): SmartIterator<K>

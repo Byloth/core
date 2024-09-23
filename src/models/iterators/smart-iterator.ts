@@ -1,6 +1,7 @@
+import AggregatedIterator from "../aggregators/aggregated-iterator.js";
 import { ValueException } from "../exceptions/index.js";
 
-import type { GeneratorFunction, Iteratee, TypeGuardIteratee, Reducer, IterLike } from "./types.js";
+import type { GeneratorFunction, Iteratee, TypeGuardIteratee, Reducer, IteratorLike } from "./types.js";
 
 export default class SmartIterator<T, R = void, N = undefined> implements Iterator<T, R, N>
 {
@@ -9,11 +10,11 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     public return?: (value?: R) => IteratorResult<T, R>;
     public throw?: (error?: unknown) => IteratorResult<T, R>;
 
-    public constructor(iterable: Iterable<T>);
+    public constructor(iterable: Iterable<T, R, N>);
     public constructor(iterator: Iterator<T, R, N>);
     public constructor(generatorFn: GeneratorFunction<T, R, N>);
-    public constructor(argument: IterLike<T, R, N>);
-    public constructor(argument: IterLike<T, R, N>)
+    public constructor(argument: IteratorLike<T, R, N> | GeneratorFunction<T, R, N>);
+    public constructor(argument: IteratorLike<T, R, N> | GeneratorFunction<T, R, N>)
     {
         if (argument instanceof Function)
         {
@@ -28,8 +29,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
             this._iterator = argument;
         }
 
-        if (this._iterator.return) { this.return = (value?: R) => this._iterator.return!(value); }
-        if (this._iterator.throw) { this.throw = (error?: unknown) => this._iterator.throw!(error); }
+        if (this._iterator.return) { this.return = (value) => this._iterator.return!(value); }
+        if (this._iterator.throw) { this.throw = (error) => this._iterator.throw!(error); }
     }
 
     public every(predicate: Iteratee<T, boolean>): boolean
@@ -130,6 +131,93 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         }
     }
 
+    public flatMap<V>(iteratee: Iteratee<T, Iterable<V>>): SmartIterator<V, R>
+    {
+        const iterator = this._iterator;
+
+        return new SmartIterator<V, R>(function* ()
+        {
+            let index = 0;
+
+            while (true)
+            {
+                const result = iterator.next();
+                if (result.done) { return result.value; }
+
+                const iterable = iteratee(result.value, index);
+                for (const value of iterable)
+                {
+                    yield value;
+                }
+
+                index += 1;
+            }
+        });
+    }
+
+    public drop(count: number): SmartIterator<T, R | void>
+    {
+        const iterator = this._iterator;
+
+        return new SmartIterator<T, R | void>(function* ()
+        {
+            let index = 0;
+            while (index < count)
+            {
+                const result = iterator.next();
+                if (result.done) { return; }
+
+                index += 1;
+            }
+
+            while (true)
+            {
+                const result = iterator.next();
+                if (result.done) { return result.value; }
+
+                yield result.value;
+            }
+        });
+    }
+    public take(limit: number): SmartIterator<T, R | void>
+    {
+        const iterator = this._iterator;
+
+        return new SmartIterator<T, R | void>(function* ()
+        {
+            let index = 0;
+            while (index < limit)
+            {
+                const result = iterator.next();
+                if (result.done) { return result.value; }
+
+                yield result.value;
+
+                index += 1;
+            }
+
+            return;
+        });
+    }
+
+    public find(predicate: Iteratee<T, boolean>): T | void;
+    public find<S extends T>(predicate: TypeGuardIteratee<T, S>): S | void;
+    public find(predicate: Iteratee<T, boolean>): T | void
+    {
+        let index = 0;
+
+        // eslint-disable-next-line no-constant-condition
+        while (true)
+        {
+            const result = this._iterator.next();
+
+            if (result.done) { return; }
+            if (predicate(result.value, index)) { return result.value; }
+
+            index += 1;
+        }
+    }
+
     public enumerate(): SmartIterator<[number, T], R>
     {
         return this.map((value, index) => [index, value]);
@@ -169,6 +257,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
             index += 1;
         }
     }
+
     public forEach(iteratee: Iteratee<T>): void
     {
         let index = 0;
@@ -188,6 +277,16 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     public next(...values: N extends undefined ? [] : [N]): IteratorResult<T, R>
     {
         return this._iterator.next(...values);
+    }
+
+    public groupBy<K extends PropertyKey>(iteratee: Iteratee<T, K>): AggregatedIterator<K, T>
+    {
+        return new AggregatedIterator(this.map((element, index) =>
+        {
+            const key = iteratee(element, index);
+
+            return [key, element] as [K, T];
+        }));
     }
 
     public toArray(): T[]

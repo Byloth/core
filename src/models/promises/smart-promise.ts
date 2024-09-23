@@ -2,6 +2,11 @@ import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "./types
 
 export default class SmartPromise<T = void> implements Promise<T>
 {
+    public static FromPromise<T>(promise: Promise<T>): SmartPromise<T>
+    {
+        return new SmartPromise((resolve, reject) => promise.then(resolve, reject));
+    }
+
     protected _isPending: boolean;
     protected _isFulfilled: boolean;
     protected _isRejected: boolean;
