@@ -14,10 +14,15 @@ export enum TimeUnit
 
 export function dateDifference(start: string | Date, end: string | Date, unit = TimeUnit.Day): number
 {
+    let _round: (value: number) => number;
+
     start = new Date(start);
     end = new Date(end);
 
-    return Math.floor((end.getTime() - start.getTime()) / unit);
+    if (start < end) { _round = Math.floor; }
+    else { _round = Math.ceil; }
+
+    return _round((end.getTime() - start.getTime()) / unit);
 }
 
 export function dateRange(start: string | Date, end: string | Date, offset = TimeUnit.Day): SmartIterator<Date>
