@@ -1,4 +1,4 @@
-export const VERSION = "2.0.0-rc.2";
+export const VERSION = "2.0.0-rc.3";
 
 export type { Constructor, Interval, Timeout } from "./core/types.js";
 
@@ -7,8 +7,6 @@ export { isBrowser, isNode, isWebWorker } from "./helpers.js";
 export {
     AggregatedIterator,
     AggregatedAsyncIterator,
-    Aggregator,
-    AsyncAggregator,
     Clock,
     Countdown,
     DeferredPromise,
@@ -40,23 +38,23 @@ export {
 
 export type {
     AsyncGeneratorFunction,
-    AsyncIterLike,
+    AsyncIteratorLike,
     FulfilledHandler,
     GeneratorFunction,
     Iteratee,
-    IterLike,
+    IteratorLike,
     JSONArray,
     JSONObject,
     JSONValue,
-    KeyIteratee,
-    KeyReducer,
-    KeyTypeGuardIteratee,
-    MaybeAsyncKeyIteratee,
-    MaybeAsyncKeyReducer,
-    MaybeAsyncKeyTypeGuardIteratee,
+    KeyedIteratee,
+    KeyedReducer,
+    KeyedTypeGuardIteratee,
+    MaybeAsyncKeyedIteratee,
+    MaybeAsyncKeyedReducer,
+    MaybeAsyncKeyedTypeGuardIteratee,
     MaybeAsyncReducer,
     MaybeAsyncIteratee,
-    MaybeAsyncIterLike,
+    MaybeAsyncIteratorLike,
     MaybeAsyncTypeGuardIteratee,
     MaybePromise,
     PromiseExecutor,

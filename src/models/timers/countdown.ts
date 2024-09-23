@@ -9,7 +9,7 @@ import Publisher from "../publisher.js";
 export default class Countdown extends GameLoop
 {
     protected _deferrer?: DeferredPromise<void>;
-    protected _publisher: Publisher<[number], void>;
+    protected _publisher: Publisher<[number]>;
 
     protected _duration: number;
     public get duration(): number

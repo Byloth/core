@@ -1,9 +1,9 @@
-export async function delay(milliseconds: number): Promise<void>
+export function delay(milliseconds: number): Promise<void>
 {
-    return new Promise<void>((resolve, reject) => setTimeout(resolve, milliseconds));
+    return new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
 }
 
-export async function nextAnimationFrame(): Promise<void>
+export function nextAnimationFrame(): Promise<void>
 {
-    return new Promise<void>((resolve, reject) => requestAnimationFrame(() => resolve()));
+    return new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 }

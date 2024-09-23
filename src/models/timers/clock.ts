@@ -6,7 +6,7 @@ import Publisher from "../publisher.js";
 
 export default class Clock extends GameLoop
 {
-    protected _publisher: Publisher<[number], void>;
+    protected _publisher: Publisher<[number]>;
 
     public constructor(fpsIfNotBrowser: number = TimeUnit.Second)
     {

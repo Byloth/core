@@ -1,9 +1,15 @@
 import { SmartAsyncIterator } from "../iterators/index.js";
-import type { AsyncGeneratorFunction, GeneratorFunction, MaybeAsyncIterLike } from "../iterators/types.js";
+import type {
+    GeneratorFunction,
+    AsyncGeneratorFunction,
+    MaybeAsyncGeneratorFunction,
+    MaybeAsyncIteratorLike
+
+} from "../iterators/types.js";
 import type { MaybePromise } from "../types.js";
 
 import ReducedIterator from "./reduced-iterator.js";
-import type { MaybeAsyncKeyIteratee, MaybeAsyncKeyTypeGuardIteratee, MaybeAsyncKeyReducer } from "./types.js";
+import type { MaybeAsyncKeyedIteratee, MaybeAsyncKeyedTypeGuardIteratee, MaybeAsyncKeyedReducer } from "./types.js";
 
 export default class AggregatedAsyncIterator<K extends PropertyKey, T>
 {
@@ -15,58 +21,52 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     public constructor(iterator: AsyncIterator<[K, T]>);
     public constructor(generatorFn: GeneratorFunction<[K, T]>);
     public constructor(generatorFn: AsyncGeneratorFunction<[K, T]>);
-    public constructor(argument: MaybeAsyncIterLike<[K, T]>);
-    public constructor(argument: MaybeAsyncIterLike<[K, T]>)
+    public constructor(argument: MaybeAsyncIteratorLike<[K, T]> | MaybeAsyncGeneratorFunction<[K, T]>);
+    public constructor(argument: MaybeAsyncIteratorLike<[K, T]> | MaybeAsyncGeneratorFunction<[K, T]>)
     {
         this._elements = new SmartAsyncIterator(argument);
     }
 
-    public async every(predicate: MaybeAsyncKeyIteratee<K, T, boolean>): Promise<ReducedIterator<K, boolean>>
+    public async every(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, boolean>>
     {
-        const indexes = new Map<K, [number, boolean]>();
+        const values = new Map<K, [number, boolean]>();
 
         for await (const [key, element] of this._elements)
         {
-            const [index, result] = indexes.get(key) ?? [0, true];
+            const [index, result] = values.get(key) ?? [0, true];
 
             if (!(result)) { continue; }
 
-            indexes.set(key, [index + 1, await predicate(key, element, index)]);
+            values.set(key, [index + 1, await predicate(key, element, index)]);
         }
 
         return new ReducedIterator(function* ()
         {
-            for (const [key, [_, result]] of indexes)
-            {
-                yield [key, result];
-            }
+            for (const [key, [_, result]] of values) { yield [key, result]; }
         });
     }
-    public async some(predicate: MaybeAsyncKeyIteratee<K, T, boolean>): Promise<ReducedIterator<K, boolean>>
+    public async some(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, boolean>>
     {
-        const indexes = new Map<K, [number, boolean]>();
+        const values = new Map<K, [number, boolean]>();
 
         for await (const [key, element] of this._elements)
         {
-            const [index, result] = indexes.get(key) ?? [0, false];
+            const [index, result] = values.get(key) ?? [0, false];
 
             if (result) { continue; }
 
-            indexes.set(key, [index + 1, await predicate(key, element, index)]);
+            values.set(key, [index + 1, await predicate(key, element, index)]);
         }
 
         return new ReducedIterator(function* ()
         {
-            for (const [key, [_, result]] of indexes)
-            {
-                yield [key, result];
-            }
+            for (const [key, [_, result]] of values) { yield [key, result]; }
         });
     }
 
-    public filter(predicate: MaybeAsyncKeyIteratee<K, T, boolean>): AggregatedAsyncIterator<K, T>;
-    public filter<S extends T>(predicate: MaybeAsyncKeyTypeGuardIteratee<K, T, S>): AggregatedAsyncIterator<K, S>;
-    public filter(predicate: MaybeAsyncKeyIteratee<K, T, boolean>): AggregatedAsyncIterator<K, T>
+    public filter(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): AggregatedAsyncIterator<K, T>;
+    public filter<S extends T>(predicate: MaybeAsyncKeyedTypeGuardIteratee<K, T, S>): AggregatedAsyncIterator<K, S>;
+    public filter(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): AggregatedAsyncIterator<K, T>
     {
         const elements = this._elements;
 
@@ -78,13 +78,13 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
             {
                 const index = indexes.get(key) ?? 0;
 
-                indexes.set(key, index + 1);
-
                 if (await predicate(key, element, index)) { yield [key, element]; }
+
+                indexes.set(key, index + 1);
             }
         });
     }
-    public map<V>(iteratee: MaybeAsyncKeyIteratee<K, T, V>): AggregatedAsyncIterator<K, V>
+    public map<V>(iteratee: MaybeAsyncKeyedIteratee<K, T, V>): AggregatedAsyncIterator<K, V>
     {
         const elements = this._elements;
 
@@ -96,31 +96,26 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
             {
                 const index = indexes.get(key) ?? 0;
 
-                indexes.set(key, index + 1);
-
                 yield [key, await iteratee(key, element, index)];
+
+                indexes.set(key, index + 1);
             }
         });
     }
-    public async reduce(reducer: MaybeAsyncKeyReducer<K, T, T>): Promise<ReducedIterator<K, T>>;
-    public async reduce<A>(reducer: MaybeAsyncKeyReducer<K, T, A>, initialValue: (key: K) => MaybePromise<A>)
+    public async reduce(reducer: MaybeAsyncKeyedReducer<K, T, T>): Promise<ReducedIterator<K, T>>;
+    public async reduce<A>(reducer: MaybeAsyncKeyedReducer<K, T, A>, initialValue: (key: K) => MaybePromise<A>)
         : Promise<ReducedIterator<K, A>>;
-    public async reduce<A>(reducer: MaybeAsyncKeyReducer<K, T, A>, initialValue?: (key: K) => MaybePromise<A>)
+    public async reduce<A>(reducer: MaybeAsyncKeyedReducer<K, T, A>, initialValue?: (key: K) => MaybePromise<A>)
         : Promise<ReducedIterator<K, A>>
     {
-        const accumulators = new Map<K, [number, A]>();
+        const values = new Map<K, [number, A]>();
 
         for await (const [key, element] of this._elements)
         {
             let index: number;
             let accumulator: A;
 
-            if (accumulators.has(key))
-            {
-                [index, accumulator] = accumulators.get(key)!;
-
-                index += 1;
-            }
+            if (values.has(key)) { [index, accumulator] = values.get(key)!; }
             else if (initialValue !== undefined)
             {
                 index = 0;
@@ -128,22 +123,108 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
             }
             else
             {
-                accumulators.set(key, [0, (element as unknown) as A]);
+                values.set(key, [0, (element as unknown) as A]);
 
                 continue;
             }
 
-            accumulator = await reducer(key, accumulator, element, index);
-
-            accumulators.set(key, [index, accumulator]);
+            values.set(key, [index + 1, await reducer(key, accumulator, element, index)]);
         }
 
         return new ReducedIterator(function* ()
         {
-            for (const [key, [_, accumulator]] of accumulators)
+            for (const [key, [_, accumulator]] of values) { yield [key, accumulator]; }
+        });
+    }
+
+    public flatMap<V>(iteratee: MaybeAsyncKeyedIteratee<K, T, Iterable<V>>): AggregatedAsyncIterator<K, V>
+    {
+        const elements = this._elements;
+
+        return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, V]>
+        {
+            const indexes = new Map<K, number>();
+
+            for await (const [key, element] of elements)
             {
-                yield [key, accumulator];
+                const index = indexes.get(key) ?? 0;
+                const values = await iteratee(key, element, index);
+
+                for await (const value of values) { yield [key, value]; }
+
+                indexes.set(key, index + 1);
             }
+        });
+    }
+
+    public drop(count: number): AggregatedAsyncIterator<K, T>
+    {
+        const elements = this._elements;
+
+        return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, T]>
+        {
+            const indexes = new Map<K, number>();
+
+            for await (const [key, element] of elements)
+            {
+                const index = indexes.get(key) ?? 0;
+                if (index < count)
+                {
+                    indexes.set(key, index + 1);
+
+                    continue;
+                }
+
+                yield [key, element];
+            }
+        });
+    }
+    public take(limit: number): AggregatedAsyncIterator<K, T>
+    {
+        const elements = this._elements;
+
+        return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, T]>
+        {
+            const indexes = new Map<K, number>();
+
+            for await (const [key, element] of elements)
+            {
+                const index = indexes.get(key) ?? 0;
+                if (index >= limit)
+                {
+                    if (indexes.values().every((value) => value >= limit)) { break; }
+
+                    continue;
+                }
+
+                yield [key, element];
+
+                indexes.set(key, index + 1);
+            }
+        });
+    }
+
+    public async find(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, T | void>>;
+    public async find<S extends T>(predicate: MaybeAsyncKeyedTypeGuardIteratee<K, T, S>)
+        : Promise<ReducedIterator<K, S | void>>;
+
+    public async find(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, T | void>>
+    {
+        const values = new Map<K, [number, T | undefined]>();
+
+        for await (const [key, element] of this._elements)
+        {
+            let [index, finding] = values.get(key) ?? [0, undefined];
+
+            if (finding !== undefined) { continue; }
+            if (await predicate(key, element, index)) { finding = element; }
+
+            values.set(key, [index + 1, finding]);
+        }
+
+        return new ReducedIterator(function* ()
+        {
+            for (const [key, [_, finding]] of values) { yield [key, finding]; }
         });
     }
 
@@ -182,47 +263,22 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
 
         return new ReducedIterator(function* ()
         {
-            for (const [key, count] of counters)
-            {
-                yield [key, count];
-            }
+            for (const [key, count] of counters) { yield [key, count]; }
         });
     }
-    public async first(): Promise<ReducedIterator<K, T>>
+
+    public async forEach(iteratee: MaybeAsyncKeyedIteratee<K, T>): Promise<void>
     {
-        const firsts = new Map<K, T>();
+        const indexes = new Map<K, number>();
 
         for await (const [key, element] of this._elements)
         {
-            if (firsts.has(key)) { continue; }
+            const index = indexes.get(key) ?? 0;
 
-            firsts.set(key, element);
+            iteratee(key, element, index);
+
+            indexes.set(key, index + 1);
         }
-
-        return new ReducedIterator(function* ()
-        {
-            for (const [key, element] of firsts)
-            {
-                yield [key, element];
-            }
-        });
-    }
-    public async last(): Promise<ReducedIterator<K, T>>
-    {
-        const lasts = new Map<K, T>();
-
-        for await (const [key, element] of this._elements)
-        {
-            lasts.set(key, element);
-        }
-
-        return new ReducedIterator(function* ()
-        {
-            for (const [key, element] of lasts)
-            {
-                yield [key, element];
-            }
-        });
     }
 
     public keys(): SmartAsyncIterator<K>
@@ -252,10 +308,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
 
         return new SmartAsyncIterator<T>(async function* ()
         {
-            for await (const [_, element] of elements)
-            {
-                yield element;
-            }
+            for await (const [_, element] of elements) { yield element; }
         });
     }
 
