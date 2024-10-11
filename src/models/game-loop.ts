@@ -80,4 +80,6 @@ export default class GameLoop
         this._handle = undefined;
         this._isRunning = false;
     }
+
+    public readonly [Symbol.toStringTag]: string = "GameLoop";
 }

@@ -1,7 +1,10 @@
+
 import { SmartIterator } from "../models/index.js";
 
 export enum TimeUnit
 {
+    /* eslint-disable @typescript-eslint/prefer-literal-enum-member */
+
     Millisecond = 1,
     Second = 1000,
     Minute = 60 * Second,

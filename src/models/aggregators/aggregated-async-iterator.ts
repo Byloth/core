@@ -204,11 +204,11 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         });
     }
 
-    public async find(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, T | void>>;
+    public async find(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, T | undefined>>;
     public async find<S extends T>(predicate: MaybeAsyncKeyedTypeGuardIteratee<K, T, S>)
-        : Promise<ReducedIterator<K, S | void>>;
+        : Promise<ReducedIterator<K, S | undefined>>;
 
-    public async find(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, T | void>>
+    public async find(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, T | undefined>>
     {
         const values = new Map<K, [number, T | undefined]>();
 
@@ -347,5 +347,5 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return groups;
     }
 
-    public get [Symbol.toStringTag]() { return "AggregatedAsyncIterator"; }
+    public readonly [Symbol.toStringTag]: string = "AggregatedAsyncIterator";
 }

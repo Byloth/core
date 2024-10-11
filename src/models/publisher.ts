@@ -35,5 +35,5 @@ export default class Publisher<A extends unknown[] = [], R = void>
             .map((subscriber) => subscriber(...args));
     }
 
-    public get [Symbol.toStringTag]() { return "Publisher"; }
+    public readonly [Symbol.toStringTag]: string = "Publisher";
 }

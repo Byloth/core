@@ -192,9 +192,9 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
-    public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | void>;
-    public find<S extends T>(predicate: KeyedTypeGuardIteratee<K, T, S>): ReducedIterator<K, S | void>;
-    public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | void>
+    public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | undefined>;
+    public find<S extends T>(predicate: KeyedTypeGuardIteratee<K, T, S>): ReducedIterator<K, S | undefined>;
+    public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | undefined>
     {
         const values = new Map<K, [number, T | undefined]>();
 
@@ -337,5 +337,5 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         return groups;
     }
 
-    public get [Symbol.toStringTag]() { return "AggregatedIterator"; }
+    public readonly [Symbol.toStringTag]: string = "AggregatedIterator";
 }

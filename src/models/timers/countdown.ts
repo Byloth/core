@@ -76,4 +76,6 @@ export default class Countdown extends GameLoop
             lastTick = remainingTime;
         });
     }
+
+    public readonly [Symbol.toStringTag]: string = "Countdown";
 }

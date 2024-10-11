@@ -37,7 +37,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     {
         let index = 0;
 
-        // eslint-disable-next-line no-constant-condition
         while (true)
         {
             const result = this._iterator.next();
@@ -52,7 +51,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     {
         let index = 0;
 
-        // eslint-disable-next-line no-constant-condition
         while (true)
         {
             const result = this._iterator.next();
@@ -119,7 +117,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
             index += 1;
         }
 
-        // eslint-disable-next-line no-constant-condition
         while (true)
         {
             const result = this._iterator.next();
@@ -155,11 +152,11 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         });
     }
 
-    public drop(count: number): SmartIterator<T, R | void>
+    public drop(count: number): SmartIterator<T, R | undefined>
     {
         const iterator = this._iterator;
 
-        return new SmartIterator<T, R | void>(function* ()
+        return new SmartIterator<T, R | undefined>(function* ()
         {
             let index = 0;
             while (index < count)
@@ -179,11 +176,11 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
             }
         });
     }
-    public take(limit: number): SmartIterator<T, R | void>
+    public take(limit: number): SmartIterator<T, R | undefined>
     {
         const iterator = this._iterator;
 
-        return new SmartIterator<T, R | void>(function* ()
+        return new SmartIterator<T, R | undefined>(function* ()
         {
             let index = 0;
             while (index < limit)
@@ -200,13 +197,12 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         });
     }
 
-    public find(predicate: Iteratee<T, boolean>): T | void;
-    public find<S extends T>(predicate: TypeGuardIteratee<T, S>): S | void;
-    public find(predicate: Iteratee<T, boolean>): T | void
+    public find(predicate: Iteratee<T, boolean>): T | undefined;
+    public find<S extends T>(predicate: TypeGuardIteratee<T, S>): S | undefined;
+    public find(predicate: Iteratee<T, boolean>): T | undefined
     {
         let index = 0;
 
-        // eslint-disable-next-line no-constant-condition
         while (true)
         {
             const result = this._iterator.next();
@@ -248,7 +244,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     {
         let index = 0;
 
-        // eslint-disable-next-line no-constant-condition
         while (true)
         {
             const result = this._iterator.next();
@@ -262,7 +257,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     {
         let index = 0;
 
-        // eslint-disable-next-line no-constant-condition
         while (true)
         {
             const result = this._iterator.next();
@@ -294,7 +288,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         return Array.from(this as Iterable<T>);
     }
 
-    public get [Symbol.toStringTag]() { return "SmartIterator"; }
+    public readonly [Symbol.toStringTag]: string = "SmartIterator";
 
     public [Symbol.iterator](): SmartIterator<T, R, N> { return this; }
 }

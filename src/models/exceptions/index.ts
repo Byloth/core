@@ -7,7 +7,7 @@ export class FileException extends Exception
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "FileException"; }
+    public readonly [Symbol.toStringTag]: string = "FileException";
 }
 export class FileExistsException extends FileException
 {
@@ -16,7 +16,7 @@ export class FileExistsException extends FileException
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "FileExistsException"; }
+    public readonly [Symbol.toStringTag]: string = "FileExistsException";
 }
 export class FileNotFoundException extends FileException
 {
@@ -25,7 +25,7 @@ export class FileNotFoundException extends FileException
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "FileNotFoundException"; }
+    public readonly [Symbol.toStringTag]: string = "FileNotFoundException";
 }
 
 export class KeyException extends Exception
@@ -35,7 +35,7 @@ export class KeyException extends Exception
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "KeyException"; }
+    public readonly [Symbol.toStringTag]: string = "KeyException";
 }
 export class NetworkException extends Exception
 {
@@ -44,7 +44,7 @@ export class NetworkException extends Exception
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "NetworkException"; }
+    public readonly [Symbol.toStringTag]: string = "NetworkException";
 }
 export class PermissionException extends Exception
 {
@@ -53,7 +53,7 @@ export class PermissionException extends Exception
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "PermissionException"; }
+    public readonly [Symbol.toStringTag]: string = "PermissionException";
 }
 export class ReferenceException extends Exception
 {
@@ -62,7 +62,7 @@ export class ReferenceException extends Exception
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "ReferenceException"; }
+    public readonly [Symbol.toStringTag]: string = "ReferenceException";
 }
 
 export class RuntimeException extends Exception
@@ -72,7 +72,7 @@ export class RuntimeException extends Exception
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "RuntimeException"; }
+    public readonly [Symbol.toStringTag]: string = "RuntimeException";
 }
 export class EnvironmentException extends RuntimeException
 {
@@ -81,7 +81,7 @@ export class EnvironmentException extends RuntimeException
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "EnvironmentException"; }
+    public readonly [Symbol.toStringTag]: string = "EnvironmentException";
 }
 
 export class TimeoutException extends Exception
@@ -91,7 +91,7 @@ export class TimeoutException extends Exception
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "TimeoutException"; }
+    public readonly [Symbol.toStringTag]: string = "TimeoutException";
 }
 export class TypeException extends Exception
 {
@@ -100,7 +100,7 @@ export class TypeException extends Exception
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "TypeException"; }
+    public readonly [Symbol.toStringTag]: string = "TypeException";
 }
 
 export class ValueException extends Exception
@@ -110,7 +110,7 @@ export class ValueException extends Exception
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "ValueException"; }
+    public readonly [Symbol.toStringTag]: string = "ValueException";
 }
 export class RangeException extends ValueException
 {
@@ -119,7 +119,7 @@ export class RangeException extends ValueException
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "RangeException"; }
+    public readonly [Symbol.toStringTag]: string = "RangeException";
 }
 
 export { Exception };

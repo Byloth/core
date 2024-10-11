@@ -39,7 +39,7 @@ export default class Exception extends Error
         }
     }
 
-    public get [Symbol.toStringTag]() { return "Exception"; }
+    public readonly [Symbol.toStringTag]: string = "Exception";
 }
 
 export class FatalErrorException extends Exception
@@ -55,7 +55,7 @@ export class FatalErrorException extends Exception
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "FatalErrorException"; }
+    public readonly [Symbol.toStringTag]: string = "FatalErrorException";
 }
 export class NotImplementedException extends FatalErrorException
 {
@@ -69,5 +69,5 @@ export class NotImplementedException extends FatalErrorException
         super(message, cause, name);
     }
 
-    public get [Symbol.toStringTag]() { return "NotImplementedException"; }
+    public readonly [Symbol.toStringTag]: string = "NotImplementedException";
 }

@@ -44,4 +44,6 @@ export default class Clock extends GameLoop
             lastTick = elapsedTime;
         });
     }
+
+    public readonly [Symbol.toStringTag]: string = "Clock";
 }

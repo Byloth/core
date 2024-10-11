@@ -2,7 +2,7 @@ import { ValueException } from "../models/index.js";
 
 export default class Random
 {
-    public static Boolean(ratio: number = 0.5): boolean
+    public static Boolean(ratio = 0.5): boolean
     {
         return (Math.random() < ratio);
     }
@@ -38,6 +38,7 @@ export default class Random
         return elements[Random.Index(elements)];
     }
 
-    // eslint-disable-next-line no-useless-constructor
-    private constructor() { }
+    private constructor() { /* ... */ }
+
+    public readonly [Symbol.toStringTag]: string = "Random";
 }

@@ -209,5 +209,5 @@ export default class ReducedIterator<K extends PropertyKey, T>
         return Object.fromEntries(this.items()) as Record<K, T>;
     }
 
-    public get [Symbol.toStringTag]() { return "ReducedIterator"; }
+    public readonly [Symbol.toStringTag]: string = "ReducedIterator";
 }

@@ -1,4 +1,3 @@
-/* eslint-disable no-trailing-spaces */
 
 import { isBrowser } from "../../helpers.js";
 import { EnvironmentException } from "../exceptions/index.js";
@@ -45,7 +44,7 @@ export default class JSONStorage
             {
                 return JSON.parse(propertyValue);
             }
-            catch (error)
+            catch
             {
                 // eslint-disable-next-line no-console
                 console.warn(
@@ -252,5 +251,5 @@ export default class JSONStorage
         this._persistent.removeItem(propertyName);
     }
 
-    public get [Symbol.toStringTag]() { return "JSONStorage"; }
+    public readonly [Symbol.toStringTag]: string = "JSONStorage";
 }

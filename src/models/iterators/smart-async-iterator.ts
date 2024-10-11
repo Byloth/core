@@ -97,7 +97,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     {
         let index = 0;
 
-        // eslint-disable-next-line no-constant-condition
         while (true)
         {
             const result = await this._iterator.next();
@@ -112,7 +111,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     {
         let index = 0;
 
-        // eslint-disable-next-line no-constant-condition
         while (true)
         {
             const result = await this._iterator.next();
@@ -179,7 +177,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
             index += 1;
         }
 
-        // eslint-disable-next-line no-constant-condition
         while (true)
         {
             const result = await this._iterator.next();
@@ -216,11 +213,11 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         });
     }
 
-    public drop(count: number): SmartAsyncIterator<T, R | void>
+    public drop(count: number): SmartAsyncIterator<T, R | undefined>
     {
         const iterator = this._iterator;
 
-        return new SmartAsyncIterator<T, R | void>(async function* ()
+        return new SmartAsyncIterator<T, R | undefined>(async function* ()
         {
             let index = 0;
 
@@ -241,11 +238,11 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
             }
         });
     }
-    public take(limit: number): SmartAsyncIterator<T, R | void>
+    public take(limit: number): SmartAsyncIterator<T, R | undefined>
     {
         const iterator = this._iterator;
 
-        return new SmartAsyncIterator<T, R | void>(async function* ()
+        return new SmartAsyncIterator<T, R | undefined>(async function* ()
         {
             let index = 0;
 
@@ -263,11 +260,10 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         });
     }
 
-    public async find(predicate: MaybeAsyncIteratee<T, boolean>): Promise<T | void>
+    public async find(predicate: MaybeAsyncIteratee<T, boolean>): Promise<T | undefined>
     {
         let index = 0;
 
-        // eslint-disable-next-line no-constant-condition
         while (true)
         {
             const result = await this._iterator.next();
@@ -309,7 +305,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     {
         let index = 0;
 
-        // eslint-disable-next-line no-constant-condition
         while (true)
         {
             const result = await this._iterator.next();
@@ -322,7 +317,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     {
         let index = 0;
 
-        // eslint-disable-next-line no-constant-condition
         while (true)
         {
             const result = await this._iterator.next();
@@ -354,7 +348,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return Array.fromAsync(this as AsyncIterable<T>);
     }
 
-    public get [Symbol.toStringTag]() { return "SmartAsyncIterator"; }
+    public readonly [Symbol.toStringTag]: string = "SmartAsyncIterator";
 
     public [Symbol.asyncIterator](): SmartAsyncIterator<T, R, N> { return this; }
 }

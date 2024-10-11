@@ -64,5 +64,5 @@ export default class SmartPromise<T = void> implements Promise<T>
         return this._promise.finally(onFinally);
     }
 
-    public get [Symbol.toStringTag]() { return "SmartPromise"; }
+    public readonly [Symbol.toStringTag]: string = "SmartPromise";
 }

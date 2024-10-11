@@ -27,5 +27,5 @@ export default class TimedPromise<T = void> extends SmartPromise<T>
         });
     }
 
-    public get [Symbol.toStringTag]() { return "TimedPromise"; }
+    public readonly [Symbol.toStringTag]: string = "TimedPromise";
 }
