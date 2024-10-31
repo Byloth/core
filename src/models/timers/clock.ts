@@ -8,9 +8,9 @@ export default class Clock extends GameLoop
 {
     protected _publisher: Publisher<[number]>;
 
-    public constructor(fpsIfNotBrowser: number = TimeUnit.Second)
+    public constructor(msIfNotBrowser: number = TimeUnit.Second)
     {
-        super((elapsedTime) => this._publisher.publish(elapsedTime), fpsIfNotBrowser);
+        super((elapsedTime) => this._publisher.publish(elapsedTime), msIfNotBrowser);
 
         this._publisher = new Publisher();
     }

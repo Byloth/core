@@ -1,11 +1,11 @@
+import type { Interval } from "../core/types.js";
 import { isBrowser } from "../helpers.js";
-import { TimeUnit } from "../utils/date.js";
 
 import { FatalErrorException, RuntimeException } from "./exceptions/index.js";
 
 export default class GameLoop
 {
-    protected _handle?: number;
+    protected _handle?: number | Interval;
 
     protected _startTime: number;
     public get startTime(): number
@@ -27,7 +27,7 @@ export default class GameLoop
     protected _start: () => void;
     protected _stop: () => void;
 
-    public constructor(callback: FrameRequestCallback, fpsIfNotBrowser = 30)
+    public constructor(callback: FrameRequestCallback, msIfNotBrowser = 40)
     {
         this._startTime = 0;
         this._isRunning = false;
@@ -41,24 +41,22 @@ export default class GameLoop
                 this._handle = window.requestAnimationFrame(this._start);
             };
 
-            this._stop = () => window.cancelAnimationFrame(this._handle!);
+            this._stop = () => window.cancelAnimationFrame(this._handle as number);
         }
         else
         {
             // eslint-disable-next-line no-console
             console.warn(
                 "Not a browser environment detected. " +
-                `Using setInterval@${fpsIfNotBrowser}fps instead of requestAnimationFrame...`
+                `Using setInterval@${msIfNotBrowser}ms instead of requestAnimationFrame...`
             );
 
             this._start = () =>
             {
-                const delay = (TimeUnit.Second / fpsIfNotBrowser);
-
-                this._handle = (setInterval(() => callback(this.elapsedTime), delay) as unknown) as number;
+                this._handle = setInterval(() => callback(this.elapsedTime), msIfNotBrowser);
             };
 
-            this._stop = () => clearInterval(this._handle!);
+            this._stop = () => clearInterval(this._handle as Interval);
         }
     }
 

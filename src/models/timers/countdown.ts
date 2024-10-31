@@ -22,7 +22,7 @@ export default class Countdown extends GameLoop
         return this._duration - this.elapsedTime;
     }
 
-    public constructor(duration: number, fpsIfNotBrowser: number = TimeUnit.Second)
+    public constructor(duration: number, msIfNotBrowser: number = TimeUnit.Second)
     {
         const callback = () =>
         {
@@ -32,7 +32,7 @@ export default class Countdown extends GameLoop
             if (remainingTime <= 0) { this.stop(); }
         };
 
-        super(callback, fpsIfNotBrowser);
+        super(callback, msIfNotBrowser);
 
         this._publisher = new Publisher();
         this._duration = duration;
