@@ -29,6 +29,7 @@ export {
     SmartIterator,
     SmartAsyncIterator,
     SmartPromise,
+    Thenable,
     TimeoutException,
     TimedPromise,
     TypeException,
