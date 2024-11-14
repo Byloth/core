@@ -6,14 +6,21 @@ import { DeferredPromise, SmartPromise } from "../promises/index.js";
 import GameLoop from "../game-loop.js";
 import Publisher from "../publisher.js";
 
+interface CountdownEvents
+{
+    /* eslint-disable @typescript-eslint/no-invalid-void-type */
+
+    start: [[], void];
+    stop: [[unknown], void];
+    tick: [[number], void];
+    expire: [[], void];
+}
+
 export default class Countdown extends GameLoop
 {
     protected _deferrer?: DeferredPromise<void>;
 
-    protected _expirer: Publisher;
-    protected _starter: Publisher;
-    protected _stopper: Publisher<[unknown]>;
-    protected _ticker: Publisher<[number]>;
+    protected _publisher: Publisher<CountdownEvents>;
 
     protected _duration: number;
     public get duration(): number
@@ -31,23 +38,19 @@ export default class Countdown extends GameLoop
         const callback = () =>
         {
             const remainingTime = this.remainingTime;
-            this._ticker.publish(remainingTime);
+            this._publisher.publish("tick", remainingTime);
 
             if (remainingTime <= 0)
             {
                 this._deferrerStop();
 
-                this._expirer.publish();
+                this._publisher.publish("expire");
             }
         };
 
         super(callback, msIfNotBrowser);
 
-        this._expirer = new Publisher();
-        this._starter = new Publisher();
-        this._stopper = new Publisher();
-        this._ticker = new Publisher();
-
+        this._publisher = new Publisher();
         this._duration = duration;
     }
 
@@ -72,7 +75,7 @@ export default class Countdown extends GameLoop
         this._deferrer = new DeferredPromise();
         super.start(this.duration - remainingTime);
 
-        this._starter.publish();
+        this._publisher.publish("start");
 
         return this._deferrer;
     }
@@ -80,31 +83,31 @@ export default class Countdown extends GameLoop
     {
         this._deferrerStop(reason);
 
-        this._stopper.publish(reason);
+        this._publisher.publish("stop", reason);
     }
 
     public onExpire(callback: () => void): () => void
     {
-        return this._expirer.subscribe(callback);
+        return this._publisher.subscribe("expire", callback);
     }
 
     public onStart(callback: () => void): () => void
     {
-        return this._starter.subscribe(callback);
+        return this._publisher.subscribe("start", callback);
     }
     public onStop(callback: (reason?: unknown) => void): () => void
     {
-        return this._stopper.subscribe(callback);
+        return this._publisher.subscribe("stop", callback);
     }
 
     public onTick(callback: (remainingTime: number) => void, tickStep = 0): () => void
     {
         if (tickStep < 0) { throw new RangeException("The tick step must be a non-negative number."); }
-        if (tickStep === 0) { return this._ticker.subscribe(callback); }
+        if (tickStep === 0) { return this._publisher.subscribe("tick", callback); }
 
         let lastTick = 0;
 
-        return this._ticker.subscribe((remainingTime: number) =>
+        return this._publisher.subscribe("tick", (remainingTime: number) =>
         {
             if ((lastTick - remainingTime) < tickStep) { return; }
 

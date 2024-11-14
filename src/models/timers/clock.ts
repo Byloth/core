@@ -1,22 +1,27 @@
 import { TimeUnit } from "../../utils/date.js";
-
 import { RangeException, RuntimeException } from "../exceptions/index.js";
+
 import GameLoop from "../game-loop.js";
 import Publisher from "../publisher.js";
 
+interface ClockEvents
+{
+    /* eslint-disable @typescript-eslint/no-invalid-void-type */
+
+    start: [[], void];
+    stop: [[], void];
+    tick: [[number], void];
+}
+
 export default class Clock extends GameLoop
 {
-    protected _starter: Publisher;
-    protected _stopper: Publisher;
-    protected _ticker: Publisher<[number]>;
+    protected _publisher: Publisher<ClockEvents>;
 
     public constructor(msIfNotBrowser: number = TimeUnit.Second)
     {
-        super((elapsedTime) => this._ticker.publish(elapsedTime), msIfNotBrowser);
+        super((elapsedTime) => this._publisher.publish("tick", elapsedTime), msIfNotBrowser);
 
-        this._starter = new Publisher();
-        this._stopper = new Publisher();
-        this._ticker = new Publisher();
+        this._publisher = new Publisher();
     }
 
     public start(elapsedTime = 0): void
@@ -25,7 +30,7 @@ export default class Clock extends GameLoop
 
         super.start(elapsedTime);
 
-        this._starter.publish();
+        this._publisher.publish("start");
     }
 
     public stop(): void
@@ -34,26 +39,26 @@ export default class Clock extends GameLoop
 
         super.stop();
 
-        this._stopper.publish();
+        this._publisher.publish("stop");
     }
 
     public onStart(callback: () => void): () => void
     {
-        return this._starter.subscribe(callback);
+        return this._publisher.subscribe("start", callback);
     }
     public onStop(callback: () => void): () => void
     {
-        return this._stopper.subscribe(callback);
+        return this._publisher.subscribe("stop", callback);
     }
 
     public onTick(callback: (elapsedTime: number) => void, tickStep = 0): () => void
     {
         if (tickStep < 0) { throw new RangeException("The tick step must be a non-negative number."); }
-        if (tickStep === 0) { return this._ticker.subscribe(callback); }
+        if (tickStep === 0) { return this._publisher.subscribe("tick", callback); }
 
         let lastTick = 0;
 
-        return this._ticker.subscribe((elapsedTime: number) =>
+        return this._publisher.subscribe("tick", (elapsedTime: number) =>
         {
             if ((elapsedTime - lastTick) < tickStep) { return; }
 
