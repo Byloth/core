@@ -178,12 +178,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             for (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
-                if (index >= limit)
-                {
-                    if (indexes.values().every((value) => value >= limit)) { break; }
-
-                    continue;
-                }
+                if (index >= limit) { continue; }
 
                 yield [key, element];
 
