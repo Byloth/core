@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@byloth/eslint-config-typescript':
-        specifier: ^3.0.1
-        version: 3.0.1(eslint@9.14.0)(typescript@5.6.3)
+        specifier: ^3.0.3
+        version: 3.0.3(eslint@9.14.0)(typescript@5.6.3)
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
@@ -26,11 +26,11 @@ importers:
 
 packages:
 
-  '@byloth/eslint-config-typescript@3.0.1':
-    resolution: {integrity: sha512-RYFsPZWLnm3f3v++8XtP7C+nyeIS0AvnSAPjcJsvEfbFAeqOFLZ29xMEpZEilJlDV2WeDjyxqBpgoO0XKo342A==}
+  '@byloth/eslint-config-typescript@3.0.3':
+    resolution: {integrity: sha512-97bJOula+nilxjPJDgRIuGlF8KyppcQ2HjxWyA+MVTNEOeWNF3+u3FG3R4+XqSxz2Nc4RNB4wRqhAjdVPW6gVw==}
 
-  '@byloth/eslint-config@3.0.1':
-    resolution: {integrity: sha512-RuJ1jSX6UrFOX64NBrojsAsgCTMagRL4Gc5JX49mXo+LcuwFI8D3p1jfSCxD4rg72R4M/NWSemTnR+IQgIMaYQ==}
+  '@byloth/eslint-config@3.0.3':
+    resolution: {integrity: sha512-fXpIxZByU2Ux+95jGcEEweKYb4bxS571xaMZDJ24wsasrDuczjld63EGAulnm9yRAJiLpScruvV0mWLow+16tg==}
 
   '@esbuild/aix-ppc64@0.21.5':
     resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
@@ -828,9 +828,9 @@ packages:
 
 snapshots:
 
-  '@byloth/eslint-config-typescript@3.0.1(eslint@9.14.0)(typescript@5.6.3)':
+  '@byloth/eslint-config-typescript@3.0.3(eslint@9.14.0)(typescript@5.6.3)':
     dependencies:
-      '@byloth/eslint-config': 3.0.1
+      '@byloth/eslint-config': 3.0.3
       '@typescript-eslint/eslint-plugin': 8.14.0(@typescript-eslint/parser@8.14.0(eslint@9.14.0)(typescript@5.6.3))(eslint@9.14.0)(typescript@5.6.3)
       '@typescript-eslint/parser': 8.14.0(eslint@9.14.0)(typescript@5.6.3)
     transitivePeerDependencies:
@@ -839,7 +839,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@byloth/eslint-config@3.0.1':
+  '@byloth/eslint-config@3.0.3':
     dependencies:
       '@eslint/compat': 1.2.3(eslint@9.14.0)
       '@eslint/js': 9.14.0

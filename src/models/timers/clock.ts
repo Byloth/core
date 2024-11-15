@@ -6,8 +6,6 @@ import Publisher from "../publisher.js";
 
 interface ClockEvents
 {
-    /* eslint-disable @typescript-eslint/no-invalid-void-type */
-
     start: [[], void];
     stop: [[], void];
     tick: [[number], void];

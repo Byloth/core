@@ -2,7 +2,6 @@ import { ReferenceException } from "./exceptions/index.js";
 
 export type Subscriber<A extends unknown[] = [], R = void> = (...args: A) => R;
 
-// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
 export default class Publisher<T extends { [K in keyof T]: [unknown[], unknown] } = Record<string, [[], void]>>
 {
     protected _subscribers: Map<keyof T, Subscriber<unknown[], unknown>[]>;

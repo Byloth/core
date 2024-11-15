@@ -8,8 +8,6 @@ import Publisher from "../publisher.js";
 
 interface CountdownEvents
 {
-    /* eslint-disable @typescript-eslint/no-invalid-void-type */
-
     start: [[], void];
     stop: [[unknown], void];
     tick: [[number], void];
