@@ -4,7 +4,7 @@ import { RangeException, RuntimeException } from "../exceptions/index.js";
 import GameLoop from "../game-loop.js";
 import Publisher from "../publisher.js";
 
-interface ClockEvents
+interface ClockEventMap
 {
     start: [[], void];
     stop: [[], void];
@@ -13,7 +13,7 @@ interface ClockEvents
 
 export default class Clock extends GameLoop
 {
-    protected _publisher: Publisher<ClockEvents>;
+    protected _publisher: Publisher<ClockEventMap>;
 
     public constructor(msIfNotBrowser: number = TimeUnit.Second)
     {

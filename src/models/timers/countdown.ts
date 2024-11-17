@@ -6,7 +6,7 @@ import { DeferredPromise, SmartPromise } from "../promises/index.js";
 import GameLoop from "../game-loop.js";
 import Publisher from "../publisher.js";
 
-interface CountdownEvents
+interface CountdownEventMap
 {
     start: [[], void];
     stop: [[unknown], void];
@@ -18,7 +18,7 @@ export default class Countdown extends GameLoop
 {
     protected _deferrer?: DeferredPromise<void>;
 
-    protected _publisher: Publisher<CountdownEvents>;
+    protected _publisher: Publisher<CountdownEventMap>;
 
     protected _duration: number;
     public get duration(): number
