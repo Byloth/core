@@ -18,6 +18,7 @@ export {
     GameLoop,
     JSONStorage,
     KeyException,
+    LongRunningTask,
     NotImplementedException,
     NetworkException,
     PermissionException,
@@ -50,12 +51,14 @@ export type {
     KeyedIteratee,
     KeyedReducer,
     KeyedTypeGuardIteratee,
+    LongRunningTaskOptions,
     MaybeAsyncKeyedIteratee,
     MaybeAsyncKeyedReducer,
     MaybeAsyncKeyedTypeGuardIteratee,
-    MaybeAsyncReducer,
+    MaybeAsyncGeneratorFunction,
     MaybeAsyncIteratee,
     MaybeAsyncIteratorLike,
+    MaybeAsyncReducer,
     MaybeAsyncTypeGuardIteratee,
     MaybePromise,
     PromiseExecutor,
@@ -87,6 +90,7 @@ export {
     shuffle,
     sum,
     unique,
+    yieldToEventLoop,
     zip
 
 } from "./utils/index.js";

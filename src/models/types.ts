@@ -11,6 +11,7 @@ export type {
 export type {
     GeneratorFunction,
     AsyncGeneratorFunction,
+    MaybeAsyncGeneratorFunction,
     Iteratee,
     MaybeAsyncIteratee,
     TypeGuardIteratee,
@@ -31,6 +32,7 @@ export type {
 } from "./json/types.js";
 
 export type {
+    LongRunningTaskOptions,
     MaybePromise,
     FulfilledHandler,
     RejectedHandler,
