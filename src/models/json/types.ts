@@ -1,7 +1,5 @@
 export type JSONArray = JSONValue[];
 
-// @ts-expect-error - This is a circular reference to itself.
-export type JSONObject = Record<string, JSONValue>;
-
-// @ts-expect-error - This is a circular reference to itself.
+// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
+export interface JSONObject { [key: string]: JSONValue }
 export type JSONValue = boolean | number | string | null | JSONObject | JSONArray;
