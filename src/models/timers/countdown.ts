@@ -8,10 +8,10 @@ import Publisher from "../publisher.js";
 
 interface CountdownEventMap
 {
-    start: [[], void];
-    stop: [[unknown], void];
-    tick: [[number], void];
-    expire: [[], void];
+    start: () => void;
+    stop: (reason: unknown) => void;
+    tick: (remainingTime: number) => void;
+    expire: () => void;
 }
 
 export default class Countdown extends GameLoop

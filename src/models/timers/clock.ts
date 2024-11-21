@@ -6,9 +6,9 @@ import Publisher from "../publisher.js";
 
 interface ClockEventMap
 {
-    start: [[], void];
-    stop: [[], void];
-    tick: [[number], void];
+    start: () => void;
+    stop: () => void;
+    tick: (elapsedTime: number) => void;
 }
 
 export default class Clock extends GameLoop
