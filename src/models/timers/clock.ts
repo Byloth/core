@@ -1,8 +1,8 @@
 import { TimeUnit } from "../../utils/date.js";
 import { RangeException, RuntimeException } from "../exceptions/index.js";
 
+import Publisher from "../callbacks/publisher.js";
 import GameLoop from "../game-loop.js";
-import Publisher from "../publisher.js";
 
 interface ClockEventMap
 {

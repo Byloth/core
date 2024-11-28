@@ -1,4 +1,4 @@
-export const VERSION = "2.0.0-rc.7";
+export const VERSION = "2.0.0-rc.8";
 
 export type { Constructor, Interval, Timeout } from "./core/types.js";
 
@@ -7,6 +7,7 @@ export { isBrowser, isNode, isWebWorker } from "./helpers.js";
 export {
     AggregatedIterator,
     AggregatedAsyncIterator,
+    CallableObject,
     Clock,
     Countdown,
     DeferredPromise,
@@ -30,6 +31,7 @@ export {
     SmartIterator,
     SmartAsyncIterator,
     SmartPromise,
+    SwitchableCallback,
     Thenable,
     TimeoutException,
     TimedPromise,
@@ -41,6 +43,7 @@ export {
 export type {
     AsyncGeneratorFunction,
     AsyncIteratorLike,
+    Callback,
     FulfilledHandler,
     GeneratorFunction,
     Iteratee,
@@ -66,7 +69,6 @@ export type {
     PromiseResolver,
     Reducer,
     RejectedHandler,
-    Subscriber,
     TypeGuardIteratee
 
 } from "./models/types.js";

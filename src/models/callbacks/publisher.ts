@@ -1,19 +1,18 @@
-import { ReferenceException } from "./exceptions/index.js";
+import { ReferenceException } from "../exceptions/index.js";
 
-export type Subscriber<A extends unknown[] = [], R = void> = (...args: A) => R;
+import type { Callback } from "./types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default class Publisher<T extends { [K in keyof T]: Subscriber<any[], any> } = Record<string, Subscriber>>
+export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> } = Record<string, Callback>>
 {
-    protected _subscribers: Map<keyof T, Subscriber<unknown[], unknown>[]>;
+    protected _subscribers: Map<keyof T, Callback<unknown[], unknown>[]>;
 
     public constructor()
     {
         this._subscribers = new Map();
     }
 
-    public subscribe<K extends keyof T, S extends T[K]>(event: K, subscriber: S)
-        : () => void
+    public subscribe<K extends keyof T, S extends T[K]>(event: K, subscriber: S): () => void
     {
         if (!(this._subscribers.has(event))) { this._subscribers.set(event, []); }
 

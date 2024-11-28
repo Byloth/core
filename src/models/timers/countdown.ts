@@ -3,8 +3,8 @@ import { TimeUnit } from "../../utils/date.js";
 import { FatalErrorException, RangeException, RuntimeException } from "../exceptions/index.js";
 import { DeferredPromise, SmartPromise } from "../promises/index.js";
 
+import Publisher from "../callbacks/publisher.js";
 import GameLoop from "../game-loop.js";
-import Publisher from "../publisher.js";
 
 interface CountdownEventMap
 {
@@ -17,7 +17,6 @@ interface CountdownEventMap
 export default class Countdown extends GameLoop
 {
     protected _deferrer?: DeferredPromise<void>;
-
     protected _publisher: Publisher<CountdownEventMap>;
 
     protected _duration: number;

@@ -42,4 +42,4 @@ export type {
 
 } from "./promises/types.js";
 
-export type { Subscriber } from "./publisher.js";
+export type { Callback } from "./callbacks/types.js";

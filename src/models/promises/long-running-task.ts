@@ -1,6 +1,7 @@
 import { yieldToEventLoop } from "../../utils/async.js";
+
+import Publisher from "../callbacks/publisher.js";
 import { RuntimeException } from "../exceptions/index.js";
-import Publisher from "../publisher.js";
 
 import type { MaybeAsyncGeneratorFunction } from "../iterators/types.js";
 import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "./types.js";
