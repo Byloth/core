@@ -99,6 +99,10 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
         }
 
         this._key = key;
-        this._callback = this._callbacks.get(key)!;
+
+        if (this._isEnabled)
+        {
+            this._callback = this._callbacks.get(key)!;
+        }
     }
 }
