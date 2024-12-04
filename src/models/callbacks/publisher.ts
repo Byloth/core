@@ -12,7 +12,7 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
         this._subscribers = new Map();
     }
 
-    public subscribe<K extends keyof T, S extends T[K]>(event: K, subscriber: S): () => void
+    public subscribe<K extends keyof T>(event: K, subscriber: T[K]): () => void
     {
         if (!(this._subscribers.has(event))) { this._subscribers.set(event, []); }
 
@@ -32,13 +32,13 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
         };
     }
 
-    public publish<K extends keyof T, A extends Parameters<T[K]>, R extends ReturnType<T[K]>>(event: K, ...args: A): R[]
+    public publish<K extends keyof T>(event: K, ...args: Parameters<T[K]>): ReturnType<T[K]>[]
     {
         const subscribers = this._subscribers.get(event);
         if (!(subscribers)) { return []; }
 
         return subscribers.slice()
-            .map((subscriber) => subscriber(...args)) as R[];
+            .map((subscriber) => subscriber(...args)) as ReturnType<T[K]>[];
     }
 
     public readonly [Symbol.toStringTag]: string = "Publisher";
