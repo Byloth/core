@@ -32,7 +32,7 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
         this._callback = ((_default) as unknown) as T;
         this._callbacks = new Map<string, T>();
 
-        this._isEnabled = false;
+        this._isEnabled = true;
         this._key = "";
 
         this.invoke = (...args: Parameters<T>): ReturnType<T> => this._callback(...args);
