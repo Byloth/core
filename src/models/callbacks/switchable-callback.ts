@@ -105,4 +105,6 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
             this._callback = this._callbacks.get(key)!;
         }
     }
+
+    public readonly [Symbol.toStringTag]: string = "SwitchableCallback";
 }

@@ -20,4 +20,6 @@ export default abstract class CallableObject<T extends Callback<any[], any> = ()
     }
 
     public abstract invoke(...args: Parameters<T>): ReturnType<T>;
+
+    public readonly [Symbol.toStringTag]: string = "CallableObject";
 }
