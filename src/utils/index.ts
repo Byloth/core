@@ -1,3 +1,4 @@
+import Curve from "./curve.js";
 import Random from "./random.js";
 
 export { delay, nextAnimationFrame, yieldToEventLoop } from "./async.js";
@@ -7,4 +8,4 @@ export { chain, count, enumerate, range, shuffle, unique, zip } from "./iterator
 export { average, hash, sum } from "./math.js";
 export { capitalize } from "./string.js";
 
-export { Random };
+export { Curve, Random };

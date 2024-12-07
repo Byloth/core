@@ -78,6 +78,7 @@ export {
     capitalize,
     chain,
     count,
+    Curve,
     delay,
     dateDifference,
     dateRange,
