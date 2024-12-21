@@ -37,5 +37,5 @@ export default class DeferredPromise<T = void, F = T, R = never> extends SmartPr
         return this;
     }
 
-    public readonly [Symbol.toStringTag]: string = "DeferredPromise";
+    public override readonly [Symbol.toStringTag]: string = "DeferredPromise";
 }

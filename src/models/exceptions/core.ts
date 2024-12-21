@@ -55,7 +55,7 @@ export class FatalErrorException extends Exception
         super(message, cause, name);
     }
 
-    public readonly [Symbol.toStringTag]: string = "FatalErrorException";
+    public override readonly [Symbol.toStringTag]: string = "FatalErrorException";
 }
 export class NotImplementedException extends FatalErrorException
 {
@@ -69,5 +69,5 @@ export class NotImplementedException extends FatalErrorException
         super(message, cause, name);
     }
 
-    public readonly [Symbol.toStringTag]: string = "NotImplementedException";
+    public override readonly [Symbol.toStringTag]: string = "NotImplementedException";
 }

@@ -22,7 +22,7 @@ export default class Clock extends GameLoop
         this._publisher = new Publisher();
     }
 
-    public start(elapsedTime = 0): void
+    public override start(elapsedTime = 0): void
     {
         if (this._isRunning) { throw new RuntimeException("The clock has already been started."); }
 
@@ -31,7 +31,7 @@ export default class Clock extends GameLoop
         this._publisher.publish("start");
     }
 
-    public stop(): void
+    public override stop(): void
     {
         if (!(this._isRunning)) { throw new RuntimeException("The clock hadn't yet started."); }
 
@@ -65,5 +65,5 @@ export default class Clock extends GameLoop
         });
     }
 
-    public readonly [Symbol.toStringTag]: string = "Clock";
+    public override readonly [Symbol.toStringTag]: string = "Clock";
 }
