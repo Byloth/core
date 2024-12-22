@@ -85,6 +85,7 @@ export {
     dateRound,
     TimeUnit,
     enumerate,
+    getWeek,
     hash,
     loadScript,
     nextAnimationFrame,
@@ -93,6 +94,7 @@ export {
     shuffle,
     sum,
     unique,
+    WeekDay,
     yieldToEventLoop,
     zip
 
