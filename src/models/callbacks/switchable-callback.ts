@@ -15,7 +15,7 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
     protected _key: string;
     public get key(): string { return this._key; }
 
-    public readonly invoke: (...args: Parameters<T>) => ReturnType<T>;
+    protected readonly _invoke: (...args: Parameters<T>) => ReturnType<T>;
 
     public constructor()
     {
@@ -35,7 +35,7 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
         this._isEnabled = true;
         this._key = "";
 
-        this.invoke = (...args: Parameters<T>): ReturnType<T> => this._callback(...args);
+        this._invoke = (...args: Parameters<T>): ReturnType<T> => this._callback(...args);
     }
 
     public enable(): void
@@ -106,5 +106,5 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
         }
     }
 
-    public readonly [Symbol.toStringTag]: string = "SwitchableCallback";
+    public override readonly [Symbol.toStringTag]: string = "SwitchableCallback";
 }

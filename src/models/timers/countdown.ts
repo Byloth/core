@@ -64,7 +64,7 @@ export default class Countdown extends GameLoop
         this._deferrer = undefined;
     }
 
-    public start(remainingTime: number = this.duration): SmartPromise<void>
+    public override start(remainingTime: number = this.duration): SmartPromise<void>
     {
         if (this._isRunning) { throw new RuntimeException("The countdown has already been started."); }
         if (this._deferrer) { throw new FatalErrorException(); }
@@ -76,7 +76,7 @@ export default class Countdown extends GameLoop
 
         return this._deferrer;
     }
-    public stop(reason?: unknown): void
+    public override stop(reason?: unknown): void
     {
         this._deferrerStop(reason);
 
@@ -113,5 +113,5 @@ export default class Countdown extends GameLoop
         });
     }
 
-    public readonly [Symbol.toStringTag]: string = "Countdown";
+    public override readonly [Symbol.toStringTag]: string = "Countdown";
 }
