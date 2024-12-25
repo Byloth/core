@@ -133,8 +133,8 @@ export function dateDifference(start: string | Date, end: string | Date, unit = 
 }
 
 /**
- * An utility function that generates a range of dates between two dates.  
- * The range can be expressed in different time units.
+ * An utility function that generates an iterator over a range of dates.  
+ * The step between the dates can be expressed in different time units.
  *
  * ```ts
  * const start = new Date("2025-01-01");
@@ -148,30 +148,45 @@ export function dateDifference(start: string | Date, end: string | Date, unit = 
  *
  * ---
  *
- * @param start 
- * @param end 
- * @param offset 
- * @returns 
+ * @param start The start date (included).
+ * @param end The end date (excluded).
+ * @param step The time unit to express the step between the dates. `TimeUnit.Day` by default.
+ *
+ * @returns A {@link SmartIterator} object that generates the dates in the range.
  */
-export function dateRange(start: string | Date, end: string | Date, offset = TimeUnit.Day): SmartIterator<Date>
+export function dateRange(start: string | Date, end: string | Date, step = TimeUnit.Day): SmartIterator<Date>
 {
-    start = new Date(start);
-    end = new Date(end);
-
     return new SmartIterator<Date>(function* ()
     {
-        const endTime = end.getTime();
+        const endTime = new Date(end).getTime();
 
-        let unixTime: number = start.getTime();
+        let unixTime: number = new Date(start).getTime();
         while (unixTime < endTime)
         {
             yield new Date(unixTime);
 
-            unixTime += offset;
+            unixTime += step;
         }
     });
 }
 
+/**
+ * An utility function that rounds a date to the nearest time unit.  
+ * The rounding can be expressed in different time units.
+ *
+ * ```ts
+ * const date = new Date("2025-01-01T12:34:56.789Z");
+ *
+ * dateRound(date, TimeUnit.Hour); // 2025-01-01T12:00:00.000Z
+ * ```
+ *
+ * ---
+ *
+ * @param date The date to round.
+ * @param unit The time unit to express the rounding. `TimeUnit.Day` by default.
+ *
+ * @returns The rounded date.
+ */
 export function dateRound(date: string | Date, unit = TimeUnit.Day): Date
 {
     date = new Date(date);
@@ -179,6 +194,23 @@ export function dateRound(date: string | Date, unit = TimeUnit.Day): Date
     return new Date(Math.floor(date.getTime() / unit) * unit);
 }
 
+/**
+ * An utility function that gets the week of a date.  
+ * The first day of the week can be optionally specified.
+ *
+ * ```ts
+ * const date = new Date("2025-01-01");
+ *
+ * getWeek(date, WeekDay.Monday); // 2024-12-30
+ * ```
+ *
+ * ---
+ *
+ * @param date The date to get the week of.
+ * @param firstDay The first day of the week. `WeekDay.Sunday` by default.
+ *
+ * @returns The first day of the week of the specified date.
+ */
 export function getWeek(date: string | Date, firstDay = WeekDay.Sunday): Date
 {
     date = new Date(date);

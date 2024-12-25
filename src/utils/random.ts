@@ -33,7 +33,7 @@ export default class Random
     }
 
     /**
-     * Generates a random integer value between `0` and `max` (excluded).
+     * Generates a random integer value between `0` (included) and `max` (excluded).
      *
      * ```ts
      * Random.Integer(5); // 0, 1, 2, 3, 4
@@ -130,7 +130,7 @@ export default class Random
      * 
      * @returns A valid random index from the given array.
      */
-    public static Index<T>(elements: T[]): number
+    public static Index<T>(elements: readonly T[]): number
     {
         if (elements.length === 0) { throw new ValueException("You must provide at least one element."); }
 
@@ -147,7 +147,7 @@ export default class Random
      * 
      * @returns A random element from the given array.
      */
-    public static Choice<T>(elements: T[]): T
+    public static Choice<T>(elements: readonly T[]): T
     {
         return elements[Random.Index(elements)];
     }

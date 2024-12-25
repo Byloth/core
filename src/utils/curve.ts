@@ -24,7 +24,7 @@ export default class Curve
      *
      * @param values The number of values to generate.
      *
-     * @returns A `SmartIterator` object that generates the values following a linear curve.
+     * @returns A {@link SmartIterator} object that generates the values following a linear curve.
      */
     public static Linear(values: number): SmartIterator<number>
     {
@@ -59,7 +59,7 @@ export default class Curve
      *
      * The base cannot be negative. If so, a `ValueException` will be thrown.
      *
-     * @returns A `SmartIterator` object that generates the values following an exponential curve.
+     * @returns A {@link SmartIterator} object that generates the values following an exponential curve.
      */
     public static Exponential(values: number, base = 2): SmartIterator<number>
     {
