@@ -305,6 +305,7 @@ export class RuntimeException extends Exception
  * {
  *     throw new EnvironmentException("The Geolocation API isn't supported in this environment.");
  * }
+ * ```
  */
 export class EnvironmentException extends RuntimeException
 {

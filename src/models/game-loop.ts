@@ -68,7 +68,7 @@ export default class GameLoop
     }
 
     /**
-     * A boolean value indicating whether the game loop is currently running or not.
+     * A flag indicating whether the game loop is currently running or not.
      *
      * This protected property is the only one that can be modified directly by the derived classes.
      * If you're looking for the public & readonly property, use the {@link isRunning} getter instead.
@@ -76,7 +76,7 @@ export default class GameLoop
     protected _isRunning: boolean;
 
     /**
-     * A boolean value indicating whether the game loop is currently running or not.
+     * A flag indicating whether the game loop is currently running or not.
      */
     public get isRunning(): boolean
     {
