@@ -20,9 +20,22 @@ import type { JSONValue } from "./types.js";
  */
 export default class JSONStorage
 {
+    /**
+     * Whether to prefer the {@link localStorage} over the {@link sessionStorage} when calling an ambivalent method.
+     *
+     * If `true`, the persistent storage is preferred. If `false`, the volatile storage is preferred.  
+     * Default is `true`.
+     */
     protected _preferPersistence: boolean;
 
+    /**
+     * A reference to the volatile {@link sessionStorage} storage.
+     */
     protected _volatile: Storage;
+
+    /**
+     * A reference to the persistent {@link localStorage} storage.
+     */
     protected _persistent: Storage;
 
     /**

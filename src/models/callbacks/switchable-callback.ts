@@ -23,15 +23,51 @@ import type { Callback } from "./types.js";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class SwitchableCallback<T extends Callback<any[], any> = Callback> extends CallableObject<T>
 {
+    /**
+     * The currently selected implementation of the callback.
+     */
     protected _callback: T;
+
+    /**
+     * All the implementations that have been registered for the callback.
+     *
+     * The keys are the names of the implementations they were registered with.  
+     * The values are the implementations themselves.
+     */
     protected _callbacks: Map<string, T>;
 
+    /**
+     * A flag indicating whether the callback is enabled or not.
+     *
+     * This protected property is the only one that can be modified directly by the derived classes.  
+     * If you're looking for the public & readonly property, use the {@link isEnabled} getter instead.
+     */
     protected _isEnabled: boolean;
+
+    /**
+     * A flag indicating whether the callback is enabled or not.
+     *
+     * It indicates whether the callback is currently able to execute the currently selected implementation.  
+     * If it's disabled, the callback will be invoked without executing anything.
+     */
     public get isEnabled(): boolean { return this._isEnabled; }
 
+    /**
+     * The key that is associated with the currently selected implementation.
+     *
+     * This protected property is the only one that can be modified directly by the derived classes.
+     * If you're looking for the public & readonly property, use the {@link key} getter instead.
+     */
     protected _key: string;
+
+    /**
+     * The key that is associated with the currently selected implementation.
+     */
     public get key(): string { return this._key; }
 
+    /**
+     * The function that will be called by the extended class when the object is invoked as a function.
+     */
     protected readonly _invoke: (...args: Parameters<T>) => ReturnType<T>;
 
     /**
