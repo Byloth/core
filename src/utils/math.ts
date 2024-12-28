@@ -15,14 +15,14 @@ import { zip } from "./iterator.js";
  * @param values
  * The list of values to compute the average.
  * 
- * It must contain at least one element. Otherwise, a `ValueException` will be thrown.
+ * It must contain at least one element. Otherwise, a {@link ValueException} will be thrown.
  *
  * @param weights
  * The list of weights to apply to the values.  
  * It should contain the same number of elements as the values list or
  * the smaller number of elements between the two lists will be considered.
  *
- * The sum of the weights must be greater than zero. Otherwise, a `ValueException` will be thrown.
+ * The sum of the weights must be greater than zero. Otherwise, a {@link ValueException} will be thrown.
  *
  * @returns The average of the specified values.
  */

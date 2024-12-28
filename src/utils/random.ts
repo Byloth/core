@@ -1,7 +1,8 @@
 import { ValueException } from "../models/index.js";
 
 /**
- * A utility class that provides a set of methods to generate random values.  
+ * A wrapper class around the native {@link Math.random} function that
+ * provides a set of methods to generate random values more easily.  
  * It can be used to generate random numbers, booleans and other different values.
  * 
  * It cannot be instantiated directly.
@@ -126,7 +127,7 @@ export default class Random
      * @param elements
      * The array of elements to pick from.
      *
-     * It must contain at least one element. Otherwise, a `ValueException` will be thrown.
+     * It must contain at least one element. Otherwise, a {@link ValueException} will be thrown.
      * 
      * @returns A valid random index from the given array.
      */
@@ -143,7 +144,7 @@ export default class Random
      * @param elements
      * The array of elements to pick from.
      *
-     * It must contain at least one element. Otherwise, a `ValueException` will be thrown.
+     * It must contain at least one element. Otherwise, a {@link ValueException} will be thrown.
      * 
      * @returns A random element from the given array.
      */

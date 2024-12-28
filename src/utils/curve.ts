@@ -57,7 +57,7 @@ export default class Curve
      * - If it's equal to `1`, the curve will be linear.
      * - If it's included between `0` and `1`, the curve will be logarithmic.
      *
-     * The base cannot be negative. If so, a `ValueException` will be thrown.
+     * The base cannot be negative. If so, a {@link ValueException} will be thrown.
      *
      * @returns A {@link SmartIterator} object that generates the values following an exponential curve.
      */
