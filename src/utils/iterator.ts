@@ -135,7 +135,7 @@ export function range(end: number): SmartIterator<number>;
  * If the `end` value is less than the `start` value, the iterator will generate the numbers in reverse order.
  *
  * @param step The step between the numbers. Default is `1`.
- * 
+ *
  * @returns A {@link SmartIterator} object that generates the numbers in the range.
  */
 export function range(start: number, end: number, step?: number): SmartIterator<number>;

@@ -48,7 +48,7 @@ export function nextAnimationFrame(): Promise<void>
  * for (let i = 0; i < 100_000_000; i += 1)
  * {
  *     doSomething(i);
- * 
+ *
  *     if (i % 100 === 0) await yieldToEventLoop();
  * }
  * ```

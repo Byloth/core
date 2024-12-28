@@ -31,7 +31,7 @@ export default class Exception extends Error
      * catch (error)
      * {
      *     const exc = Exception.FromUnknown(error);
-     * 
+     *
      *     [...]
      * }
      * ```
@@ -63,6 +63,12 @@ export default class Exception extends Error
 
     /**
      * Initializes a new instance of the {@link Exception} class.
+     *
+     * ```ts
+     * throw new Exception("An error occurred while processing the request.");
+     * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -96,7 +102,7 @@ export default class Exception extends Error
  * Also commonly used to satisfy the type-system, but not part of a real feasible scenario.
  *
  * It provides a clear and friendly message by default.
- * 
+ *
  * ```ts
  * function checkCase(value: "A" | "B" | "C"): 1 | 2 | 3
  * {
@@ -114,6 +120,12 @@ export class FatalErrorException extends Exception
 {
     /**
      * Initializes a new instance of the {@link FatalErrorException} class.
+     *
+     * ```ts
+     * throw new FatalErrorException("This error should never happen. Please, contact the support team.");
+     * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -153,6 +165,12 @@ export class NotImplementedException extends FatalErrorException
 {
     /**
      * Initializes a new instance of the {@link NotImplementedException} class.
+     *
+     * ```ts
+     * throw new NotImplementedException("This method hasn't been implemented yet. Check back later.");
+     * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.

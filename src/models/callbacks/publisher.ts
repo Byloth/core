@@ -11,7 +11,7 @@ import type { Callback } from "./types.js";
  * It's a simple and efficient way to decouple the objects and make them communicate with each other.
  *
  * Using generics, it's also possible to define the type of the events and the callbacks that can be subscribed to them.
- * 
+ *
  * ```ts
  * interface EventsMap
  * {
@@ -43,6 +43,10 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
 
     /**
      * Initializes a new instance of the {@link Publisher} class.
+     *
+     * ```ts
+     * const publisher = new Publisher();
+     * ```
      */
     public constructor()
     {

@@ -4,7 +4,7 @@
  *
  * ```ts
  * function factory<T extends object>(Factory: Constructor<T>): T { [...] }
- * 
+ *
  * const instance: MyObject = factory(MyObject);
  * ```
  */
@@ -22,7 +22,7 @@ export type Constructor<T extends object, P extends unknown[] = any[]> = new (..
  *
  * ```ts
  * const intervalId: Interval = setInterval(() => { [...] }, 1000);
- * 
+ *
  * clearInterval(intervalId);
  * ```
  */
@@ -39,7 +39,7 @@ export type Interval = ReturnType<typeof setInterval>;
  *
  * ```ts
  * const timeoutId: Timeout = setTimeout(() => { [...] }, 1000);
- * 
+ *
  * clearTimeout(timeoutId);
  * ```
  */

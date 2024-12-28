@@ -47,7 +47,7 @@ export default class JSONStorage
      * ```
      *
      * ---
-     * 
+     *
      * @param preferPersistence
      * Whether to prefer the {@link localStorage} over the {@link sessionStorage} when calling an ambivalent method.  
      * If omitted, it defaults to `true` to prefer the persistent storage.
@@ -323,14 +323,14 @@ export default class JSONStorage
 
     /**
      * Checks whether the value with the specified key exists within the default storage.
-     * 
+     *
      * ```ts
      * if (jsonStorage.has("key"))
      * {
      *    // The key exists. Do something...
      * }
      * ```
-     * 
+     *
      * ---
      *
      * @param key The key of the value to check.
@@ -349,14 +349,14 @@ export default class JSONStorage
 
     /**
      * Checks whether the value with the specified key exists within the volatile {@link sessionStorage}.
-     * 
+     *
      * ```ts
      * if (jsonStorage.knows("key"))
      * {
      *    // The key exists. Do something...
      * }
      * ```
-     * 
+     *
      * ---
      *
      * @param key The key of the value to check.
@@ -371,14 +371,14 @@ export default class JSONStorage
     /**
      * Checks whether the value with the specified key exists looking first in the
      * volatile {@link sessionStorage} and then, if not found, in the persistent {@link localStorage}.
-     * 
+     *
      * ```ts
      * if (jsonStorage.find("key"))
      * {
      *    // The key exists. Do something...
      * }
      * ```
-     * 
+     *
      * ---
      *
      * @param key The key of the value to check.
@@ -392,14 +392,14 @@ export default class JSONStorage
 
     /**
      * Checks whether the value with the specified key exists within the persistent {@link localStorage}.
-     * 
+     *
      * ```ts
      * if (jsonStorage.exists("key"))
      * {
      *    // The key exists. Do something...
      * }
      * ```
-     * 
+     *
      * ---
      *
      * @param key The key of the value to check.

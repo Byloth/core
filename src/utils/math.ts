@@ -14,7 +14,7 @@ import { zip } from "./iterator.js";
  *
  * @param values
  * The list of values to compute the average.
- * 
+ *
  * It must contain at least one element. Otherwise, a {@link ValueException} will be thrown.
  *
  * @param weights
