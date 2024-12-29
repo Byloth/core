@@ -29,7 +29,7 @@ import GameLoop from "./game-loop.js";
 
 export { SmartIterator, SmartAsyncIterator } from "./iterators/index.js";
 export { JSONStorage } from "./json/index.js";
-export { DeferredPromise, SmartPromise, TimedPromise } from "./promises/index.js";
+export { DeferredPromise, SmartPromise, Thenable, TimedPromise } from "./promises/index.js";
 
 export { Clock, Countdown } from "./timers/index.js";
 
