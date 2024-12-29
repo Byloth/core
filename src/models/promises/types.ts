@@ -1,5 +1,3 @@
-export type { LongRunningTaskOptions } from "./long-running-task.js";
-
 export type MaybePromise<T> = T | PromiseLike<T>;
 
 export type FulfilledHandler<T = void, R = T> = (value: T) => MaybePromise<R>;
