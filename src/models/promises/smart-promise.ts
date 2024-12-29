@@ -3,9 +3,9 @@ import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "./types
 /**
  * A wrapper class representing an enhanced version of the native {@link Promise} object.
  *
- * It provides additional properties that allow you to check the state of the promise itself.  
- * The state can be either `pending`, `fulfilled` or `rejected` and you can access it via the
- * {@link isPending}, {@link isFulfilled} and {@link isRejected} properties.
+ * It provides additional properties to check the state of the promise itself.  
+ * The state can be either `pending`, `fulfilled` or `rejected` and is accessible through
+ * the {@link isPending}, {@link isFulfilled} and {@link isRejected} properties.
  *
  * ```ts
  * const promise = new SmartPromise((resolve, reject) =>
@@ -14,7 +14,11 @@ import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "./types
  * });
  *
  * console.log(promise.isPending); // true
+ * console.log(promise.isFulfilled); // false
+ *
  * console.log(await promise); // "Hello, World!"
+ *
+ * console.log(promise.isPending); // false
  * console.log(promise.isFulfilled); // true
  * ```
  */
@@ -48,7 +52,7 @@ export default class SmartPromise<T = void> implements Promise<T>
     /**
      * A flag indicating whether the promise is still pending or not.
      *
-     * The protected property is the only one that can be modified directly by the derived classes.
+     * The protected property is the only one that can be modified directly by the derived classes.  
      * If you're looking for the public & readonly property, use the {@link isPending} getter instead.
      */
     protected _isPending: boolean;
@@ -64,7 +68,7 @@ export default class SmartPromise<T = void> implements Promise<T>
     /**
      * A flag indicating whether the promise has been fulfilled or not.
      *
-     * The protected property is the only one that can be modified directly by the derived classes.
+     * The protected property is the only one that can be modified directly by the derived classes.  
      * If you're looking for the public & readonly property, use the {@link isFulfilled} getter instead.
      */
     protected _isFulfilled: boolean;
@@ -80,7 +84,7 @@ export default class SmartPromise<T = void> implements Promise<T>
     /**
      * A flag indicating whether the promise has been rejected or not.
      *
-     * The protected property is the only one that can be modified directly by the derived classes.
+     * The protected property is the only one that can be modified directly by the derived classes.  
      * If you're looking for the public & readonly property, use the {@link isRejected} getter instead.
      */
     protected _isRejected: boolean;
@@ -94,7 +98,7 @@ export default class SmartPromise<T = void> implements Promise<T>
     }
 
     /**
-     * The native {@link Promise} object that is wrapped by this {@link SmartPromise} itself.
+     * The native {@link Promise} object wrapped by this {@link SmartPromise} instance.
      */
     protected _promise: Promise<T>;
 
@@ -111,8 +115,8 @@ export default class SmartPromise<T = void> implements Promise<T>
      * ---
      *
      * @param executor
-     * The function that is responsible for eventually resolving or rejecting the promise.  
-     * Just ike for the native {@link Promise}, it will be immediately executed after the promise has been created.
+     * The function responsible for eventually resolving or rejecting the promise.  
+     * Similarly to the native {@link Promise} object, it's immediately executed after the promise is created.
      */
     public constructor(executor: PromiseExecutor<T>)
     {
@@ -140,8 +144,8 @@ export default class SmartPromise<T = void> implements Promise<T>
     }
 
     /**
-     * Creates a new {@link Promise} object identical to the one that is wrapped by this {@link SmartPromise}.  
-     * Just with a different reference so you won't be able to compare or modify the original one.
+     * Creates a new {@link Promise} identical to the one wrapped by
+     * this {@link SmartPromise} instance, with a different reference.
      *
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
@@ -154,12 +158,15 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * ---
      *
-     * @returns A new {@link Promise} object that's identical to the original one.
+     * @returns A new {@link Promise} identical to the original one.
      */
     public then(onFulfilled?: null): Promise<T>;
 
     /**
-     * Attaches a callback to the promise that will be called right after the promise has been fulfilled.
+     * Attaches a callback that executes right after the promise is fulfilled.
+     *
+     * The previous result of the promise is passed as the argument to the callback.  
+     * The callback's return value is considered the new promise's result instead.
      *
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
@@ -172,14 +179,24 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * ---
      *
-     * @param onFulfilled The callback that will be called when the promise has been fulfilled.
+     * @param onFulfilled The callback to execute once the promise is fulfilled.
      *
-     * @returns A new {@link Promise} object that will be resolved with the return value of the callback.
+     * @returns A new {@link Promise} resolved with the return value of the callback.
      */
     public then<F = T>(onFulfilled: FulfilledHandler<T, F>, onRejected?: null): Promise<F>;
 
     /**
-     * Attaches callbacks to the promise that will be called right after the promise has been fulfilled or rejected.
+     * Attaches callbacks that executes right after the promise is fulfilled or rejected.
+     *
+     * The previous result of the promise is passed as the argument to the fulfillment callback.  
+     * The fulfillment callback's return value is considered the new promise's result instead.
+     *
+     * If an error is thrown during execution, the rejection callback is then executed instead.
+     *
+     * Also note that:
+     * - If the rejection callback runs properly, the error is considered handled.  
+     * The rejection callback's return value is considered the new promise's result.
+     * - If the rejection callback throws an error, the new promise is rejected with that error.
      *
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
@@ -193,10 +210,10 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * ---
      *
-     * @param onFulfilled The callback that will be called when the promise has been fulfilled.
-     * @param onRejected The callback that will be called when the promise has been rejected.
+     * @param onFulfilled The callback to execute once the promise is fulfilled.
+     * @param onRejected The callback to execute once the promise is rejected.
      *
-     * @returns A new {@link Promise} object that will be resolved with the return value of the callback.
+     * @returns A new {@link Promise} resolved or rejected based on the callbacks.
      */
     public then<F = T, R = never>(onFulfilled: FulfilledHandler<T, F>, onRejected: RejectedHandler<unknown, R>)
         : Promise<F | R>;
@@ -208,8 +225,8 @@ export default class SmartPromise<T = void> implements Promise<T>
     }
 
     /**
-     * Creates a new {@link Promise} object identical to the one that is wrapped by this {@link SmartPromise}.  
-     * Just with a different reference so you won't be able to compare or modify the original one.
+     * Creates a new {@link Promise} identical to the one wrapped by
+     * this {@link SmartPromise} instance, with a different reference.
      *
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
@@ -222,12 +239,18 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * ---
      *
-     * @returns A new {@link Promise} object that's identical to the original one.
+     * @returns A new {@link Promise} identical to the original one.
      */
     public catch(onRejected?: null): Promise<T>;
 
     /**
-     * Attaches a callback to the promise that will be called right after the promise has been rejected.
+     * Attaches a callback to handle the potential rejection of the promise.  
+     * If it happens, the callback is then executed.
+     *
+     * Also note that:
+     * - If the callback runs properly, the error is considered handled.  
+     * The callback's return value is considered the new promise's result.
+     * - If the callback throws an error, the new promise is rejected with that error.
      *
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
@@ -240,10 +263,9 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * ---
      *
-     * @param onRejected The callback that will be called when the promise has been rejected.
+     * @param onRejected The callback to execute once the promise is rejected.
      *
-     * @returns
-     * A new {@link Promise} object that will catch the error and resolve with the return value of the callback.
+     * @returns A new {@link Promise} able to catch and handle the potential error.
      */
     public catch<R = never>(onRejected: RejectedHandler<unknown, R>): Promise<T | R>;
     public catch<R = never>(onRejected?: RejectedHandler<unknown, R> | null): Promise<T | R>
@@ -252,7 +274,7 @@ export default class SmartPromise<T = void> implements Promise<T>
     }
 
     /**
-     * Attaches a callback to the promise that will be called right after the promise has been settled.
+     * Attaches a callback that executes right after the promise is settled, regardless of the outcome.
      *
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
@@ -262,16 +284,16 @@ export default class SmartPromise<T = void> implements Promise<T>
      * });
      *
      * 
-     * promise.then(() => console.log("Yup!")) // First will only prints "Yup!" is the promise is resolved.
-     *     .catch(() => console.log("Nope!")) // First will only prints "Nope!" is the promise is rejected.
-     *     .finally(() => console.log("What?")); // Then will always prints "What?" in any case.
+     * promise.then(() => console.log("OK!"))
+     *     .catch(() => console.log("KO!"))
+     *     .finally(() => console.log("Done!")); // Always logs "Done!"
      * ```
      *
      * ---
      *
-     * @param onFinally The callback that will be called when the promise has been settled.
+     * @param onFinally The callback to execute when once promise is settled.
      *
-     * @returns A new {@link Promise} object that will always execute the callback at the end.
+     * @returns A new {@link Promise} that executes the callback once the promise is settled.
      */
     public finally(onFinally?: (() => void) | null): Promise<T>
     {
