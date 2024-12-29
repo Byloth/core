@@ -262,9 +262,9 @@ export default class SmartPromise<T = void> implements Promise<T>
      * });
      *
      * 
-     * promise.then(() => console.log("OK!")) // First will only prints "OK!" is the promise is resolved.
-     *     .catch(() => console.log("KO!")) // First will only prints "KO!" is the promise is rejected.
-     *     .finally(() => console.log("Done!")); // Then will always prints "Done!" in any case.
+     * promise.then(() => console.log("Yup!")) // First will only prints "Yup!" is the promise is resolved.
+     *     .catch(() => console.log("Nope!")) // First will only prints "Nope!" is the promise is rejected.
+     *     .finally(() => console.log("What?")); // Then will always prints "What?" in any case.
      * ```
      *
      * ---
