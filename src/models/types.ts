@@ -32,6 +32,7 @@ export type {
 } from "./json/types.js";
 
 export type {
+    LongRunningTaskOptions,
     MaybePromise,
     FulfilledHandler,
     RejectedHandler,
