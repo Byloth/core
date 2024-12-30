@@ -8,9 +8,9 @@ import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "./types
  * the {@link isPending}, {@link isFulfilled} and {@link isRejected} properties.
  *
  * ```ts
- * const promise = new SmartPromise((resolve, reject) =>
+ * const promise = new SmartPromise<string>((resolve, reject) =>
  * {
- *     setTimeout(() => resolve("Hello, World!"), 1000);
+ *     setTimeout(() => resolve("Hello, World!"), 1_000);
  * });
  *
  * console.log(promise.isPending); // true
@@ -106,9 +106,9 @@ export default class SmartPromise<T = void> implements Promise<T>
      * Initializes a new instance of the {@link SmartPromise} class.
      *
      * ```ts
-     * const promise = new SmartPromise((resolve, reject) =>
+     * const promise = new SmartPromise<string>((resolve, reject) =>
      * {
-     *     setTimeout(() => resolve("Hello, World!"), 1000);
+     *     setTimeout(() => resolve("Hello, World!"), 1_000);
      * });
      * ```
      *
@@ -148,9 +148,9 @@ export default class SmartPromise<T = void> implements Promise<T>
      * this {@link SmartPromise} instance, with a different reference.
      *
      * ```ts
-     * const promise = new SmartPromise((resolve, reject) =>
+     * const promise = new SmartPromise<string>((resolve, reject) =>
      * {
-     *     setTimeout(() => resolve("Hello, World!"), 1000);
+     *     setTimeout(() => resolve("Hello, World!"), 1_000);
      * });
      *
      * console.log(await promise.then()); // "Hello, World!"
@@ -169,9 +169,9 @@ export default class SmartPromise<T = void> implements Promise<T>
      * The callback's return value is considered the new promise's result instead.
      *
      * ```ts
-     * const promise = new SmartPromise((resolve, reject) =>
+     * const promise = new SmartPromise<string>((resolve, reject) =>
      * {
-     *     setTimeout(() => resolve("Hello, World!"), 1000);
+     *     setTimeout(() => resolve("Hello, World!"), 1_000);
      * });
      *
      * promise.then((result) => console.log(result)); // "Hello, World!"
@@ -201,8 +201,8 @@ export default class SmartPromise<T = void> implements Promise<T>
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
      * {
-     *     setTimeout(resolve, Math.random() * 1000);
-     *     setTimeout(reject, Math.random() * 1000);
+     *     setTimeout(resolve, Math.random() * 1_000);
+     *     setTimeout(reject, Math.random() * 1_000);
      * });
      *
      * promise.then(() => console.log("OK!"), () => console.log("KO!")); // "OK!" or "KO!"
@@ -231,7 +231,7 @@ export default class SmartPromise<T = void> implements Promise<T>
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
      * {
-     *     setTimeout(() => reject(new Error("An unknown error occurred.")), 1000);
+     *     setTimeout(() => reject(new Error("An unknown error occurred.")), 1_000);
      * });
      *
      * promise.catch(); // Uncaught Error: An unknown error occurred.
@@ -255,7 +255,7 @@ export default class SmartPromise<T = void> implements Promise<T>
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
      * {
-     *     setTimeout(() => reject(new Error("An unknown error occurred.")), 1000);
+     *     setTimeout(() => reject(new Error("An unknown error occurred.")), 1_000);
      * });
      *
      * promise.catch((reason) => console.error(reason)); // "Error: An unknown error occurred."
@@ -279,14 +279,15 @@ export default class SmartPromise<T = void> implements Promise<T>
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
      * {
-     *     setTimeout(resolve, Math.random() * 1000);
-     *     setTimeout(reject, Math.random() * 1000);
+     *     setTimeout(resolve, Math.random() * 1_000);
+     *     setTimeout(reject, Math.random() * 1_000);
      * });
      *
      * 
-     * promise.then(() => console.log("OK!"))
-     *     .catch(() => console.log("KO!"))
-     *     .finally(() => console.log("Done!")); // Always logs "Done!"
+     * promise
+     *     .then(() => console.log("OK!")) // Logs "OK!" if the promise is fulfilled.
+     *     .catch(() => console.log("KO!")) // Logs "KO!" if the promise is rejected.
+     *     .finally(() => console.log("Done!")); // Always logs "Done!".
      * ```
      *
      * ---

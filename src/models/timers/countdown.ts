@@ -24,7 +24,7 @@ interface CountdownEventMap
  * It's possible to subscribe to these events to receive notifications when they occur.
  *
  * ```ts
- * const countdown = new Countdown(10000);
+ * const countdown = new Countdown(10_000);
  *
  * countdown.onStart(() => { console.log("The countdown has started."); });
  * countdown.onTick((remainingTime) => { console.log(`The countdown has ${remainingTime}ms remaining.`); });
@@ -75,7 +75,7 @@ export default class Countdown extends GameLoop
      * Initializes a new instance of the {@link Countdown} class.
      *
      * ```ts
-     * const countdown = new Countdown(10000);
+     * const countdown = new Countdown(10_000);
      * ```
      *
      * ---

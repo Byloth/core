@@ -335,7 +335,7 @@ export class EnvironmentException extends RuntimeException
  * It's commonly used when a task takes too long to complete or when a request times out.
  *
  * ```ts
- * const timeoutId = setTimeout(() => { throw new TimeoutException("The request timed out."); }, 5000);
+ * const timeoutId = setTimeout(() => { throw new TimeoutException("The request timed out."); }, 5_000);
  * const response = await fetch("https://api.example.com/data");
  *
  * clearTimeout(timeoutId);

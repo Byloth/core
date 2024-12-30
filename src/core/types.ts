@@ -21,7 +21,7 @@ export type Constructor<T extends object, P extends unknown[] = any[]> = new (..
  * This allows to seamlessly use the same code in both environments, without having to deal with the differences:
  *
  * ```ts
- * const intervalId: Interval = setInterval(() => { [...] }, 1000);
+ * const intervalId: Interval = setInterval(() => { [...] }, 1_000);
  *
  * clearInterval(intervalId);
  * ```
@@ -38,7 +38,7 @@ export type Interval = ReturnType<typeof setInterval>;
  * This allows to seamlessly use the same code in both environments, without having to deal with the differences:
  *
  * ```ts
- * const timeoutId: Timeout = setTimeout(() => { [...] }, 1000);
+ * const timeoutId: Timeout = setTimeout(() => { [...] }, 1_000);
  *
  * clearTimeout(timeoutId);
  * ```

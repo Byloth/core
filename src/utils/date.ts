@@ -22,7 +22,7 @@ export enum TimeUnit
     /**
      * A second: 1000 milliseconds.
      */
-    Second = 1000,
+    Second = 1_000,
 
     /**
      * A minute: 60 seconds.

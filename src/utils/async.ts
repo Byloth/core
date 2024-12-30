@@ -4,7 +4,7 @@
  *
  * ```ts
  * doSomething();
- * await delay(1000);
+ * await delay(1_000);
  * doSomethingElse();
  * ```
  *
