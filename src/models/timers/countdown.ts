@@ -45,7 +45,7 @@ export default class Countdown extends GameLoop
      * The total duration of the countdown in milliseconds.
      *
      * This protected property is the only one that can be modified directly by the derived classes.
-     * If you're looking for the public & readonly property, use the {@link duration} getter instead.
+     * If you're looking for the public & readonly property, use the {@link Countdown.duration} getter instead.
      */
     protected _duration: number;
 
@@ -113,7 +113,7 @@ export default class Countdown extends GameLoop
 
     /**
      * The internal method actually responsible for stopping the
-     * countdown and resolving or rejecting the {@link _deferrer} promise.
+     * countdown and resolving or rejecting the {@link Countdown._deferrer} promise.
      *
      * @param reason
      * The reason why the countdown has stopped.
@@ -149,7 +149,8 @@ export default class Countdown extends GameLoop
      * ---
      *
      * @param remainingTime
-     * The remaining time to set as default when the countdown starts. Default is the {@link duration} itself.
+     * The remaining time to set as default when the countdown starts.
+     * Default is the {@link Countdown.duration} itself.
      *
      * @returns A {@link SmartPromise} that will be resolved or rejected when the countdown expires or stops.
      */

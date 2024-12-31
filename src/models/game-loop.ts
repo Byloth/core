@@ -43,7 +43,7 @@ export default class GameLoop
 {
     /**
      * The handle of the interval or the animation frame, depending on the environment.  
-     * It's used to stop the game loop when the {@link _stop} method is called.
+     * It's used to stop the game loop when the {@link GameLoop._stop} method is called.
      */
     protected _handle?: number | Interval;
 
@@ -53,7 +53,7 @@ export default class GameLoop
      * of the start of the game loop, it's also used to calculate the elapsed time.
      *
      * This protected property is the only one that can be modified directly by the derived classes.  
-     * If you're looking for the public & readonly property, use the {@link startTime} getter instead.
+     * If you're looking for the public & readonly property, use the {@link GameLoop.startTime} getter instead.
      */
     protected _startTime: number;
 
@@ -71,7 +71,7 @@ export default class GameLoop
      * A flag indicating whether the game loop is currently running or not.
      *
      * This protected property is the only one that can be modified directly by the derived classes.
-     * If you're looking for the public & readonly property, use the {@link isRunning} getter instead.
+     * If you're looking for the public & readonly property, use the {@link GameLoop.isRunning} getter instead.
      */
     protected _isRunning: boolean;
 
@@ -85,7 +85,7 @@ export default class GameLoop
 
     /**
      * The elapsed time since the start of the game loop.  
-     * It's calculated as the difference between the current time and the {@link startTime}.
+     * It's calculated as the difference between the current time and the {@link GameLoop.startTime}.
      */
     public get elapsedTime(): number
     {

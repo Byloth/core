@@ -44,7 +44,8 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      * A flag indicating whether the callback is enabled or not.
      *
      * This protected property is the only one that can be modified directly by the derived classes.  
-     * If you're looking for the public & readonly property, use the {@link isEnabled} getter instead.
+     * If you're looking for the public & readonly property, use
+     * the {@link SwitchableCallback.isEnabled} getter instead.
      */
     protected _isEnabled: boolean;
 
@@ -60,7 +61,7 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      * The key that is associated with the currently selected implementation.
      *
      * This protected property is the only one that can be modified directly by the derived classes.
-     * If you're looking for the public & readonly property, use the {@link key} getter instead.
+     * If you're looking for the public & readonly property, use the {@link SwitchableCallback.key} getter instead.
      */
     protected _key: string;
 

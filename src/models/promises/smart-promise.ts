@@ -5,7 +5,7 @@ import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "./types
  *
  * It provides additional properties to check the state of the promise itself.  
  * The state can be either `pending`, `fulfilled` or `rejected` and is accessible through
- * the {@link isPending}, {@link isFulfilled} and {@link isRejected} properties.
+ * the {@link SmartPromise.isPending}, {@link SmartPromise.isFulfilled} and {@link SmartPromise.isRejected} properties.
  *
  * ```ts
  * const promise = new SmartPromise<string>((resolve, reject) =>
@@ -57,7 +57,7 @@ export default class SmartPromise<T = void> implements Promise<T>
      * A flag indicating whether the promise is still pending or not.
      *
      * The protected property is the only one that can be modified directly by the derived classes.  
-     * If you're looking for the public & readonly property, use the {@link isPending} getter instead.
+     * If you're looking for the public & readonly property, use the {@link SmartPromise.isPending} getter instead.
      */
     protected _isPending: boolean;
 
@@ -73,7 +73,7 @@ export default class SmartPromise<T = void> implements Promise<T>
      * A flag indicating whether the promise has been fulfilled or not.
      *
      * The protected property is the only one that can be modified directly by the derived classes.  
-     * If you're looking for the public & readonly property, use the {@link isFulfilled} getter instead.
+     * If you're looking for the public & readonly property, use the {@link SmartPromise.isFulfilled} getter instead.
      */
     protected _isFulfilled: boolean;
 
@@ -89,7 +89,7 @@ export default class SmartPromise<T = void> implements Promise<T>
      * A flag indicating whether the promise has been rejected or not.
      *
      * The protected property is the only one that can be modified directly by the derived classes.  
-     * If you're looking for the public & readonly property, use the {@link isRejected} getter instead.
+     * If you're looking for the public & readonly property, use the {@link SmartPromise.isRejected} getter instead.
      */
     protected _isRejected: boolean;
 
