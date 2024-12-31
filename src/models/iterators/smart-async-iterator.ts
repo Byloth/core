@@ -17,9 +17,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
 {
     protected _iterator: AsyncIterator<T, R, N>;
 
-    public return?: (value?: R) => Promise<IteratorResult<T, R>>;
-    public throw?: (error?: unknown) => Promise<IteratorResult<T, R>>;
-
     public constructor(iterable: Iterable<T>);
     public constructor(iterable: AsyncIterable<T>);
     public constructor(iterator: Iterator<T, R, N>);
@@ -88,9 +85,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
 
             })();
         }
-
-        if (this._iterator.return) { this.return = (value?: R) => this._iterator.return!(value); }
-        if (this._iterator.throw) { this.throw = (error?: unknown) => this._iterator.throw!(error); }
     }
 
     public async every(predicate: MaybeAsyncIteratee<T, boolean>): Promise<boolean>
@@ -331,6 +325,18 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     public next(...values: N extends undefined ? [] : [N]): Promise<IteratorResult<T, R>>
     {
         return this._iterator.next(...values);
+    }
+    public async return(value?: R): Promise<IteratorResult<T, R>>
+    {
+        if (this._iterator.return) { return this._iterator.return(value); }
+
+        return { done: true, value: value as R };
+    }
+    public throw(error: unknown): Promise<IteratorResult<T, R>>
+    {
+        if (this._iterator.throw) { return this._iterator.throw(error); }
+
+        throw error;
     }
 
     public groupBy<K extends PropertyKey>(iteratee: MaybeAsyncIteratee<T, K>): AggregatedAsyncIterator<K, T>

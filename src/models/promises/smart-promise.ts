@@ -21,6 +21,10 @@ import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "./types
  * console.log(promise.isPending); // false
  * console.log(promise.isFulfilled); // true
  * ```
+ *
+ * ---
+ *
+ * @template T The type of value the promise will eventually resolve to. Default is `void`.
  */
 export default class SmartPromise<T = void> implements Promise<T>
 {
@@ -98,7 +102,7 @@ export default class SmartPromise<T = void> implements Promise<T>
     }
 
     /**
-     * The native {@link Promise} object wrapped by this {@link SmartPromise} instance.
+     * The native {@link Promise} object wrapped by this instance.
      */
     protected _promise: Promise<T>;
 
@@ -144,8 +148,7 @@ export default class SmartPromise<T = void> implements Promise<T>
     }
 
     /**
-     * Creates a new {@link Promise} identical to the one wrapped by
-     * this {@link SmartPromise} instance, with a different reference.
+     * Creates a new {@link Promise} identical to the one wrapped by this instance, with a different reference.
      *
      * ```ts
      * const promise = new SmartPromise<string>((resolve, reject) =>
@@ -179,6 +182,8 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * ---
      *
+     * @template F The type of value the new promise will eventually resolve to. Default is `T`.
+     *
      * @param onFulfilled The callback to execute once the promise is fulfilled.
      *
      * @returns A new {@link Promise} resolved with the return value of the callback.
@@ -210,6 +215,9 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * ---
      *
+     * @template F The type of value the new promise will eventually resolve to. Default is `T`.
+     * @template R The type of value the new promise will eventually resolve to. Default is `never`.
+     *
      * @param onFulfilled The callback to execute once the promise is fulfilled.
      * @param onRejected The callback to execute once the promise is rejected.
      *
@@ -225,8 +233,7 @@ export default class SmartPromise<T = void> implements Promise<T>
     }
 
     /**
-     * Creates a new {@link Promise} identical to the one wrapped by
-     * this {@link SmartPromise} instance, with a different reference.
+     * Creates a new {@link Promise} identical to the one wrapped by this instance, with a different reference.
      *
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
@@ -262,6 +269,8 @@ export default class SmartPromise<T = void> implements Promise<T>
      * ```
      *
      * ---
+     *
+     * @template R The type of value the new promise will eventually resolve to. Default is `T`.
      *
      * @param onRejected The callback to execute once the promise is rejected.
      *

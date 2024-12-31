@@ -12,6 +12,8 @@ import { SmartIterator } from "../models/index.js";
  *
  * ---
  *
+ * @template T The type of elements in the iterables.
+ *
  * @param iterables The list of iterables to chain.
  *
  * @returns A {@link SmartIterator} object that chains the iterables into a single one.
@@ -40,6 +42,8 @@ export function chain<T>(...iterables: Iterable<T>[]): SmartIterator<T>
  *
  * ---
  *
+ * @template T The type of elements in the iterable.
+ *
  * @param elements The iterable to count.
  *
  * @returns The number of elements in the iterable.
@@ -65,6 +69,8 @@ export function count<T>(elements: Iterable<T>): number
  * ```
  *
  * ---
+ *
+ * @template T The type of elements in the iterable.
  *
  * @param elements The iterable to enumerate.
  *
@@ -172,6 +178,8 @@ export function range(start: number, end?: number, step = 1): SmartIterator<numb
  *
  * ---
  *
+ * @template T The type of elements in the iterable.
+ *
  * @param iterable The iterable to shuffle.
  *
  * @returns A new `Array` containing the shuffled elements of the given iterable.
@@ -201,6 +209,8 @@ export function shuffle<T>(iterable: Iterable<T>): T[]
  * ```
  *
  * ---
+ *
+ * @template T The type of elements in the iterable.
  *
  * @param elements The iterable to filter.
  *
@@ -237,6 +247,9 @@ export function unique<T>(elements: Iterable<T>): SmartIterator<T>
  * ```
  *
  * ---
+ *
+ * @template T The type of elements in the first iterable.
+ * @template U The type of elements in the second iterable.
  *
  * @param first The first iterable to zip.
  * @param second The second iterable to zip.

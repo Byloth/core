@@ -29,6 +29,13 @@ import type { Callback } from "./types.js";
  *     unsubscribe = publisher.subscribe("player:move", ({ x, y }) => { [...] });
  * });
  * ```
+ *
+ * ---
+ *
+ * @template T
+ * A map containing the names of the emittable events and the
+ * related callback signatures that can be subscribed to them.  
+ * Default is `Record<string, () => void>`.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> } = Record<string, Callback>>
@@ -88,6 +95,8 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
      *
      * ---
      *
+     * @template K The key of the map containing the callback signature to publish.
+     *
      * @param event The name of the event to publish.
      * @param args The arguments to pass to the subscribers.
      *
@@ -115,6 +124,8 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
      * ```
      *
      * ---
+     *
+     * @template K The key of the map containing the callback signature to subscribe.
      *
      * @param event The name of the event to subscribe to.
      * @param subscriber The subscriber to add to the event.
@@ -152,6 +163,8 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
      * ```
      *
      * ---
+     *
+     * @template K The key of the map containing the callback signature to unsubscribe.
      *
      * @param event The name of the event to unsubscribe from.
      * @param subscriber The subscriber to remove from the event.

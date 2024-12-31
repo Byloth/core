@@ -20,6 +20,10 @@ import type { MaybePromise, PromiseExecutor } from "./types.js";
  *     .then((result) => console.log(result))  // "Hello, World!"
  *     .catch((error) => console.error(error)); // TimeoutException: The operation has timed out.
  * ```
+ *
+ * ---
+ *
+ * @template T The type of value the promise will eventually resolve to. Default is `void`.
  */
 export default class TimedPromise<T = void> extends SmartPromise<T>
 {

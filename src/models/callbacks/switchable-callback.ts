@@ -19,6 +19,10 @@ import type { Callback } from "./types.js";
  * window.addEventListener("pointermove", onPointerMove);
  * window.addEventListener("pointerup", () => { onPointerMove.switch("released"); });
  * ```
+ *
+ * ---
+ *
+ * @template T The type signature of the callback. Default is `(...args: any[]) => any`.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class SwitchableCallback<T extends Callback<any[], any> = Callback> extends CallableObject<T>

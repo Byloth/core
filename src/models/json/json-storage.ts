@@ -114,6 +114,8 @@ export default class JSONStorage
      *
      * ---
      *
+     * @template T The type of the value to retrieve.
+     *
      * @param key The key of the value to retrieve.
      *
      * @returns The value with the specified key or `undefined` if the key doesn't exist.
@@ -128,6 +130,8 @@ export default class JSONStorage
      * ```
      *
      * ---
+     *
+     * @template T The type of the value to retrieve.
      *
      * @param key The key of the value to retrieve.
      * @param defaultValue The default value to return if the key doesn't exist.
@@ -147,6 +151,8 @@ export default class JSONStorage
      * ```
      *
      * ---
+     *
+     * @template T The type of the value to retrieve.
      *
      * @param key The key of the value to retrieve.
      * @param defaultValue The default value to return (which may be `undefined`) if the key doesn't exist.
@@ -174,6 +180,8 @@ export default class JSONStorage
      *
      * ---
      *
+     * @template T The type of the value to retrieve.
+     *
      * @param key The key of the value to retrieve.
      *
      * @returns The value with the specified key or `undefined` if the key doesn't exist.
@@ -188,6 +196,8 @@ export default class JSONStorage
      * ```
      *
      * ---
+     *
+     * @template T The type of the value to retrieve.
      *
      * @param key The key of the value to retrieve.
      * @param defaultValue The default value to return if the key doesn't exist.
@@ -204,6 +214,8 @@ export default class JSONStorage
      * ```
      *
      * ---
+     *
+     * @template T The type of the value to retrieve.
      *
      * @param key The key of the value to retrieve.
      * @param defaultValue The default value to return (which may be `undefined`) if the key doesn't exist.
@@ -226,6 +238,8 @@ export default class JSONStorage
      *
      * ---
      *
+     * @template T The type of the value to retrieve.
+     *
      * @param key The key of the value to retrieve.
      *
      * @returns The value with the specified key or `undefined` if the key doesn't exist.
@@ -241,6 +255,8 @@ export default class JSONStorage
      * ```
      *
      * ---
+     *
+     * @template T The type of the value to retrieve.
      *
      * @param key The key of the value to retrieve.
      * @param defaultValue The default value to return if the key doesn't exist.
@@ -258,6 +274,8 @@ export default class JSONStorage
      * ```
      *
      * ---
+     *
+     * @template T The type of the value to retrieve.
      *
      * @param key The key of the value to retrieve.
      * @param defaultValue The default value to return (which may be `undefined`) if the key doesn't exist.
@@ -279,6 +297,8 @@ export default class JSONStorage
      *
      * ---
      *
+     * @template T The type of the value to retrieve.
+     *
      * @param key The key of the value to retrieve.
      *
      * @returns The value with the specified key or `undefined` if the key doesn't exist.
@@ -293,6 +313,8 @@ export default class JSONStorage
      * ```
      *
      * ---
+     *
+     * @template T The type of the value to retrieve.
      *
      * @param key The key of the value to retrieve.
      * @param defaultValue The default value to return if the key doesn't exist.
@@ -309,6 +331,8 @@ export default class JSONStorage
      * ```
      *
      * ---
+     *
+     * @template T The type of the value to retrieve.
      *
      * @param key The key of the value to retrieve.
      * @param defaultValue The default value to return (which may be `undefined`) if the key doesn't exist.
@@ -423,6 +447,8 @@ export default class JSONStorage
      *
      * ---
      *
+     * @template T The type of the value to set.
+     *
      * @param key The key of the value to set.
      * @param newValue The new value to set. If it's `undefined` or omitted, the key is removed instead.
      * @param persistent
@@ -448,6 +474,8 @@ export default class JSONStorage
      *
      * ---
      *
+     * @template T The type of the value to set.
+     *
      * @param key The key of the value to set.
      * @param newValue The new value to set. If it's `undefined` or omitted, the key is removed instead.
      */
@@ -467,6 +495,8 @@ export default class JSONStorage
      * ```
      *
      * ---
+     *
+     * @template T The type of the value to set.
      *
      * @param key The key of the value to set.
      * @param newValue The new value to set. If it's `undefined` or omitted, the key is removed instead.

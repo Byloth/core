@@ -3,16 +3,88 @@ import { ValueException } from "../exceptions/index.js";
 
 import type { GeneratorFunction, Iteratee, TypeGuardIteratee, Reducer, IteratorLike } from "./types.js";
 
+/**
+ * A wrapper class representing an enhanced & instantiable version
+ * of the native {@link Iterable} & {@link Iterator} interfaces.
+ *
+ * It provides a set of utility methods to better manipulate and
+ * transform iterators in a functional and highly performant way.  
+ * It takes inspiration from the native {@link Array} methods like `map`, `filter`, `reduce`, etc...
+ *
+ * @template T The type of elements in the iterator.
+ * @template R The type of the final result of the iterator. Default is `void`.
+ * @template N The type of the argument required by the `next` method. Default is `undefined`.
+ */
 export default class SmartIterator<T, R = void, N = undefined> implements Iterator<T, R, N>
 {
+    /**
+     * The native {@link Iterator} object that is wrapped by this instance.
+     */
     protected _iterator: Iterator<T, R, N>;
 
-    public return?: (value?: R) => IteratorResult<T, R>;
-    public throw?: (error?: unknown) => IteratorResult<T, R>;
-
+    /**
+     * Initializes a new instance of the {@link SmartIterator} class.
+     *
+     * ```ts
+     * const iterator = new SmartIterator<string>(["A", "B", "C"]);
+     * ```
+     *
+     * ---
+     *
+     * @param iterable The iterable to wrap.
+     */
     public constructor(iterable: Iterable<T, R, N>);
+
+    /**
+     * Initializes a new instance of the {@link SmartIterator} class.
+     *
+     * ```ts
+     * const iterator = new SmartIterator<number, void, number>({
+     *     _sum: 0, _count: 0,
+     *
+     *     next: function (value: number)
+     *     {
+     *         this._sum += value;
+     *         this._count += 1;
+     *
+     *         return { done: false, value: this._sum / this._count };
+     *     }
+     * })
+     * ```
+     *
+     * ---
+     *
+     * @param iterator The iterator to wrap.
+     */
     public constructor(iterator: Iterator<T, R, N>);
+
+    /**
+     * Initializes a new instance of the {@link SmartIterator} class.
+     *
+     * ```ts
+     * const iterator = new SmartIterator<number>(function* ()
+     * {
+     *     for (let i = 2; i < 65_536; i *= 2) { yield (i - 1); }
+     * });
+     * ```
+     *
+     * ---
+     *
+     * @param generatorFn The generator function to wrap.
+     */
     public constructor(generatorFn: GeneratorFunction<T, R, N>);
+
+    /**
+     * Initializes a new instance of the {@link SmartIterator} class.
+     *
+     * ```ts
+     * const iterator = new SmartIterator(values);
+     * ```
+     *
+     * ---
+     *
+     * @param argument The iterable, iterator or generator function to wrap.
+     */
     public constructor(argument: IteratorLike<T, R, N> | GeneratorFunction<T, R, N>);
     public constructor(argument: IteratorLike<T, R, N> | GeneratorFunction<T, R, N>)
     {
@@ -28,11 +100,27 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         {
             this._iterator = argument;
         }
-
-        if (this._iterator.return) { this.return = (value) => this._iterator.return!(value); }
-        if (this._iterator.throw) { this.throw = (error) => this._iterator.throw!(error); }
     }
 
+    /**
+     * Determines whether all the elements of the iterator satisfy a condition.
+     *
+     * Also note that:
+     * - The iterator will be consumed entirely in the process.  
+     * - If the iterator is infinite, the function will never return.
+     *
+     * ```ts
+     * const iterator = new SmartIterator<number>([1, 2, 3, 4, 5]);
+     * const result = iterator.every((value) => value > 0);
+     *
+     * console.log(result); // true
+     * ```
+     *
+     * ---
+     *
+     * @param predicate The condition to check for each element of the iterator.
+     * @returns `true` if all elements satisfy the condition, `false` otherwise.
+     */
     public every(predicate: Iteratee<T, boolean>): boolean
     {
         let index = 0;
@@ -47,6 +135,26 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
             index += 1;
         }
     }
+
+    /**
+     * Determines whether any element of the iterator satisfies a condition.
+     *
+     * Also note that:
+     * - The iterator will be consumed entirely in the process.  
+     * - If the iterator is infinite, the function will never return.
+     *
+     * ```ts
+     * const iterator = new SmartIterator<number>([1, 2, 3, 4, 5]);
+     * const result = iterator.some((value) => value > 3);
+     *
+     * console.log(result); // true
+     * ```
+     *
+     * ---
+     *
+     * @param predicate The condition to check for each element of the iterator.
+     * @returns `true` if any element satisfies the condition, `false` otherwise.
+     */
     public some(predicate: Iteratee<T, boolean>): boolean
     {
         let index = 0;
@@ -271,6 +379,18 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     public next(...values: N extends undefined ? [] : [N]): IteratorResult<T, R>
     {
         return this._iterator.next(...values);
+    }
+    public return(value?: R): IteratorResult<T, R>
+    {
+        if (this._iterator.return) { return this._iterator.return(value); }
+
+        return { done: true, value: value as R };
+    }
+    public throw(error: unknown): IteratorResult<T, R>
+    {
+        if (this._iterator.throw) { return this._iterator.throw(error); }
+
+        throw error;
     }
 
     public groupBy<K extends PropertyKey>(iteratee: Iteratee<T, K>): AggregatedIterator<K, T>

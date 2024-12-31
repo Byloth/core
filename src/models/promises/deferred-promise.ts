@@ -3,7 +3,7 @@ import type { PromiseResolver, PromiseRejecter, FulfilledHandler, RejectedHandle
 import SmartPromise from "./smart-promise.js";
 
 /**
- * A class representing a promise that can be resolved or rejected from the "outside".  
+ * A class representing a {@link SmartPromise} that can be resolved or rejected from the "outside".  
  * The `resolve` and `reject` methods are exposed to allow the promise to be settled from another context.
  *
  * It's particularly useful in scenarios where the promise is created and needs to be awaited in one place,  
@@ -18,6 +18,16 @@ import SmartPromise from "./smart-promise.js";
  * promise.then((result) => console.log(result)); // ["Hello,", "World!"]
  * promise.resolve("Hello, World!");
  * ```
+ *
+ * ---
+ *
+ * @template T The type of value the promise expects to initially be resolved with. Default is `void`.
+ * @template F
+ * The type of value returned by the `onFulfilled` callback.  
+ * This will be the actual type of value the promise will eventually resolve to. Default is `T`.
+ * @template R
+ * The type of value possibly returned by the `onRejected` callback.  
+ * This will be coupled with the type of value the promise will eventually resolve to, if provided. Default is `never`.
  */
 export default class DeferredPromise<T = void, F = T, R = never> extends SmartPromise<F | R>
 {
