@@ -2,7 +2,7 @@ import { SmartIterator } from "../iterators/index.js";
 import type { GeneratorFunction, IteratorLike } from "../iterators/types.js";
 
 import ReducedIterator from "./reduced-iterator.js";
-import type { KeyedIteratee, KeyedTypeGuardIteratee, KeyedReducer } from "./types.js";
+import type { KeyedIteratee, KeyedTypeGuardPredicate, KeyedReducer } from "./types.js";
 
 export default class AggregatedIterator<K extends PropertyKey, T>
 {
@@ -55,7 +55,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     }
 
     public filter(predicate: KeyedIteratee<K, T, boolean>): AggregatedIterator<K, T>;
-    public filter<S extends T>(predicate: KeyedTypeGuardIteratee<K, T, S>): AggregatedIterator<K, S>;
+    public filter<S extends T>(predicate: KeyedTypeGuardPredicate<K, T, S>): AggregatedIterator<K, S>;
     public filter(predicate: KeyedIteratee<K, T, boolean>): AggregatedIterator<K, T>
     {
         const elements = this._elements;
@@ -188,7 +188,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     }
 
     public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | undefined>;
-    public find<S extends T>(predicate: KeyedTypeGuardIteratee<K, T, S>): ReducedIterator<K, S | undefined>;
+    public find<S extends T>(predicate: KeyedTypeGuardPredicate<K, T, S>): ReducedIterator<K, S | undefined>;
     public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | undefined>
     {
         const values = new Map<K, [number, T | undefined]>();

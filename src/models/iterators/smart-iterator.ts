@@ -1,7 +1,7 @@
 import AggregatedIterator from "../aggregators/aggregated-iterator.js";
 import { ValueException } from "../exceptions/index.js";
 
-import type { GeneratorFunction, Iteratee, TypeGuardIteratee, Reducer, IteratorLike } from "./types.js";
+import type { GeneratorFunction, Iteratee, TypeGuardPredicate, Reducer, IteratorLike } from "./types.js";
 
 /**
  * A wrapper class representing an enhanced & instantiable version
@@ -235,7 +235,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * @returns A new {@link SmartIterator} containing only the elements that satisfy the condition.
      */
-    public filter<S extends T>(predicate: TypeGuardIteratee<T, S>): SmartIterator<S, R>;
+    public filter<S extends T>(predicate: TypeGuardPredicate<T, S>): SmartIterator<S, R>;
     public filter(predicate: Iteratee<T, boolean>): SmartIterator<T, R>
     {
         const iterator = this._iterator;
@@ -593,7 +593,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * @returns The first element that satisfies the condition, `undefined` otherwise.
      */
-    public find<S extends T>(predicate: TypeGuardIteratee<T, S>): S | undefined;
+    public find<S extends T>(predicate: TypeGuardPredicate<T, S>): S | undefined;
     public find(predicate: Iteratee<T, boolean>): T | undefined
     {
         let index = 0;

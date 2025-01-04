@@ -9,7 +9,7 @@ import type {
 import type { MaybePromise } from "../types.js";
 
 import ReducedIterator from "./reduced-iterator.js";
-import type { MaybeAsyncKeyedIteratee, MaybeAsyncKeyedTypeGuardIteratee, MaybeAsyncKeyedReducer } from "./types.js";
+import type { MaybeAsyncKeyedIteratee, MaybeAsyncKeyedReducer } from "./types.js";
 
 export default class AggregatedAsyncIterator<K extends PropertyKey, T>
 {
@@ -65,7 +65,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     }
 
     public filter(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): AggregatedAsyncIterator<K, T>;
-    public filter<S extends T>(predicate: MaybeAsyncKeyedTypeGuardIteratee<K, T, S>): AggregatedAsyncIterator<K, S>;
     public filter(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): AggregatedAsyncIterator<K, T>
     {
         const elements = this._elements;
@@ -200,9 +199,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     }
 
     public async find(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, T | undefined>>;
-    public async find<S extends T>(predicate: MaybeAsyncKeyedTypeGuardIteratee<K, T, S>)
-        : Promise<ReducedIterator<K, S | undefined>>;
-
     public async find(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, T | undefined>>
     {
         const values = new Map<K, [number, T | undefined]>();
