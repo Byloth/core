@@ -316,6 +316,36 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * @returns A new {@link SmartAsyncIterator} containing only the elements that satisfy the condition.
      */
     public filter(predicate: MaybeAsyncIteratee<T, boolean>): SmartAsyncIterator<T, R>;
+
+    /**
+     * Filters the elements of the iterator using a given condition.  
+     * Since the iterator is lazy, the filtering process will
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume also the other.
+     *
+     * ```ts
+     * const iterator = new SmartAsyncIterator<number | string>([-2, "-1", "0", 1, "2"]);
+     * const result = iterator.filter<number>(async (value) => typeof value === "number");
+     *
+     * console.log(await result.toArray()); // [-2, 1]
+     * ```
+     *
+     * ---
+     *
+     * @template S
+     * The type of the elements that satisfy the condition.  
+     * This allows the type-system to infer the correct type of the new iterator.
+     *  
+     * It must be a subtype of the original type of the iterator.
+     *
+     * @param predicate The condition to check for each element of the iterator.
+     *
+     * @returns A new {@link SmartAsyncIterator} containing only the elements that satisfy the condition.
+     */
+    public filter<S extends T>(predicate: MaybeAsyncIteratee<T, boolean>): SmartAsyncIterator<S, R>;
     public filter(predicate: MaybeAsyncIteratee<T, boolean>): SmartAsyncIterator<T, R>
     {
         const iterator = this._iterator;
@@ -642,6 +672,41 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * @returns A promise that will resolve to the first element that satisfies the condition, `undefined` otherwise.
      */
     public async find(predicate: MaybeAsyncIteratee<T, boolean>): Promise<T | undefined>;
+
+    /**
+     * Finds the first element of the iterator that satisfies a given condition.  
+     *
+     * The method will iterate over all elements of the iterator checking if they satisfy the condition.
+     * The first element that satisfies the condition will be returned immediately.
+     *
+     * Only the elements that are necessary to find the first
+     * satisfying one will be consumed from the original iterator.
+     * The rest of the original iterator will be available for further consumption.
+     *
+     * Also note that:
+     * - If no element satisfies the condition, `undefined` will be returned once the entire iterator is consumed.
+     * - If the iterator is infinite and no element satisfies the condition, the function will never return.
+     *
+     * ```ts
+     * const iterator = new SmartAsyncIterator<number | string>([-2, "-1", "0", 1, "2"]);
+     * const result = await iterator.find<number>(async (value) => typeof value === "number");
+     *
+     * console.log(result); // -2
+     * ```
+     *
+     * ---
+     *
+     * @template S
+     * The type of the element that satisfies the condition.  
+     * This allows the type-system to infer the correct type of the result.
+     *  
+     * It must be a subtype of the original type of the iterator.
+     *
+     * @param predicate The condition to check for each element of the iterator.
+     *
+     * @returns A promise that will resolve to the first element that satisfies the condition, `undefined` otherwise.
+     */
+    public async find<S extends T>(predicate: MaybeAsyncIteratee<T, boolean>): Promise<S | undefined>;
     public async find(predicate: MaybeAsyncIteratee<T, boolean>): Promise<T | undefined>
     {
         let index = 0;

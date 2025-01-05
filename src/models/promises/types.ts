@@ -1,5 +1,5 @@
 /**
- * An utility type that represents a value that can be either a value or a promise of that value.  
+ * An union type that represents a value that can be either a value or a promise of that value.  
  * This is useful when you want to handle both synchronous and asynchronous values in the same way.
  *
  * ```ts

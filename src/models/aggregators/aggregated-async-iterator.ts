@@ -65,6 +65,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     }
 
     public filter(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): AggregatedAsyncIterator<K, T>;
+    public filter<S extends T>(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): AggregatedAsyncIterator<K, S>;
     public filter(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): AggregatedAsyncIterator<K, T>
     {
         const elements = this._elements;
@@ -199,6 +200,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     }
 
     public async find(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, T | undefined>>;
+    public async find<S extends T>(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>)
+        : Promise<ReducedIterator<K, S | undefined>>;
+
     public async find(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, T | undefined>>
     {
         const values = new Map<K, [number, T | undefined]>();

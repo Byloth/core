@@ -1,7 +1,7 @@
 import type { MaybePromise } from "../promises/types.js";
 
 /**
- * An utility type that represents an iterable object that can be either synchronous or asynchronous.
+ * An union type that represents an iterable object that can be either synchronous or asynchronous.
  *
  * ```ts
  * const iterable: MaybeAsyncIterable<number> = [...];
@@ -18,7 +18,7 @@ import type { MaybePromise } from "../promises/types.js";
 export type MaybeAsyncIterable<T, R = void, N = undefined> = Iterable<T, R, N> | AsyncIterable<T, R, N>;
 
 /**
- * An utility type that represents an iterator object that can be either synchronous or asynchronous.
+ * An union type that represents an iterator object that can be either synchronous or asynchronous.
  *
  * ```ts
  * const iterator: MaybeAsyncIterator<number> = { ... };
@@ -35,7 +35,7 @@ export type MaybeAsyncIterable<T, R = void, N = undefined> = Iterable<T, R, N> |
 export type MaybeAsyncIterator<T, R = void, N = undefined> = Iterator<T, R, N> | AsyncIterator<T, R, N>;
 
 /**
- * An utility type that represents a generator object that can be either synchronous or asynchronous.
+ * An union type that represents a generator object that can be either synchronous or asynchronous.
  *
  * ```ts
  * const generator: MaybeAsyncGenerator<number> = [async] function*() { ... };
@@ -137,9 +137,9 @@ export type Iteratee<T, R = void> = (value: T, index: number) => R;
  * ```ts
  * const iteratee: AsyncIteratee<number, string> = async (value: number) => `${value}`;
  * const values: Promise<string>[] = [1, 2, 3, 4, 5].map(iteratee);
- * for (const value of values)
+ * for await (const value of values)
  * {
- *     console.log(await value); // "1", "2", "3", "4", "5"
+ *     console.log(value); // "1", "2", "3", "4", "5"
  * }
  * ```
  *
@@ -158,9 +158,9 @@ export type AsyncIteratee<T, R = void> = (value: T, index: number) => Promise<R>
  * ```ts
  * const iteratee: MaybeAsyncIteratee<number, string> = [async] (value: number) => `${value}`;
  * const values: Promise<string>[] = [1, 2, 3, 4, 5].map(iteratee);
- * for (const value of values)
+ * for await (const value of values)
  * {
- *     console.log(await value); // "1", "2", "3", "4", "5"
+ *     console.log(value); // "1", "2", "3", "4", "5"
  * }
  * ```
  *
@@ -173,7 +173,7 @@ export type MaybeAsyncIteratee<T, R = void> = (value: T, index: number) => Maybe
 
 /**
  * An utility type that represents a {@link https://en.wikipedia.org/wiki/Predicate_(mathematical_logic)|predicate}
- * which acts as a
+ * function which acts as a
  * {@link https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates|type guard}.  
  * It can be used to ensure the type of the elements of an iterable
  * while allowing the type-system to infer them correctly.
@@ -201,10 +201,120 @@ export type TypeGuardPredicate<T, R extends T> = (value: T, index: number) => va
 // export type AsyncTypeGuardPredicate<T, R extends T> = (value: T, index: number) => value is Promise<R>;
 // export type MaybeAsyncTypeGuardPredicate<T, R extends T> = (value: T, index: number) => value is MaybePromise<R>;
 
+/**
+ * An utility type that represents a reducer function.  
+ * It can be used to reduce the elements of an iterable into a single value.
+ *
+ * ```ts
+ * const sum: Reducer<number, number> = (accumulator, value) => accumulator + value;
+ * const total: number = [1, 2, 3, 4, 5].reduce(sum);
+ *
+ * console.log(total); // 15
+ * ```
+ *
+ * ---
+ *
+ * @template T The type of the elements in the iterable.
+ * @template A The type of the accumulator.
+ */
 export type Reducer<T, A> = (accumulator: A, value: T, index: number) => A;
+
+/**
+ * An utility type that represents an asynchronous reducer function.  
+ * It can be used to reduce the elements of an iterable into a single value.
+ *
+ * ```ts
+ * const sum: AsyncReducer<number, number> = async (accumulator, value) => accumulator + value;
+ * const result = await new SmartAsyncIterator<number>([1, 2, 3, 4, 5]).reduce(sum);
+ *
+ * console.log(result); // 15
+ * ```
+ *
+ * ---
+ *
+ * @template T The type of the elements in the iterable.
+ * @template A The type of the accumulator.
+ */
 export type AsyncReducer<T, A> = (accumulator: A, value: T, index: number) => Promise<A>;
+
+/**
+ * An utility type that represents a reducer function that can be either synchronous or asynchronous.  
+ * It can be used to reduce the elements of an iterable into a single value.
+ *
+ * ```ts
+ * const sum: MaybeAsyncReducer<number, number> = [async] (accumulator, value) => accumulator + value;
+ * const result = await new SmartAsyncIterator<number>([1, 2, 3, 4, 5]).reduce(sum);
+ *
+ * console.log(result); // 15
+ * ```
+ *
+ * ---
+ *
+ * @template T The type of the elements in the iterable.
+ * @template A The type of the accumulator.
+ */
 export type MaybeAsyncReducer<T, A> = (accumulator: A, value: T, index: number) => MaybePromise<A>;
 
-export type IteratorLike<T, R = void, N = undefined> = Iterable<T> | Iterator<T, R, N>;
-export type AsyncIteratorLike<T, R = void, N = undefined> = AsyncIterable<T> | AsyncIterator<T, R, N>;
+/**
+ * An union type that represents either an iterable or an iterator object.  
+ * More in general, it represents an object that can be looped over in one way or another.
+ *
+ * ```ts
+ * const elements: IteratorLike<number> = { ... };
+ * const iterator: SmartIterator<number> = new SmartIterator(elements);
+ * for (const value of iterator)
+ * {
+ *     console.log(value);
+ * }
+ * ```
+ *
+ * ---
+ *
+ * @template T The type of the elements in the iterable.
+ * @template R The type of the return value of the iterator. Default is `void`.
+ * @template N The type of the `next` method argument. Default is `undefined`.
+ */
+export type IteratorLike<T, R = void, N = undefined> = Iterable<T, R, N> | Iterator<T, R, N>;
+
+/**
+ * An union type that represents either an iterable or an iterator object that can be asynchronous.
+ * More in general, it represents an object that can be looped over in one way or another.
+ *
+ * ```ts
+ * const elements: AsyncIteratorLike<number> = { ... };
+ * const iterator: SmartAsyncIterator<number> = new SmartAsyncIterator(elements);
+ * for await (const value of iterator)
+ * {
+ *     console.log(value);
+ * }
+ * ```
+ *
+ * ---
+ *
+ * @template T The type of the elements in the iterable.
+ * @template R The type of the return value of the iterator. Default is `void`.
+ * @template N The type of the `next` method argument. Default is `undefined`.
+ */
+export type AsyncIteratorLike<T, R = void, N = undefined> = AsyncIterable<T, R, N> | AsyncIterator<T, R, N>;
+
+/**
+ * An union type that represents either an iterable or an iterator
+ * object that can be either synchronous or asynchronous.  
+ * More in general, it represents an object that can be looped over in one way or another.
+ *
+ * ```ts
+ * const elements: MaybeAsyncIteratorLike<number> = { ... };
+ * const iterator: SmartAsyncIterator<number> = new SmartAsyncIterator(elements);
+ * for await (const value of iterator)
+ * {
+ *     console.log(value);
+ * }
+ * ```
+ *
+ * ---
+ *
+ * @template T The type of the elements in the iterable.
+ * @template R The type of the return value of the iterator. Default is `void`.
+ * @template N The type of the `next` method argument. Default is `undefined`.
+ */
 export type MaybeAsyncIteratorLike<T, R = void, N = undefined> = IteratorLike<T, R, N> | AsyncIteratorLike<T, R, N>;
