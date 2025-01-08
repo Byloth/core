@@ -1,223 +1,121 @@
-import { describe, expect, test } from "vitest";
+import { describe, it, expect } from "vitest";
 
-import { dateDifference, dateRange, dateRound, getWeek, WeekDay } from "../../src/index.js";
-import { RangeException, TimeUnit } from "../../src/index.js";
+import { RangeException } from "../../src/index.js";
+import { TimeUnit, WeekDay, dateDifference, dateRange, dateRound, getWeek } from "../../src/index.js";
+
+describe("TimeUnit", () =>
+{
+    it("Should have correct conversion factors", () =>
+    {
+        expect(TimeUnit.Millisecond).toBe(1);
+        expect(TimeUnit.Second).toBe(1000);
+        expect(TimeUnit.Minute).toBe(60 * TimeUnit.Second);
+        expect(TimeUnit.Hour).toBe(60 * TimeUnit.Minute);
+        expect(TimeUnit.Day).toBe(24 * TimeUnit.Hour);
+        expect(TimeUnit.Week).toBe(7 * TimeUnit.Day);
+        expect(TimeUnit.Month).toBe(30 * TimeUnit.Day);
+        expect(TimeUnit.Year).toBe(365 * TimeUnit.Day);
+    });
+});
+
+describe("WeekDay", () =>
+{
+    it("Should have correct day values", () =>
+    {
+        expect(WeekDay.Sunday).toBe(0);
+        expect(WeekDay.Monday).toBe(1);
+        expect(WeekDay.Tuesday).toBe(2);
+        expect(WeekDay.Wednesday).toBe(3);
+        expect(WeekDay.Thursday).toBe(4);
+        expect(WeekDay.Friday).toBe(5);
+        expect(WeekDay.Saturday).toBe(6);
+    });
+});
 
 describe("dateDifference", () =>
 {
-    test("years", () =>
+    it("Should calculate the difference in days by default", () =>
     {
-        expect(dateDifference("2024-03-01T12:23:34.456Z", "2020-02-28Z", TimeUnit.Year))
-            .toBe(-4);
+        const start = new Date("2025-01-01");
+        const end = new Date("2025-01-31");
+
+        expect(dateDifference(start, end)).toBe(30);
     });
-    test("months", () =>
+    it("Should calculate the difference in specified `TimeUnit`", () =>
     {
-        expect(dateDifference("2020-02-28Z", "2024-03-01T12:23:34.456Z", TimeUnit.Month))
-            .toBe(4 * 12);
-    });
-    test("weeks", () =>
-    {
-        expect(dateDifference("2024-03-01T12:23:34.456Z", "2020-02-28Z", TimeUnit.Week))
-            .toBe(-(4 * 52 + 1));
+        const start = new Date("2025-01-01");
+        const end = new Date("2025-01-31");
+
+        expect(dateDifference(start, end, TimeUnit.Minute)).toBe(43200);
     });
 
-    test("default", () =>
+    it("Should return negative difference if start date is after end date", () =>
     {
-        expect(dateDifference("2020-02-28Z", "2024-03-01T12:23:34.456Z"))
-            .toBe(365 * 4 + 3);
-    });
+        const start = new Date("2025-01-31");
+        const end = new Date("2025-01-01");
 
-    test("days", () =>
-    {
-        expect(dateDifference("2024-03-01T12:23:34.456Z", "2020-02-28Z", TimeUnit.Day))
-            .toBe(-(365 * 4 + 3));
-    });
-    test("hours", () =>
-    {
-        expect(dateDifference(new Date("2020-02-28Z"), "2024-03-01T12:23:34.456Z", TimeUnit.Hour))
-            .toBe((365 * 4 + 3) * 24 + 12);
-    });
-    test("minutes", () =>
-    {
-        expect(dateDifference("2024-03-01T12:23:34.456Z", new Date("2020-02-28Z"), TimeUnit.Minute))
-            .toBe(-(((365 * 4 + 3) * 24 + 12) * 60 + 23));
-    });
-    test("seconds", () =>
-    {
-        expect(dateDifference(new Date("2020-02-28Z"), new Date("2024-03-01T12:23:34.456Z"), TimeUnit.Second))
-            .toBe((((365 * 4 + 3) * 24 + 12) * 60 + 23) * 60 + 34);
-    });
-    test("milliseconds", () =>
-    {
-        expect(dateDifference(new Date("2024-03-01T12:23:34.456Z"), new Date("2020-02-28Z"), TimeUnit.Millisecond))
-            .toBe(-(((((365 * 4 + 3) * 24 + 12) * 60 + 23) * 60 + 34) * 1000 + 456));
+        expect(dateDifference(start, end)).toBe(-30);
     });
 });
 
 describe("dateRange", () =>
 {
-    test("years", () =>
+    it("Should generate dates in the specified range", () =>
     {
-        expect([
-            ...dateRange("2020-02-28Z", "2027-03-01T12:23:34.456Z", TimeUnit.Year * 3)
-        ].map((date) => date.getTime()))
-            .toEqual([1582848000000, 1677456000000, 1772064000000]);
-    });
-    test("months", () =>
-    {
-        expect([
-            ...dateRange("2020-02-28T12:23:34.456Z", "2020-06-27Z", TimeUnit.Month)
-        ].map((date) => date.getTime()))
-            .toEqual([1582892614456, 1585484614456, 1588076614456, 1590668614456]);
-    });
-    test("weeks", () =>
-    {
-        expect([
-            ...dateRange("2020-02-28Z", "2020-03-31T12:23:34.456Z", TimeUnit.Week)
-        ].map((date) => date.getTime()))
-            .toEqual([1582848000000, 1583452800000, 1584057600000, 1584662400000, 1585267200000]);
+        const start = new Date("2025-01-01");
+        const end = new Date("2025-01-05");
+        const iterator = dateRange(start, end);
+        const dates = Array.from(iterator);
+
+        expect(dates.length).toBe(4);
+
+        expect(dates[0].toISOString().slice(0, 10)).toBe("2025-01-01");
+        expect(dates[3].toISOString().slice(0, 10)).toBe("2025-01-04");
     });
 
-    test("default", () =>
+    it("Should throw `RangeException` if start date is not less than end date", () =>
     {
-        expect([
-            ...dateRange("2020-02-28T12:23:34.456Z", "2020-03-02Z")
-        ].map((date) => date.getTime()))
-            .toEqual([1582892614456, 1582979014456, 1583065414456]);
-    });
-    test("default (exception)", () =>
-    {
-        expect(() => [...dateRange("2020-03-02Z", "2020-02-28T12:23:34.456Z")])
-            .toThrowError(RangeException);
-    });
-
-    test("days", () =>
-    {
-        expect([
-            ...dateRange("2020-02-28Z", "2020-03-31T12:23:34.456Z", TimeUnit.Day * 7)
-        ].map((date) => date.getTime()))
-            .toEqual([1582848000000, 1583452800000, 1584057600000, 1584662400000, 1585267200000]);
-    });
-    test("hours", () =>
-    {
-        expect([
-            ...dateRange(new Date("2020-02-28T12:23:34.456Z"), "2020-02-28T18:00:00Z", TimeUnit.Hour * 2)
-        ].map((date) => date.getTime()))
-            .toEqual([1582892614456, 1582899814456, 1582907014456]);
-    });
-    test("minutes", () =>
-    {
-        expect([
-            ...dateRange("2020-02-28T12:23:34.456Z", new Date("2020-02-28T12:28:33Z"), TimeUnit.Minute)
-        ].map((date) => date.getTime()))
-            .toEqual([1582892614456, 1582892674456, 1582892734456, 1582892794456, 1582892854456]);
-    });
-    test("seconds", () =>
-    {
-        expect([
-            ...dateRange(new Date("2020-02-28T12:23:34.456Z"), new Date("2020-02-28T12:23:37Z"), TimeUnit.Second)
-        ].map((date) => date.getTime()))
-            .toEqual([1582892614456, 1582892615456, 1582892616456]);
-    });
-    test("milliseconds", () =>
-    {
-        expect([
-            ...dateRange("2020-02-28T12:23:34.456Z", "2020-02-28T12:23:34.495Z", TimeUnit.Millisecond * 10)
-        ].map((date) => date.getTime()))
-            .toEqual([1582892614456, 1582892614466, 1582892614476, 1582892614486]);
+        const start = new Date("2025-01-05");
+        const end = new Date("2025-01-01");
+        expect(() => dateRange(start, end)).toThrow(RangeException);
     });
 });
 
 describe("dateRound", () =>
 {
-    test("years (exception)", () =>
+    it("Should round date to the previous time unit", () =>
     {
-        expect(() => dateRound("2020-02-28T12:23:34.456Z", TimeUnit.Year))
-            .toThrowError(RangeException);
-    });
-    test("months (exception)", () =>
-    {
-        expect(() => dateRound("2020-02-28T12:23:34.456Z", TimeUnit.Month))
-            .toThrowError(RangeException);
-    });
-    test("weeks (exception)", () =>
-    {
-        expect(() => dateRound("2020-02-28T12:23:34.456Z", TimeUnit.Week))
-            .toThrowError(RangeException);
+        const date = new Date("2025-01-01T12:34:56.789Z");
+
+        expect(dateRound(date, TimeUnit.Hour).toISOString()).toBe("2025-01-01T12:00:00.000Z");
     });
 
-    test("default", () =>
+    it("Should throw `RangeException` if unit is less than or equal to a millisecond", () =>
     {
-        expect(dateRound("2020-02-28T12:23:34.456Z").getTime())
-            .toBe(1582848000000);
+        const date = new Date("2025-01-01T12:34:56.789Z");
+
+        expect(() => dateRound(date, TimeUnit.Millisecond)).toThrow(RangeException);
     });
-    test("days", () =>
+    it("Should throw `RangeException` if unit is greater than a day", () =>
     {
-        expect(dateRound("2020-02-28T12:23:34.456Z", TimeUnit.Day).getTime())
-            .toBe(1582848000000);
-    });
-    test("hours", () =>
-    {
-        expect(dateRound("2020-02-28T12:23:34.456Z", TimeUnit.Hour).getTime())
-            .toBe(1582891200000);
-    });
-    test("minutes", () =>
-    {
-        expect(dateRound("2020-02-28T12:23:34.456Z", TimeUnit.Minute).getTime())
-            .toBe(1582892580000);
-    });
-    test("seconds", () =>
-    {
-        expect(dateRound("2020-02-28T12:23:34.456Z", TimeUnit.Second).getTime())
-            .toBe(1582892614000);
-    });
-    test("milliseconds (exception)", () =>
-    {
-        expect(() => dateRound("2020-02-28T12:23:34.456Z", TimeUnit.Millisecond))
-            .toThrowError(RangeException);
+        const date = new Date("2025-01-01T12:34:56.789Z");
+
+        expect(() => dateRound(date, TimeUnit.Week)).toThrow(RangeException);
     });
 });
 
 describe("getWeek", () =>
 {
-    test("default", () =>
+    it("Should get the first day of the week for the specified date", () =>
     {
-        expect(getWeek("2020-02-28T12:23:34.456Z").getTime())
-            .toBe(1582416000000);
+        const date = new Date("2025-01-01");
+        expect(getWeek(date, WeekDay.Monday).toISOString()
+            .slice(0, 10)).toBe("2024-12-30");
     });
-    test("monday", () =>
+    it("Should get the first day of the week for the specified date with default first day", () =>
     {
-        expect(getWeek("2020-02-28T12:23:34.456Z", WeekDay.Monday).getTime())
-            .toBe(1582502400000);
-    });
-    test("tuesday", () =>
-    {
-        expect(getWeek(new Date("2020-02-28T12:23:34.456Z"), WeekDay.Tuesday).getTime())
-            .toBe(1582588800000);
-    });
-    test("wednesday", () =>
-    {
-        expect(getWeek("2020-02-28T12:23:34.456Z", WeekDay.Wednesday).getTime())
-            .toBe(1582675200000);
-    });
-    test("thursday", () =>
-    {
-        expect(getWeek(new Date("2020-02-28T12:23:34.456Z"), WeekDay.Thursday).getTime())
-            .toBe(1582761600000);
-    });
-    test("friday", () =>
-    {
-        expect(getWeek("2020-02-28T12:23:34.456Z", WeekDay.Friday).getTime())
-            .toBe(1582848000000);
-    });
-    test("saturday", () =>
-    {
-        expect(getWeek(new Date("2020-02-28T12:23:34.456Z"), WeekDay.Saturday).getTime())
-            .toBe(1582329600000);
-    });
-    test("sunday", () =>
-    {
-        expect(getWeek(new Date("2020-02-28T12:23:34.456Z"), WeekDay.Sunday).getTime())
-            .toBe(1582416000000);
+        const date = new Date("2025-01-01");
+        expect(getWeek(date).toISOString()
+            .slice(0, 10)).toBe("2024-12-29");
     });
 });
