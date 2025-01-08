@@ -157,7 +157,7 @@ export function dateDifference(start: string | Date, end: string | Date, unit = 
  * @param end
  * The end date (excluded).
  *
- * Must be greater than the start date. If not, a {@link RangeException} will be thrown.
+ * Must be greater than the start date. Otherwise, a {@link RangeException} will be thrown.
  *
  * @param step The time unit to express the step between the dates. `TimeUnit.Day` by default.
  *
@@ -194,14 +194,32 @@ export function dateRange(start: string | Date, end: string | Date, step = TimeU
  * ---
  *
  * @param date The date to round.
- * @param unit The time unit to express the rounding. `TimeUnit.Day` by default.
+ * @param unit
+ * The time unit to express the rounding. `TimeUnit.Day` by default.
+ *
+ * Must be greater than a millisecond and less than or equal to a day.
+ * Otherwise, a {@link RangeException} will be thrown.
  *
  * @returns The rounded date.
  */
 export function dateRound(date: string | Date, unit = TimeUnit.Day): Date
 {
-    date = new Date(date);
+    if (unit <= TimeUnit.Millisecond)
+    {
+        throw new RangeException(
+            "Rounding a timestamp by milliseconds or less makes no sense." +
+            "Use the timestamp value directly instead."
+        );
+    }
+    if (unit > TimeUnit.Day)
+    {
+        throw new RangeException(
+            "Rounding by more than a day leads to unexpected results. " +
+            "Consider using other methods to round dates by weeks, months or years."
+        );
+    }
 
+    date = new Date(date);
     return new Date(Math.floor(date.getTime() / unit) * unit);
 }
 
