@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import { RangeException } from "../../src/index.js";
+import { RangeException, SmartIterator } from "../../src/index.js";
 import { TimeUnit, WeekDay, dateDifference, dateRange, dateRound, getWeek } from "../../src/index.js";
 
 describe("TimeUnit", () =>
@@ -60,6 +60,16 @@ describe("dateDifference", () =>
 
 describe("dateRange", () =>
 {
+    it("Should return an instance of `SmartIterator`", () =>
+    {
+        const start = new Date("2025-01-01");
+        const end = new Date("2025-01-05");
+
+        const iterator = dateRange(start, end);
+
+        expect(iterator).toBeInstanceOf(SmartIterator);
+    });
+
     it("Should generate dates in the specified range", () =>
     {
         const start = new Date("2025-01-01");
@@ -77,6 +87,7 @@ describe("dateRange", () =>
     {
         const start = new Date("2025-01-05");
         const end = new Date("2025-01-01");
+
         expect(() => dateRange(start, end)).toThrow(RangeException);
     });
 });
@@ -109,12 +120,14 @@ describe("getWeek", () =>
     it("Should get the first day of the week for the specified date", () =>
     {
         const date = new Date("2025-01-01");
+
         expect(getWeek(date, WeekDay.Monday).toISOString()
             .slice(0, 10)).toBe("2024-12-30");
     });
     it("Should get the first day of the week for the specified date with default first day", () =>
     {
         const date = new Date("2025-01-01");
+
         expect(getWeek(date).toISOString()
             .slice(0, 10)).toBe("2024-12-29");
     });

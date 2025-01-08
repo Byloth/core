@@ -1,4 +1,4 @@
-import { SmartIterator } from "../models/index.js";
+import { RangeException, SmartIterator } from "../models/index.js";
 
 /**
  * An utility function that chains multiple iterables into a single one.
@@ -6,7 +6,7 @@ import { SmartIterator } from "../models/index.js";
  * Since the iterator is lazy, the chaining process will be
  * executed only once the resulting iterator is materialized.
  *
- * A new iterator will be created, holding the reference to the original one.  
+ * A new iterator will be created, holding the reference to the original one.
  * This means that the original iterator won't be consumed until the
  * new one is and that consuming one of them will consume also the other.
  *
@@ -66,13 +66,13 @@ export function count<T>(elements: Iterable<T>): number
 }
 
 /**
- * An utility function that enumerates the elements of an iterable.  
+ * An utility function that enumerates the elements of an iterable.
  * Each element is paired with its index in a new iterator.
  *
  * Since the iterator is lazy, the enumeration process will
  * be executed once the resulting iterator is materialized.
  *
- * A new iterator will be created, holding the reference to the original one.  
+ * A new iterator will be created, holding the reference to the original one.
  * This means that the original iterator won't be consumed until the
  * new one is and that consuming one of them will consume also the other.
  *
@@ -96,7 +96,6 @@ export function enumerate<T>(elements: Iterable<T>): SmartIterator<[number, T]>
     return new SmartIterator<[number, T]>(function* ()
     {
         let index = 0;
-
         for (const element of elements)
         {
             yield [index, element];
@@ -107,7 +106,7 @@ export function enumerate<T>(elements: Iterable<T>): SmartIterator<[number, T]>
 }
 
 /**
- * An utility function that generates an iterator over a range of numbers.  
+ * An utility function that generates an iterator over a range of numbers.
  * The values are included between `0` (included) and `end` (excluded).
  *
  * The default step between the numbers is `1`.
@@ -131,7 +130,7 @@ export function enumerate<T>(elements: Iterable<T>): SmartIterator<[number, T]>
 export function range(end: number): SmartIterator<number>;
 
 /**
- * An utility function that generates an iterator over a range of numbers.  
+ * An utility function that generates an iterator over a range of numbers.
  * The values are included between `start` (included) and `end` (excluded).
  *
  * The step between the numbers can be specified with a custom value. Default is `1`.
@@ -155,23 +154,39 @@ export function range(end: number): SmartIterator<number>;
  *
  * If the `end` value is less than the `start` value, the iterator will generate the numbers in reverse order.
  *
- * @param step The step between the numbers. Default is `1`.
+ * @param step
+ * The step between the numbers. Default is `1`.
+ *
+ * Must be a positive number. Otherwise, a {@link RangeError} will be thrown.
  *
  * @returns A {@link SmartIterator} object that generates the numbers in the range.
  */
 export function range(start: number, end: number, step?: number): SmartIterator<number>;
 export function range(start: number, end?: number, step = 1): SmartIterator<number>
 {
+    if (step <= 0)
+    {
+        throw new RangeException(
+            "Step must be always a positive number, even when generating numbers in reverse order."
+        );
+    }
+
+    if (end === undefined)
+    {
+        end = start;
+        start = 0;
+    }
+
+    if (start > end)
+    {
+        return new SmartIterator<number>(function* ()
+        {
+            for (let index = start; index > end; index -= step) { yield index; }
+        });
+    }
+
     return new SmartIterator<number>(function* ()
     {
-        if (end === undefined)
-        {
-            end = start;
-            start = 0;
-        }
-
-        if (start > end) { step = step ?? -1; }
-
         for (let index = start; index < end; index += step) { yield index; }
     });
 }
@@ -236,7 +251,6 @@ export function unique<T>(elements: Iterable<T>): SmartIterator<T>
     return new SmartIterator<T>(function* ()
     {
         const values = new Set<T>();
-
         for (const element of elements)
         {
             if (values.has(element)) { continue; }
@@ -249,7 +263,7 @@ export function unique<T>(elements: Iterable<T>): SmartIterator<T>
 }
 
 /**
- * An utility function that zips two iterables into a single one.  
+ * An utility function that zips two iterables into a single one.
  * The resulting iterable will contain the elements of the two iterables paired together.
  *
  * The function will stop when one of the two iterables is exhausted.
@@ -273,11 +287,11 @@ export function unique<T>(elements: Iterable<T>): SmartIterator<T>
  */
 export function zip<T, U>(first: Iterable<T>, second: Iterable<U>): SmartIterator<[T, U]>
 {
+    const firstIterator = first[Symbol.iterator]();
+    const secondIterator = second[Symbol.iterator]();
+
     return new SmartIterator<[T, U]>(function* ()
     {
-        const firstIterator = first[Symbol.iterator]();
-        const secondIterator = second[Symbol.iterator]();
-
         while (true)
         {
             const firstResult = firstIterator.next();

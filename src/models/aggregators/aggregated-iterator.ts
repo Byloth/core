@@ -7,18 +7,18 @@ import type { KeyedIteratee, KeyedTypeGuardPredicate, KeyedReducer } from "./typ
 /**
  * A class representing an iterator that aggregates elements in a lazy and optimized way.
  *
- * It's part of the {@link SmartIterator} implementation, providing a way to group elements of an iterable by key.  
+ * It's part of the {@link SmartIterator} implementation, providing a way to group elements of an iterable by key.
  * For this reason, it isn't recommended to instantiate this class directly
  * (although it's still possible), but rather use the {@link SmartIterator.groupBy} method.
  *
- * It isn't directly iterable like its parent class but rather needs to specify on what you want to iterate.  
+ * It isn't directly iterable like its parent class but rather needs to specify on what you want to iterate.
  * See the {@link AggregatedIterator.keys}, {@link AggregatedIterator.items}
- * & {@link AggregatedIterator.values} methods.  
+ * & {@link AggregatedIterator.values} methods.
  * It does, however, provides the same set of methods to perform
- * operations and transformation on the elements of the iterator,  
+ * operations and transformation on the elements of the iterator,
  * having also the knowledge and context of the groups to which
  * they belong, allowing to handle them in a grouped manner.
- * 
+ *
  *
  * This is particularly useful when you need to group elements and
  * then perform specific operations on the groups themselves.
@@ -123,15 +123,15 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     }
 
     /**
-     * Determines whether all elements of each group of the iterator satisfy a given condition.  
+     * Determines whether all elements of each group of the iterator satisfy a given condition.
      * See also {@link AggregatedIterator.some}.
      *
-     * The method will iterate over all elements of the iterator checking if they satisfy the condition.  
+     * The method will iterate over all elements of the iterator checking if they satisfy the condition.
      * Once a single element of one group doesn't satisfy the condition,
-     * the result for the respective group will set to `false`.  
+     * the result for the respective group will set to `false`.
      *
      * Eventually, it will return a new {@link ReducedIterator}
-     * object that will contain all the boolean results for each group.  
+     * object that will contain all the boolean results for each group.
      * If the iterator is infinite, the function will never return.
      *
      * ```ts
@@ -195,11 +195,9 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         return new AggregatedIterator(function* ()
         {
             const indexes = new Map<K, number>();
-
             for (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
-
                 if (predicate(key, element, index)) { yield [key, element]; }
 
                 indexes.set(key, index + 1);
@@ -213,11 +211,9 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         return new AggregatedIterator(function* ()
         {
             const indexes = new Map<K, number>();
-
             for (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
-
                 yield [key, iteratee(key, element, index)];
 
                 indexes.set(key, index + 1);
@@ -264,12 +260,10 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         return new AggregatedIterator(function* ()
         {
             const indexes = new Map<K, number>();
-
             for (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
                 const values = iteratee(key, element, index);
-
                 for (const value of values) { yield [key, value]; }
 
                 indexes.set(key, index + 1);
@@ -284,7 +278,6 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         return new AggregatedIterator(function* ()
         {
             const indexes = new Map<K, number>();
-
             for (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
@@ -306,12 +299,10 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         return new AggregatedIterator(function* ()
         {
             const indexes = new Map<K, number>();
-
             for (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
                 if (index >= limit) { continue; }
-
                 yield [key, element];
 
                 indexes.set(key, index + 1);
@@ -352,11 +343,9 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         return new AggregatedIterator(function* ()
         {
             const keys = new Map<K, Set<T>>();
-
             for (const [key, element] of elements)
             {
                 const values = keys.get(key) ?? new Set<T>();
-
                 if (values.has(element)) { continue; }
 
                 values.add(element);
@@ -387,11 +376,9 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     public forEach(iteratee: KeyedIteratee<K, T>): void
     {
         const indexes = new Map<K, number>();
-
         for (const [key, element] of this._elements)
         {
             const index = indexes.get(key) ?? 0;
-
             iteratee(key, element, index);
 
             indexes.set(key, index + 1);
@@ -405,11 +392,9 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         return new AggregatedIterator(function* ()
         {
             const indexes = new Map<K, number>();
-
             for (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
-
                 yield [iteratee(key, element, index), element];
 
                 indexes.set(key, index + 1);
@@ -424,7 +409,6 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         return new SmartIterator<K>(function* ()
         {
             const keys = new Set<K>();
-
             for (const [key] of elements)
             {
                 if (keys.has(key)) { continue; }

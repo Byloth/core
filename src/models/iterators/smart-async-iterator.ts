@@ -17,12 +17,12 @@ import type {
  * of the native {@link AsyncIterable} & {@link AsyncIterator} interfaces.
  *
  * It provides a set of utility methods to better manipulate and transform
- * asynchronous iterators in a functional and highly performant way.  
+ * asynchronous iterators in a functional and highly performant way.
  * It takes inspiration from the native {@link Array} methods like
  * {@link Array.map}, {@link Array.filter}, {@link Array.reduce}, etc...
  *
  * The class is lazy, meaning that the transformations are applied
- * only when the resulting iterator is materialized, not before.  
+ * only when the resulting iterator is materialized, not before.
  * This allows to chain multiple transformations without
  * the need to iterate over the elements multiple times.
  *
@@ -233,13 +233,13 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * Determines whether all elements of the iterator satisfy a given condition.
      * See also {@link SmartAsyncIterator.some}.
      *
-     * The method will iterate over all elements of the iterator checking if they satisfy the condition.  
+     * The method will iterate over all elements of the iterator checking if they satisfy the condition.
      * Once a single element doesn't satisfy the condition, the method will return `false` immediately.
      *
-     * This may lead to an unknown final state of the iterator, which may be entirely or partially consumed.  
-     * For this reason, it's recommended to consider it as consumed in any case and to not use it anymore.  
+     * This may lead to an unknown final state of the iterator, which may be entirely or partially consumed.
+     * For this reason, it's recommended to consider it as consumed in any case and to not use it anymore.
      * Consider using {@link SmartAsyncIterator.find} instead.
-     * 
+     *
      * If the iterator is infinite and every element satisfies the condition, the function will never return.
      *
      * ```ts
@@ -274,13 +274,13 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * Determines whether any element of the iterator satisfies a given condition.
      * See also {@link SmartAsyncIterator.every}.
      *
-     * The method will iterate over all elements of the iterator checking if they satisfy the condition.  
+     * The method will iterate over all elements of the iterator checking if they satisfy the condition.
      * Once a single element satisfies the condition, the method will return `true` immediately.
      *
-     * This may lead to an unknown final state of the iterator, which may be entirely or partially consumed.  
-     * For this reason, it's recommended to consider it as consumed in any case and to not use it anymore.  
+     * This may lead to an unknown final state of the iterator, which may be entirely or partially consumed.
+     * For this reason, it's recommended to consider it as consumed in any case and to not use it anymore.
      * Consider using {@link SmartAsyncIterator.find} instead.
-     * 
+     *
      * If the iterator is infinite and no element satisfies the condition, the function will never return.
      *
      * ```ts
@@ -312,11 +312,11 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Filters the elements of the iterator using a given condition.  
+     * Filters the elements of the iterator using a given condition.
      * Since the iterator is lazy, the filtering process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.  
+     * A new iterator will be created, holding the reference to the original one.
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume also the other.
      *
@@ -336,11 +336,11 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     public filter(predicate: MaybeAsyncIteratee<T, boolean>): SmartAsyncIterator<T, R>;
 
     /**
-     * Filters the elements of the iterator using a given condition.  
+     * Filters the elements of the iterator using a given condition.
      * Since the iterator is lazy, the filtering process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.  
+     * A new iterator will be created, holding the reference to the original one.
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume also the other.
      *
@@ -354,9 +354,9 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * ---
      *
      * @template S
-     * The type of the elements that satisfy the condition.  
+     * The type of the elements that satisfy the condition.
      * This allows the type-system to infer the correct type of the new iterator.
-     *  
+     *
      * It must be a subtype of the original type of the iterator.
      *
      * @param predicate The condition to check for each element of the iterator.
@@ -371,11 +371,9 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return new SmartAsyncIterator<T, R>(async function* ()
         {
             let index = 0;
-
             while (true)
             {
                 const result = await iterator.next();
-
                 if (result.done) { return result.value; }
                 if (await predicate(result.value, index)) { yield result.value; }
 
@@ -385,11 +383,11 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Maps the elements of the iterator using a given transformation function.  
+     * Maps the elements of the iterator using a given transformation function.
      * Since the iterator is lazy, the mapping process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.  
+     * A new iterator will be created, holding the reference to the original one.
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume also the other.
      *
@@ -415,7 +413,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return new SmartAsyncIterator<V, R>(async function* ()
         {
             let index = 0;
-
             while (true)
             {
                 const result = await iterator.next();
@@ -429,13 +426,13 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Reduces the elements of the iterator using a given reducer function.  
+     * Reduces the elements of the iterator using a given reducer function.
      * This method will consume the entire iterator in the process.
      *
-     * It will iterate over all elements of the iterator applying the reducer function.  
-     * The result of each iteration will be passed as the accumulator to the next one.  
+     * It will iterate over all elements of the iterator applying the reducer function.
+     * The result of each iteration will be passed as the accumulator to the next one.
      *
-     * The first accumulator value will be the first element of the iterator.  
+     * The first accumulator value will be the first element of the iterator.
      * The last accumulator value will be the final result of the reduction.
      *
      * Also note that:
@@ -458,13 +455,13 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     public async reduce(reducer: MaybeAsyncReducer<T, T>): Promise<T>;
 
     /**
-     * Reduces the elements of the iterator using a given reducer function.  
+     * Reduces the elements of the iterator using a given reducer function.
      * This method will consume the entire iterator in the process.
      *
-     * It will iterate over all elements of the iterator applying the reducer function.  
-     * The result of each iteration will be passed as the accumulator to the next one.  
+     * It will iterate over all elements of the iterator applying the reducer function.
+     * The result of each iteration will be passed as the accumulator to the next one.
      *
-     * The first accumulator value will be the initial value provided.  
+     * The first accumulator value will be the initial value provided.
      * The last accumulator value will be the final result of the reduction.
      *
      * If the iterator is infinite, the function will never return.
@@ -511,11 +508,11 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Flattens the elements of the iterator using a given transformation function.  
+     * Flattens the elements of the iterator using a given transformation function.
      * Since the iterator is lazy, the flattening process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.  
+     * A new iterator will be created, holding the reference to the original one.
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume also the other.
      *
@@ -541,14 +538,12 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return new SmartAsyncIterator<V, R>(async function* ()
         {
             let index = 0;
-
             while (true)
             {
                 const result = await iterator.next();
                 if (result.done) { return result.value; }
 
                 const elements = await iteratee(result.value, index);
-
                 for await (const element of elements)
                 {
                     yield element;
@@ -560,17 +555,17 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Drops a given number of elements at the beginning of the iterator.  
+     * Drops a given number of elements at the beginning of the iterator.
      * The remaining elements will be returned in a new iterator.
      *
      * Since the iterator is lazy, the dropping process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.  
+     * A new iterator will be created, holding the reference to the original one.
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume also the other.
      *
-     * Only the dropped elements will be consumed in the process.  
+     * Only the dropped elements will be consumed in the process.
      * The rest of the iterator will be consumed only once the new one is.
      *
      * ```ts
@@ -593,7 +588,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return new SmartAsyncIterator<T, R | undefined>(async function* ()
         {
             let index = 0;
-
             while (index < count)
             {
                 const result = await iterator.next();
@@ -613,17 +607,17 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Takes a given number of elements at the beginning of the iterator.  
+     * Takes a given number of elements at the beginning of the iterator.
      * These elements will be returned in a new iterator.
      *
      * Since the iterator is lazy, the taking process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.  
+     * A new iterator will be created, holding the reference to the original one.
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume also the other.
      *
-     * Only the taken elements will be consumed from the original iterator.  
+     * Only the taken elements will be consumed from the original iterator.
      * The rest of the original iterator will be available for further consumption.
      *
      * ```ts
@@ -647,7 +641,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return new SmartAsyncIterator<T, R | undefined>(async function* ()
         {
             let index = 0;
-
             while (index < limit)
             {
                 const result = await iterator.next();
@@ -663,7 +656,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Finds the first element of the iterator that satisfies a given condition.  
+     * Finds the first element of the iterator that satisfies a given condition.
      *
      * The method will iterate over all elements of the iterator checking if they satisfy the condition.
      * The first element that satisfies the condition will be returned immediately.
@@ -692,7 +685,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     public async find(predicate: MaybeAsyncIteratee<T, boolean>): Promise<T | undefined>;
 
     /**
-     * Finds the first element of the iterator that satisfies a given condition.  
+     * Finds the first element of the iterator that satisfies a given condition.
      *
      * The method will iterate over all elements of the iterator checking if they satisfy the condition.
      * The first element that satisfies the condition will be returned immediately.
@@ -715,9 +708,9 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * ---
      *
      * @template S
-     * The type of the element that satisfies the condition.  
+     * The type of the element that satisfies the condition.
      * This allows the type-system to infer the correct type of the result.
-     *  
+     *
      * It must be a subtype of the original type of the iterator.
      *
      * @param predicate The condition to check for each element of the iterator.
@@ -741,13 +734,13 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Enumerates the elements of the iterator.  
+     * Enumerates the elements of the iterator.
      * Each element is be paired with its index in a new iterator.
      *
      * Since the iterator is lazy, the enumeration process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.  
+     * A new iterator will be created, holding the reference to the original one.
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume also the other.
      *
@@ -771,13 +764,13 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Removes all duplicate elements from the iterator.  
+     * Removes all duplicate elements from the iterator.
      * The first occurrence of each element will be kept.
      *
      * Since the iterator is lazy, the deduplication process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.  
+     * A new iterator will be created, holding the reference to the original one.
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume also the other.
      *
@@ -799,11 +792,9 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return new SmartAsyncIterator<T, R>(async function* ()
         {
             const values = new Set<T>();
-
             while (true)
             {
                 const result = await iterator.next();
-
                 if (result.done) { return result.value; }
                 if (values.has(result.value)) { continue; }
 
@@ -815,7 +806,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Counts the number of elements in the iterator.  
+     * Counts the number of elements in the iterator.
      * This method will consume the entire iterator in the process.
      *
      * If the iterator is infinite, the function will never return.
@@ -845,7 +836,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Iterates over all elements of the iterator applying a given function.  
+     * Iterates over all elements of the iterator applying a given function.
      * This method will consume the entire iterator in the process.
      *
      * If the iterator is infinite, the function will never return.
@@ -880,7 +871,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Advances the iterator to the next element and returns the result.  
+     * Advances the iterator to the next element and returns the result.
      * If the iterator requires it, a value must be provided to be passed to the next element.
      *
      * Once the iterator is done, the method will return an object with the `done` property set to `true`.
@@ -912,7 +903,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
 
     /**
      * An utility method that may be used to close the iterator gracefully,
-     * free the resources and perform any cleanup operation.  
+     * free the resources and perform any cleanup operation.
      * It may also be used to signal the end or to compute a specific final result of the iteration process.
      *
      * ```ts
@@ -928,7 +919,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * for await (const value of iterator)
      * {
      *     if (value > 5) { break; } // Closing the iterator...
-     * 
+     *
      *     console.log(value); // 1, 2, 3, 4, 5
      * }
      * ```
@@ -948,7 +939,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
 
     /**
      * An utility method that may be used to close the iterator due to an error,
-     * free the resources and perform any cleanup operation.  
+     * free the resources and perform any cleanup operation.
      * It may also be used to signal that an error occurred during the iteration process or to handle it.
      *
      * ```ts
@@ -992,14 +983,14 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * An utility method that aggregates the elements of the iterator using a given key function.  
+     * An utility method that aggregates the elements of the iterator using a given key function.
      * The elements will be grouped by the resulting keys in a new specialized iterator.
      * See {@link AggregatedAsyncIterator}.
      *
      * Since the iterator is lazy, the grouping process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.  
+     * A new iterator will be created, holding the reference to the original one.
      * This means that the original iterator won't be consumed until the
      * the new one is and that consuming one of them will consume also the other.
      *
@@ -1029,7 +1020,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Materializes the iterator into an array.  
+     * Materializes the iterator into an array.
      * This method will consume the entire iterator in the process.
      *
      * If the iterator is infinite, the function will never return.
@@ -1043,7 +1034,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * console.log(result); // [0, 1, 2, 3, 4]
      * ```
-     * 
+     *
      * @returns A promise that will resolve to an array containing all elements of the iterator.
      */
     public toArray(): Promise<T[]>

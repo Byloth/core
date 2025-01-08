@@ -73,11 +73,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, T]>
         {
             const indexes = new Map<K, number>();
-
             for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
-
                 if (await predicate(key, element, index)) { yield [key, element]; }
 
                 indexes.set(key, index + 1);
@@ -91,11 +89,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, V]>
         {
             const indexes = new Map<K, number>();
-
             for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
-
                 yield [key, await iteratee(key, element, index)];
 
                 indexes.set(key, index + 1);
@@ -144,12 +140,10 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, V]>
         {
             const indexes = new Map<K, number>();
-
             for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
                 const values = await iteratee(key, element, index);
-
                 for await (const value of values) { yield [key, value]; }
 
                 indexes.set(key, index + 1);
@@ -164,7 +158,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, T]>
         {
             const indexes = new Map<K, number>();
-
             for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
@@ -186,7 +179,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, T]>
         {
             const indexes = new Map<K, number>();
-
             for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
@@ -230,11 +222,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, T]>
         {
             const keys = new Map<K, Set<T>>();
-
             for await (const [key, element] of elements)
             {
                 const values = keys.get(key) ?? new Set<T>();
-
                 if (values.has(element)) { continue; }
 
                 values.add(element);
@@ -283,11 +273,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[J, T]>
         {
             const indexes = new Map<K, number>();
-
             for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
-
                 yield [await iteratee(key, element, index), element];
 
                 indexes.set(key, index + 1);
@@ -302,7 +290,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new SmartAsyncIterator<K>(async function* ()
         {
             const keys = new Set<K>();
-
             for await (const [key] of elements)
             {
                 if (keys.has(key)) { continue; }

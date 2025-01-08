@@ -122,7 +122,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
             for (const [index, [key, element]] of elements)
             {
                 if (index >= count) { break; }
-
                 yield [key, element];
             }
         });
@@ -139,7 +138,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
         return new ReducedIterator(function* ()
         {
             const values = new Set<T>();
-
             for (const [key, element] of elements)
             {
                 if (values.has(element)) { continue; }
