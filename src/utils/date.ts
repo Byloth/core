@@ -1,8 +1,8 @@
 
-import { SmartIterator } from "../models/index.js";
+import { RangeException, SmartIterator } from "../models/index.js";
 
 /**
- * An enumeration that represents the time units and their conversion factors.  
+ * An enumeration that represents the time units and their conversion factors.
  * It can be used as utility to express time values in a more
  * readable way or to convert time values between different units.
  *
@@ -56,7 +56,7 @@ export enum TimeUnit
 }
 
 /**
- * An enumeration that represents the days of the week.  
+ * An enumeration that represents the days of the week.
  * It can be used as utility to identify the days of the week when working with dates.
  *
  * ```ts
@@ -106,7 +106,7 @@ export enum WeekDay
 }
 
 /**
- * An utility function that calculates the difference between two dates.  
+ * An utility function that calculates the difference between two dates.
  * The difference can be expressed in different time units.
  *
  * ```ts
@@ -138,7 +138,7 @@ export function dateDifference(start: string | Date, end: string | Date, unit = 
 }
 
 /**
- * An utility function that generates an iterator over a range of dates.  
+ * An utility function that generates an iterator over a range of dates.
  * The step between the dates can be expressed in different time units.
  *
  * ```ts
@@ -154,13 +154,19 @@ export function dateDifference(start: string | Date, end: string | Date, unit = 
  * ---
  *
  * @param start The start date (included).
- * @param end The end date (excluded).
+ * @param end
+ * The end date (excluded).
+ *
+ * Must be greater than the start date. If not, a {@link RangeException} will be thrown.
+ *
  * @param step The time unit to express the step between the dates. `TimeUnit.Day` by default.
  *
  * @returns A {@link SmartIterator} object that generates the dates in the range.
  */
 export function dateRange(start: string | Date, end: string | Date, step = TimeUnit.Day): SmartIterator<Date>
 {
+    if (start >= end) { throw new RangeException("The end date must be greater than the start date."); }
+
     return new SmartIterator<Date>(function* ()
     {
         const endTime = new Date(end).getTime();
@@ -176,7 +182,7 @@ export function dateRange(start: string | Date, end: string | Date, step = TimeU
 }
 
 /**
- * An utility function that rounds a date to the nearest time unit.  
+ * An utility function that rounds a date to the nearest time unit.
  * The rounding can be expressed in different time units.
  *
  * ```ts
@@ -200,7 +206,7 @@ export function dateRound(date: string | Date, unit = TimeUnit.Day): Date
 }
 
 /**
- * An utility function that gets the week of a date.  
+ * An utility function that gets the week of a date.
  * The first day of the week can be optionally specified.
  *
  * ```ts

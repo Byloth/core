@@ -25,6 +25,7 @@ describe("dateDifference", () =>
         expect(dateDifference("2020-02-28", "2024-03-01T12:23:34.456Z"))
             .toBe(365 * 4 + 3);
     });
+
     test("days", () =>
     {
         expect(dateDifference("2024-03-01T12:23:34.456Z", "2020-02-28", TimeUnit.Day))
@@ -54,13 +55,38 @@ describe("dateDifference", () =>
 
 describe("dateRange", () =>
 {
+    test("years", () =>
+    {
+        expect([...dateRange("2020-02-28", "2024-03-01T12:23:34.456Z", TimeUnit.Year)].map((date) => date.getTime()))
+            .toEqual([1582848000000, 1614384000000, 1645920000000, 1677456000000, 1708992000000]);
+    });
+    test("months", () =>
+    {
+        expect([...dateRange("2020-02-28T12:23:34.456Z", "2020-06-27", TimeUnit.Month)].map((date) => date.getTime()))
+            .toEqual([1582892614456, 1585484614456, 1588076614456, 1590668614456]);
+    });
+    test("weeks", () =>
+    {
+        expect([...dateRange("2020-02-28", "2020-03-31T12:23:34.456Z", TimeUnit.Week)].map((date) => date.getTime()))
+            .toEqual([1582848000000, 1583452800000, 1584057600000, 1584662400000, 1585267200000]);
+    });
+
     test("default", () =>
     {
-        const range = dateRange("2020-02-28", "2020-03-02");
+        expect([...dateRange("2020-02-28T12:23:34.456Z", "2020-03-02")].map((date) => date.getTime()))
+            .toEqual([1582892614456, 1582979014456, 1583065414456]);
+    });
 
-        expect(range.next().value).toBeInstanceOf(Date);
-        expect(range.next().value).toBeInstanceOf(Date);
-        expect(range.next().value).toBeInstanceOf(Date);
-        expect(range.next().value).toBeUndefined();
+    test("days", () =>
+    {
+        expect([...dateRange("2020-02-28", "2020-03-02T12:23:34.456Z", TimeUnit.Day)].map((date) => date.getTime()))
+            .toEqual([1582848000000, 1582934400000, 1583020800000, 1583107200000]);
+    });
+    test("hours", () =>
+    {
+        expect([
+            ...dateRange(new Date("2020-02-28T12:23:34.456Z"), "2020-02-28T18:00:00", TimeUnit.Hour)
+        ].map((date) => date.getTime()))
+            .toEqual([1582892614456, 1582896214456, 1582899814456, 1582903414456, 1582907014456]);
     });
 });
