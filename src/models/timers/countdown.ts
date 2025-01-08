@@ -45,7 +45,7 @@ export default class Countdown extends GameLoop
      * The total duration of the countdown in milliseconds.
      *
      * This protected property is the only one that can be modified directly by the derived classes.
-     * If you're looking for the public & readonly property, use the {@link Countdown.duration} getter instead.
+     * If you're looking for the public and readonly property, use the {@link Countdown.duration} getter instead.
      */
     protected _duration: number;
 

@@ -276,6 +276,25 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         }
     }
 
+    public rekey<J extends PropertyKey>(iteratee: MaybeAsyncKeyedIteratee<K, T, J>): AggregatedAsyncIterator<J, T>
+    {
+        const elements = this._elements;
+
+        return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[J, T]>
+        {
+            const indexes = new Map<K, number>();
+
+            for await (const [key, element] of elements)
+            {
+                const index = indexes.get(key) ?? 0;
+
+                yield [await iteratee(key, element, index), element];
+
+                indexes.set(key, index + 1);
+            }
+        });
+    }
+
     public keys(): SmartAsyncIterator<K>
     {
         const elements = this._elements;

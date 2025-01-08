@@ -167,6 +167,19 @@ export default class ReducedIterator<K extends PropertyKey, T>
         }
     }
 
+    public rekey<J extends PropertyKey>(iteratee: KeyedIteratee<K, T, J>): AggregatedIterator<J, T>
+    {
+        const elements = this._elements.enumerate();
+
+        return new AggregatedIterator(function* ()
+        {
+            for (const [index, [key, element]] of elements)
+            {
+                yield [iteratee(key, element, index), element];
+            }
+        });
+    }
+
     public keys(): SmartIterator<K>
     {
         const elements = this._elements;

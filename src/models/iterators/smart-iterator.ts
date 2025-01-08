@@ -4,13 +4,31 @@ import { ValueException } from "../exceptions/index.js";
 import type { GeneratorFunction, Iteratee, TypeGuardPredicate, Reducer, IteratorLike } from "./types.js";
 
 /**
- * A wrapper class representing an enhanced & instantiable version
+ * A wrapper class representing an enhanced and instantiable version
  * of the native {@link Iterable} & {@link Iterator} interfaces.
  *
  * It provides a set of utility methods to better manipulate and
  * transform iterators in a functional and highly performant way.  
  * It takes inspiration from the native {@link Array} methods like
  * {@link Array.map}, {@link Array.filter}, {@link Array.reduce}, etc...
+ *
+ * The class is lazy, meaning that the transformations are applied
+ * only when the resulting iterator is materialized, not before.  
+ * This allows to chain multiple transformations without
+ * the need to iterate over the elements multiple times.
+ *
+ * ```ts
+ * const result = new SmartIterator<number>(["-5", "-4", "-3", "-2", "-1", "0", "1", "2", "3", "4", "5"])
+ *     .map(Number)
+ *     .map((value) => value + Math.ceil(Math.abs(value / 2)))
+ *     .filter((value) => value >= 0)
+ *     .map((value) => value + 1)
+ *     .reduce((acc, value) => acc + value);
+ *
+ * console.log(result); // 31
+ * ```
+ *
+ * ---
  *
  * @template T The type of elements in the iterator.
  * @template R The type of the final result of the iterator. Default is `void`.

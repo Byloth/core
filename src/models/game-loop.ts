@@ -25,7 +25,7 @@ interface GameLoopEventMap
  *
  * Every time the callback is executed, it receives the
  * elapsed time since the start of the game loop.  
- * It's also possible to subscribe to the `start` and `stop` events to receive notifications when they occur.
+ * It's also possible to subscribe to the `start` & `stop` events to receive notifications when they occur.
  *
  * ```ts
  * const loop = new GameLoop((elapsedTime: number) =>
@@ -53,7 +53,7 @@ export default class GameLoop
      * of the start of the game loop, it's also used to calculate the elapsed time.
      *
      * This protected property is the only one that can be modified directly by the derived classes.  
-     * If you're looking for the public & readonly property, use the {@link GameLoop.startTime} getter instead.
+     * If you're looking for the public and readonly property, use the {@link GameLoop.startTime} getter instead.
      */
     protected _startTime: number;
 
@@ -71,7 +71,7 @@ export default class GameLoop
      * A flag indicating whether the game loop is currently running or not.
      *
      * This protected property is the only one that can be modified directly by the derived classes.
-     * If you're looking for the public & readonly property, use the {@link GameLoop.isRunning} getter instead.
+     * If you're looking for the public and readonly property, use the {@link GameLoop.isRunning} getter instead.
      */
     protected _isRunning: boolean;
 
