@@ -2,7 +2,7 @@ import { ValueException } from "../models/exceptions/index.js";
 import { zip } from "./iterator.js";
 
 /**
- * Computes the average of a given list of values.  
+ * Computes the average of a given list of values.
  * The values can be weighted using an additional list of weights.
  *
  * ```ts
@@ -20,7 +20,7 @@ import { zip } from "./iterator.js";
  * It must contain at least one element. Otherwise, a {@link ValueException} will be thrown.
  *
  * @param weights
- * The list of weights to apply to the values.  
+ * The list of weights to apply to the values.
  * It should contain the same number of elements as the values list or
  * the smaller number of elements between the two lists will be considered.
  *
@@ -63,7 +63,7 @@ export function average<T extends number>(values: Iterable<T>, weights?: Iterabl
     }
 
     if (_index === 0) { throw new ValueException("You must provide at least one value and weight."); }
-    if (_count > 0) { throw new ValueException("The sum of weights must be greater than zero."); }
+    if (_count <= 0) { throw new ValueException("The sum of weights must be greater than zero."); }
 
     return _sum / _count;
 }
@@ -72,7 +72,7 @@ export function average<T extends number>(values: Iterable<T>, weights?: Iterabl
  * An utility function to compute the hash of a given string.
  *
  * The hash is computed using a simple variation of the
- * {@link http://www.cse.yorku.ca/~oz/hash.html#djb2|djb2} algorithm.  
+ * {@link http://www.cse.yorku.ca/~oz/hash.html#djb2|djb2} algorithm.
  * However, the hash is garanteed to be a 32-bit signed integer.
  *
  * ```ts
@@ -109,7 +109,7 @@ export function hash(value: string): number
  *
  * ---
  *
- * @template T The type of the values in the list. It must be or extend a `number` object. 
+ * @template T The type of the values in the list. It must be or extend a `number` object.
  *
  * @param values The list of values to sum.
  *
