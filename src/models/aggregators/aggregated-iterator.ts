@@ -2,21 +2,153 @@ import { SmartIterator } from "../iterators/index.js";
 import type { GeneratorFunction, IteratorLike } from "../iterators/types.js";
 
 import ReducedIterator from "./reduced-iterator.js";
-import type { KeyedIteratee, KeyedTypeGuardIteratee, KeyedReducer } from "./types.js";
+import type { KeyedIteratee, KeyedTypeGuardPredicate, KeyedReducer } from "./types.js";
 
+/**
+ * A class representing an iterator that aggregates elements in a lazy and optimized way.
+ *
+ * It's part of the {@link SmartIterator} implementation, providing a way to group elements of an iterable by key.  
+ * For this reason, it isn't recommended to instantiate this class directly
+ * (although it's still possible), but rather use the {@link SmartIterator.groupBy} method.
+ *
+ * It isn't directly iterable like its parent class but rather needs to specify on what you want to iterate.  
+ * See the {@link AggregatedIterator.keys}, {@link AggregatedIterator.items}
+ * & {@link AggregatedIterator.values} methods.  
+ * It does, however, provides the same set of methods to perform
+ * operations and transformation on the elements of the iterator,  
+ * having also the knowledge and context of the groups to which
+ * they belong, allowing to handle them in a grouped manner.
+ * 
+ *
+ * This is particularly useful when you need to group elements and
+ * then perform specific operations on the groups themselves.
+ *
+ * ```ts
+ * import { range, Random } from "@byloth/core";
+ *
+ * const iterator: SmartIterator<number> = range(10).map(() => Random.Integer(10) + 1);
+ * const { odd, even } = iterator.groupBy((value) => value % 2 === 0 ? "even" : "odd")
+ *     .count()
+ *     .toObject();
+ *
+ * if (odd > even) { console.log("There are more odd numbers."); }
+ * else { console.log("There are more even numbers."); }
+ * ```
+ *
+ * ---
+ *
+ * @template K The type of the keys of the elements.
+ * @template T The type of the elements.
+ */
 export default class AggregatedIterator<K extends PropertyKey, T>
 {
+    /**
+     * The internal {@link SmartIterator} that holds the elements to aggregate.
+     */
     protected _elements: SmartIterator<[K, T]>;
 
+    /**
+     * Initializes a new instance of the {@link AggregatedIterator} class.
+     *
+     * ```ts
+     * const iterator = new AggregatedIterator([["A", 1], ["B", 2], ["A", 3], ["C", 4], ["B", 5]]);
+     * ```
+     *
+     * ---
+     *
+     * @param iterable The iterable to aggregate.
+     */
     public constructor(iterable: Iterable<[K, T]>);
+
+    /**
+     * Initializes a new instance of the {@link AggregatedIterator} class.
+     *
+     * ```ts
+     * import { Random } from "@byloth/core";
+     *
+     * const iterator = new AggregatedIterator({
+     *     _index: 0,
+     *     next: () =>
+     *     {
+     *         if (this._index >= 5) { return { done: true, value: undefined }; }
+     *         this._index += 1;
+     *
+     *         return { done: false, value: [Random.Choice(["A", "B", "C"]), this._index] };
+     *     }
+     * });
+     * ```
+     *
+     * ---
+     *
+     * @param iterator The iterator to aggregate.
+     */
     public constructor(iterator: Iterator<[K, T]>);
+
+    /**
+     * Initializes a new instance of the {@link AggregatedIterator} class.
+     *
+     * ```ts
+     * import { range, Random } from "@byloth/core";
+     *
+     * const iterator = new AggregatedIterator(function* ()
+     * {
+     *     for (const index of range(5))
+     *     {
+     *         yield [Random.Choice(["A", "B", "C"]), (index + 1)];
+     *     }
+     * });
+     * ```
+     *
+     * ---
+     *
+     * @param generatorFn The generator function to aggregate.
+     */
     public constructor(generatorFn: GeneratorFunction<[K, T]>);
+
+    /**
+     * Initializes a new instance of the {@link AggregatedIterator} class.
+     *
+     * ```ts
+     * const iterator = new AggregatedIterator(keyedValues);
+     * ```
+     *
+     * ---
+     *
+     * @param argument The iterable, iterator or generator function to aggregate.
+     */
     public constructor(argument: IteratorLike<[K, T]> | GeneratorFunction<[K, T]>);
     public constructor(argument: IteratorLike<[K, T]> | GeneratorFunction<[K, T]>)
     {
         this._elements = new SmartIterator(argument);
     }
 
+    /**
+     * Determines whether all elements of each group of the iterator satisfy a given condition.  
+     * See also {@link AggregatedIterator.some}.
+     *
+     * The method will iterate over all elements of the iterator checking if they satisfy the condition.  
+     * Once a single element of one group doesn't satisfy the condition,
+     * the result for the respective group will set to `false`.  
+     *
+     * Eventually, it will return a new {@link ReducedIterator}
+     * object that will contain all the boolean results for each group.  
+     * If the iterator is infinite, the function will never return.
+     *
+     * ```ts
+     * import { range, Random } from "@byloth/core";
+     *
+     * const iterator: SmartIterator<number> = range(10).map(() => Random.Integer(10) + 1);
+     * const { odd, even } = iterator.groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .count()
+     *     .toObject();
+     * ```
+     *
+     * ---
+     *
+     * @param predicate The condition to check for each element of the iterator.
+     *
+     * @returns `true` if all elements satisfy the condition, `false` otherwise.
+     */
     public every(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, boolean>
     {
         const values = new Map<K, [number, boolean]>();
@@ -55,7 +187,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     }
 
     public filter(predicate: KeyedIteratee<K, T, boolean>): AggregatedIterator<K, T>;
-    public filter<S extends T>(predicate: KeyedTypeGuardIteratee<K, T, S>): AggregatedIterator<K, S>;
+    public filter<S extends T>(predicate: KeyedTypeGuardPredicate<K, T, S>): AggregatedIterator<K, S>;
     public filter(predicate: KeyedIteratee<K, T, boolean>): AggregatedIterator<K, T>
     {
         const elements = this._elements;
@@ -178,12 +310,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             for (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
-                if (index >= limit)
-                {
-                    if (indexes.values().every((value) => value >= limit)) { break; }
-
-                    continue;
-                }
+                if (index >= limit) { continue; }
 
                 yield [key, element];
 
@@ -192,9 +319,9 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
-    public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | void>;
-    public find<S extends T>(predicate: KeyedTypeGuardIteratee<K, T, S>): ReducedIterator<K, S | void>;
-    public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | void>
+    public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | undefined>;
+    public find<S extends T>(predicate: KeyedTypeGuardPredicate<K, T, S>): ReducedIterator<K, S | undefined>;
+    public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | undefined>
     {
         const values = new Map<K, [number, T | undefined]>();
 
@@ -271,6 +398,25 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         }
     }
 
+    public rekey<J extends PropertyKey>(iteratee: KeyedIteratee<K, T, J>): AggregatedIterator<J, T>
+    {
+        const elements = this._elements;
+
+        return new AggregatedIterator(function* ()
+        {
+            const indexes = new Map<K, number>();
+
+            for (const [key, element] of elements)
+            {
+                const index = indexes.get(key) ?? 0;
+
+                yield [iteratee(key, element, index), element];
+
+                indexes.set(key, index + 1);
+            }
+        });
+    }
+
     public keys(): SmartIterator<K>
     {
         const elements = this._elements;
@@ -337,5 +483,5 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         return groups;
     }
 
-    public get [Symbol.toStringTag]() { return "AggregatedIterator"; }
+    public readonly [Symbol.toStringTag]: string = "AggregatedIterator";
 }

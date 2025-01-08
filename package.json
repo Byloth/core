@@ -1,6 +1,6 @@
 {
   "name": "@byloth/core",
-  "version": "2.0.0-rc.3",
+  "version": "2.0.0-rc.12",
   "description": "An unopinionated collection of useful functions and classes that I use widely in all my projects. 🔧",
   "keywords": [
     "Core",
@@ -36,12 +36,12 @@
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/core.js",
-        "types": "./src/index.ts"
+        "types": "./src/index.ts",
+        "default": "./dist/core.js"
       },
       "require": {
-        "default": "./dist/core.umd.cjs",
-        "types": "./src/index.ts"
+        "types": "./src/index.ts",
+        "default": "./dist/core.umd.cjs"
       }
     }
   },
@@ -51,21 +51,18 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc",
-    "lint": "eslint --ext .cjs,.js,.json,.ts --ignore-path .gitignore .",
+    "lint": "eslint .",
     "test": "vitest",
     "prepare": "husky",
     "ci": "pnpm install --frozen-lockfile"
   },
   "devDependencies": {
-    "@byloth/eslint-config-typescript": "^2.8.3",
-    "@types/node": "^20.16.5",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
-    "eslint": "^8.57.1",
-    "husky": "^9.1.6",
-    "typescript": "^5.6.2",
-    "vite": "^5.4.7",
-    "vitest": "^2.1.1"
+    "@byloth/eslint-config-typescript": "^3.0.3",
+    "@types/node": "^22.10.5",
+    "husky": "^9.1.7",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7",
+    "vitest": "^2.1.8"
   },
-  "packageManager": "pnpm@9.3.0+sha512.ee7b93e0c2bd11409c6424f92b866f31d3ea1bef5fbe47d3c7500cdc3c9668833d2e55681ad66df5b640c61fa9dc25d546efa54d76d7f8bf54b13614ac293631"
+  "packageManager": "pnpm@9.15.3+sha512.1f79bc245a66eb0b07c5d4d83131240774642caaa86ef7d0434ab47c0d16f66b04e21e0c086eb61e62c77efc4d7f7ec071afad3796af64892fae66509173893a"
 }

@@ -5,6 +5,7 @@ export {
 
 } from "./aggregators/index.js";
 
+export { CallableObject, Publisher, SwitchableCallback } from "./callbacks/index.js";
 export {
     Exception,
     FatalErrorException,
@@ -30,8 +31,6 @@ export { SmartIterator, SmartAsyncIterator } from "./iterators/index.js";
 export { JSONStorage } from "./json/index.js";
 export { DeferredPromise, SmartPromise, TimedPromise } from "./promises/index.js";
 
-import Publisher from "./publisher.js";
-
 export { Clock, Countdown } from "./timers/index.js";
 
-export { GameLoop, Publisher };
+export { GameLoop };

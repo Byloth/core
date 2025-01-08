@@ -1,27 +1,59 @@
-/* eslint-disable no-trailing-spaces */
-
 import { isBrowser } from "../../helpers.js";
 import { EnvironmentException } from "../exceptions/index.js";
 
 import type { JSONValue } from "./types.js";
 
 /**
- * A wrapper around the `Storage` API to store and retrieve JSON values.
+ * A wrapper around the `Storage` API to better store and easily retrieve
+ * typed JSON values using the classical key-value pair storage system.
  *
- * It allows to handle either the `sessionStorage` or the `localStorage`
- * storage at the same time, depending on the required use case.
+ * It allows to handle either the volatile {@link sessionStorage} or the persistent
+ * {@link localStorage} at the same time, depending on what's your required use case.
+ *
+ * ```ts
+ * const jsonStorage = new JSONStorage();
+ *
+ * jsonStorage.write("user:cookieAck", { value: true, version: "2023-02-15" });
+ * // ... between sessions ...
+ * const cookieAck = jsonStorage.read<{ value: boolean; version: string; }>("user:cookieAck");
+ * ```
  */
 export default class JSONStorage
 {
+    /**
+     * Whether to prefer the {@link localStorage} over the {@link sessionStorage} when calling an ambivalent method.
+     *
+     * If `true`, the persistent storage is preferred. If `false`, the volatile storage is preferred.  
+     * Default is `true`.
+     */
     protected _preferPersistence: boolean;
 
+    /**
+     * A reference to the volatile {@link sessionStorage} storage.
+     */
     protected _volatile: Storage;
+
+    /**
+     * A reference to the persistent {@link localStorage} storage.
+     */
     protected _persistent: Storage;
 
+    /**
+     * Initializes a new instance of the {@link JSONStorage} class.  
+     * It cannot be instantiated outside of a browser environment or an {@link EnvironmentException} is thrown.
+     *
+     * ```ts
+     * const jsonStorage = new JSONStorage();
+     * ```
+     *
+     * ---
+     *
+     * @param preferPersistence
+     * Whether to prefer the {@link localStorage} over the {@link sessionStorage} when calling an ambivalent method.  
+     * If omitted, it defaults to `true` to prefer the persistent storage.
+     */
     public constructor(preferPersistence = true)
     {
-        this._preferPersistence = preferPersistence;
-
         if (!(isBrowser))
         {
             throw new EnvironmentException(
@@ -29,228 +61,521 @@ export default class JSONStorage
             );
         }
 
+        this._preferPersistence = preferPersistence;
+
         this._volatile = window.sessionStorage;
         this._persistent = window.localStorage;
     }
 
-    protected _get<T extends JSONValue>(storage: Storage, propertyName: string): T | undefined;
-    protected _get<T extends JSONValue>(storage: Storage, propertyName: string, defaultValue: T): T;
-    protected _get<T extends JSONValue>(storage: Storage, propertyName: string, defaultValue?: T): T | undefined;
-    protected _get<T extends JSONValue>(storage: Storage, propertyName: string, defaultValue?: T): T | undefined
+    protected _get<T extends JSONValue>(storage: Storage, key: string): T | undefined;
+    protected _get<T extends JSONValue>(storage: Storage, key: string, defaultValue: T): T;
+    protected _get<T extends JSONValue>(storage: Storage, key: string, defaultValue?: T): T | undefined;
+    protected _get<T extends JSONValue>(storage: Storage, key: string, defaultValue?: T): T | undefined
     {
-        const propertyValue = storage.getItem(propertyName);
-        if (propertyValue)
+        const value = storage.getItem(key);
+        if (value)
         {
             try
             {
-                return JSON.parse(propertyValue);
+                return JSON.parse(value);
             }
-            catch (error)
+            catch
             {
                 // eslint-disable-next-line no-console
                 console.warn(
-                    `The "${propertyValue}" value for "${propertyName}"` +
+                    `The "${value}" value for "${key}"` +
                     " property cannot be parsed. Clearing the storage...");
 
-                storage.removeItem(propertyName);
+                storage.removeItem(key);
             }
         }
 
         return defaultValue;
     }
-    protected _set<T extends JSONValue>(storage: Storage, propertyName: string, newValue?: T): void
+    protected _set<T extends JSONValue>(storage: Storage, key: string, newValue?: T): void
     {
         const encodedValue = JSON.stringify(newValue);
         if (encodedValue)
         {
-            storage.setItem(propertyName, encodedValue);
+            storage.setItem(key, encodedValue);
         }
         else
         {
-            storage.removeItem(propertyName);
+            storage.removeItem(key);
         }
     }
 
     /**
-     * Retrieves the value with the specified name from the corresponding storage.
+     * Retrieves the value with the specified key from the default storage.
      *
-     * @param propertyName The name of the property to retrieve.
-     * @param defaultValue The default value to return if the property does not exist.
-     * @param persistent Whether to use the persistent `localStorage` or the volatile `sessionStorage`.
+     * ```ts
+     * const value: TValue = jsonStorage.get<TValue>("key");
+     * ```
      *
-     * @returns The value of the property or the default value if the property does not exist.
+     * ---
+     *
+     * @template T The type of the value to retrieve.
+     *
+     * @param key The key of the value to retrieve.
+     *
+     * @returns The value with the specified key or `undefined` if the key doesn't exist.
      */
-    public get<T extends JSONValue>(propertyName: string, defaultValue: undefined, persistent?: boolean): T | undefined;
-    public get<T extends JSONValue>(propertyName: string, defaultValue: T, persistent?: boolean): T ;
-    public get<T extends JSONValue>(propertyName: string, defaultValue?: T, persistent?: boolean): T | undefined;
-    public get<T extends JSONValue>(propertyName: string, defaultValue?: T, persistent = this._preferPersistence)
+    public get<T extends JSONValue>(key: string): T | undefined;
+
+    /**
+     * Retrieves the value with the specified key from the default storage.
+     *
+     * ```ts
+     * const value: TValue = jsonStorage.get<TValue>("key", defaultValue);
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the value to retrieve.
+     *
+     * @param key The key of the value to retrieve.
+     * @param defaultValue The default value to return if the key doesn't exist.
+     * @param persistent
+     * Whether to prefer the persistent {@link localStorage} over the volatile {@link sessionStorage}.  
+     * If omitted, it defaults to the `preferPersistence` value set in the constructor.
+     *
+     * @returns The value with the specified key or the provided default value if the key doesn't exist.
+     */
+    public get<T extends JSONValue>(key: string, defaultValue: T, persistent?: boolean): T;
+
+    /**
+     * Retrieves the value with the specified key from the default storage.
+     *
+     * ```ts
+     * const value: TValue = jsonStorage.get<TValue>("key", obj?.value);
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the value to retrieve.
+     *
+     * @param key The key of the value to retrieve.
+     * @param defaultValue The default value to return (which may be `undefined`) if the key doesn't exist.
+     * @param persistent
+     * Whether to prefer the persistent {@link localStorage} over the volatile {@link sessionStorage}.  
+     * If omitted, it defaults to the `preferPersistence` value set in the constructor.
+     *
+     * @returns The value with the specified key or the default value if the key doesn't exist.
+     */
+    public get<T extends JSONValue>(key: string, defaultValue?: T, persistent?: boolean): T | undefined;
+    public get<T extends JSONValue>(key: string, defaultValue?: T, persistent = this._preferPersistence)
         : T | undefined
     {
         const storage = persistent ? this._persistent : this._volatile;
 
-        return this._get<T>(storage, propertyName, defaultValue);
-    }
-    /**
-     * Retrieves the value with the specified name from the volatile `sessionStorage`.
-     *
-     * @param propertyName The name of the property to retrieve.
-     * @param defaultValue The default value to return if the property does not exist.
-     *
-     * @returns The value of the property or the default value if the property does not exist.
-     */
-    public recall<T extends JSONValue>(propertyName: string): T | undefined;
-    public recall<T extends JSONValue>(propertyName: string, defaultValue: T): T;
-    public recall<T extends JSONValue>(propertyName: string, defaultValue?: T): T | undefined;
-    public recall<T extends JSONValue>(propertyName: string, defaultValue?: T): T | undefined
-    {
-        return this._get<T>(this._volatile, propertyName, defaultValue);
-    }
-    /**
-     * Retrieves the value with the specified name looking first in the
-     * volatile `sessionStorage` and then in the persistent `localStorage`.
-     *
-     * @param propertyName The name of the property to retrieve.
-     * @param defaultValue The default value to return if the property does not exist.
-     *
-     * @returns The value of the property or the default value if the property does not exist.
-     */
-    public retrieve<T extends JSONValue>(propertyName: string): T | undefined;
-    public retrieve<T extends JSONValue>(propertyName: string, defaultValue: T): T;
-    public retrieve<T extends JSONValue>(propertyName: string, defaultValue?: T): T | undefined;
-    public retrieve<T extends JSONValue>(propertyName: string, defaultValue?: T): T | undefined
-    {
-        return this.recall<T>(propertyName) ?? this.read<T>(propertyName, defaultValue);
-    }
-    /**
-     * Retrieves the value with the specified name from the persistent `localStorage`.
-     *
-     * @param propertyName The name of the property to retrieve.
-     * @param defaultValue The default value to return if the property does not exist.
-     *
-     * @returns The value of the property or the default value if the property does not exist.
-     */
-    public read<T extends JSONValue>(propertyName: string): T | undefined;
-    public read<T extends JSONValue>(propertyName: string, defaultValue: T): T;
-    public read<T extends JSONValue>(propertyName: string, defaultValue?: T): T | undefined;
-    public read<T extends JSONValue>(propertyName: string, defaultValue?: T): T | undefined
-    {
-        return this._get<T>(this._persistent, propertyName, defaultValue);
+        return this._get<T>(storage, key, defaultValue);
     }
 
     /**
-     * Checks whether the property with the specified name exists in the corresponding storage.
+     * Retrieves the value with the specified key from the volatile {@link sessionStorage}.
      *
-     * @param propertyName The name of the property to check.
-     * @param persistent Whether to use the persistent `localStorage` or the volatile `sessionStorage`.
+     * ```ts
+     * const value: TValue = jsonStorage.recall<TValue>("key");
+     * ```
      *
-     * @returns `true` if the property exists, `false` otherwise.
+     * ---
+     *
+     * @template T The type of the value to retrieve.
+     *
+     * @param key The key of the value to retrieve.
+     *
+     * @returns The value with the specified key or `undefined` if the key doesn't exist.
      */
-    public has(propertyName: string, persistent?: boolean): boolean
+    public recall<T extends JSONValue>(key: string): T | undefined;
+
+    /**
+     * Retrieves the value with the specified key from the volatile {@link sessionStorage}.
+     *
+     * ```ts
+     * const value: TValue = jsonStorage.recall<TValue>("key", defaultValue);
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the value to retrieve.
+     *
+     * @param key The key of the value to retrieve.
+     * @param defaultValue The default value to return if the key doesn't exist.
+     *
+     * @returns The value with the specified key or the default value if the key doesn't exist.
+     */
+    public recall<T extends JSONValue>(key: string, defaultValue: T): T;
+
+    /**
+     * Retrieves the value with the specified key from the volatile {@link sessionStorage}.
+     *
+     * ```ts
+     * const value: TValue = jsonStorage.recall<TValue>("key", obj?.value);
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the value to retrieve.
+     *
+     * @param key The key of the value to retrieve.
+     * @param defaultValue The default value to return (which may be `undefined`) if the key doesn't exist.
+     *
+     * @returns The value with the specified key or the default value if the key doesn't exist.
+     */
+    public recall<T extends JSONValue>(key: string, defaultValue?: T): T | undefined;
+    public recall<T extends JSONValue>(key: string, defaultValue?: T): T | undefined
+    {
+        return this._get<T>(this._volatile, key, defaultValue);
+    }
+
+    /**
+     * Retrieves the value with the specified key looking first in the volatile
+     * {@link sessionStorage} and then, if not found, in the persistent {@link localStorage}.
+     *
+     * ```ts
+     * const value: TValue = jsonStorage.retrieve<TValue>("key");
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the value to retrieve.
+     *
+     * @param key The key of the value to retrieve.
+     *
+     * @returns The value with the specified key or `undefined` if the key doesn't exist.
+     */
+    public retrieve<T extends JSONValue>(key: string): T | undefined;
+
+    /**
+     * Retrieves the value with the specified key looking first in the volatile
+     * {@link sessionStorage} and then, if not found, in the persistent {@link localStorage}.
+     *
+     * ```ts
+     * const value: TValue = jsonStorage.retrieve<TValue>("key", defaultValue);
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the value to retrieve.
+     *
+     * @param key The key of the value to retrieve.
+     * @param defaultValue The default value to return if the key doesn't exist.
+     *
+     * @returns The value with the specified key or the default value if the key doesn't exist.
+     */
+    public retrieve<T extends JSONValue>(key: string, defaultValue: T): T;
+
+    /**
+     * Retrieves the value with the specified key looking first in the volatile
+     * {@link sessionStorage} and then, if not found, in the persistent {@link localStorage}.
+     *
+     * ```ts
+     * const value: TValue = jsonStorage.retrieve<TValue>("key", obj?.value);
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the value to retrieve.
+     *
+     * @param key The key of the value to retrieve.
+     * @param defaultValue The default value to return (which may be `undefined`) if the key doesn't exist.
+     *
+     * @returns The value with the specified key or the default value if the key doesn't exist.
+     */
+    public retrieve<T extends JSONValue>(key: string, defaultValue?: T): T | undefined;
+    public retrieve<T extends JSONValue>(key: string, defaultValue?: T): T | undefined
+    {
+        return this.recall<T>(key) ?? this.read<T>(key, defaultValue);
+    }
+
+    /**
+     * Retrieves the value with the specified key from the persistent {@link localStorage}.
+     *
+     * ```ts
+     * const value: TValue = jsonStorage.read<TValue>("key");
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the value to retrieve.
+     *
+     * @param key The key of the value to retrieve.
+     *
+     * @returns The value with the specified key or `undefined` if the key doesn't exist.
+     */
+    public read<T extends JSONValue>(key: string): T | undefined;
+
+    /**
+     * Retrieves the value with the specified key from the persistent {@link localStorage}.
+     *
+     * ```ts
+     * const value: TValue = jsonStorage.read<TValue>("key", defaultValue);
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the value to retrieve.
+     *
+     * @param key The key of the value to retrieve.
+     * @param defaultValue The default value to return if the key doesn't exist.
+     *
+     * @returns The value with the specified key or the default value if the key doesn't exist.
+     */
+    public read<T extends JSONValue>(key: string, defaultValue: T): T;
+
+    /**
+     * Retrieves the value with the specified key from the persistent {@link localStorage}.
+     *
+     * ```ts
+     * const value: TValue = jsonStorage.read<TValue>("key", obj?.value);
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the value to retrieve.
+     *
+     * @param key The key of the value to retrieve.
+     * @param defaultValue The default value to return (which may be `undefined`) if the key doesn't exist.
+     *
+     * @returns The value with the specified key or the default value if the key doesn't exist.
+     */
+    public read<T extends JSONValue>(key: string, defaultValue?: T): T | undefined;
+    public read<T extends JSONValue>(key: string, defaultValue?: T): T | undefined
+    {
+        return this._get<T>(this._persistent, key, defaultValue);
+    }
+
+    /**
+     * Checks whether the value with the specified key exists within the default storage.
+     *
+     * ```ts
+     * if (jsonStorage.has("key"))
+     * {
+     *    // The key exists. Do something...
+     * }
+     * ```
+     *
+     * ---
+     *
+     * @param key The key of the value to check.
+     * @param persistent
+     * Whether to prefer the persistent {@link localStorage} over the volatile {@link sessionStorage}.  
+     * If omitted, it defaults to the `preferPersistence` value set in the constructor.
+     *
+     * @returns `true` if the key exists, `false` otherwise.
+     */
+    public has(key: string, persistent?: boolean): boolean
     {
         const storage = persistent ? this._persistent : this._volatile;
 
-        return storage.getItem(propertyName) !== null;
-    }
-    /**
-     * Checks whether the property with the specified name exists in the volatile `sessionStorage`.
-     *
-     * @param propertyName The name of the property to check.
-     *
-     * @returns `true` if the property exists, `false` otherwise.
-     */
-    public knows(propertyName: string): boolean
-    {
-        return this._volatile.getItem(propertyName) !== null;
-    }
-    /**
-     * Checks whether the property with the specified name exists looking first in the
-     * volatile `sessionStorage` and then in the persistent `localStorage`.
-     *
-     * @param propertyName The name of the property to check.
-     *
-     * @returns `true` if the property exists, `false` otherwise.
-     */
-    public find(propertyName: string): boolean
-    {
-        return this.knows(propertyName) ?? this.exists(propertyName);
-    }
-    /**
-     * Checks whether the property with the specified name exists in the persistent `localStorage`.
-     *
-     * @param propertyName The name of the property to check.
-     *
-     * @returns `true` if the property exists, `false` otherwise.
-     */
-    public exists(propertyName: string): boolean
-    {
-        return this._persistent.getItem(propertyName) !== null;
+        return storage.getItem(key) !== null;
     }
 
     /**
-     * Sets the value with the specified name in the corresponding storage.
-     * If the value is `undefined`, the property is removed from the storage.
+     * Checks whether the value with the specified key exists within the volatile {@link sessionStorage}.
      *
-     * @param propertyName The name of the property to set.
-     * @param newValue The new value to set.
-     * @param persistent Whether to use the persistent `localStorage` or the volatile `sessionStorage`.
+     * ```ts
+     * if (jsonStorage.knows("key"))
+     * {
+     *    // The key exists. Do something...
+     * }
+     * ```
+     *
+     * ---
+     *
+     * @param key The key of the value to check.
+     *
+     * @returns `true` if the key exists, `false` otherwise.
      */
-    public set<T extends JSONValue>(propertyName: string, newValue?: T, persistent = this._preferPersistence): void
+    public knows(key: string): boolean
+    {
+        return this._volatile.getItem(key) !== null;
+    }
+
+    /**
+     * Checks whether the value with the specified key exists looking first in the
+     * volatile {@link sessionStorage} and then, if not found, in the persistent {@link localStorage}.
+     *
+     * ```ts
+     * if (jsonStorage.find("key"))
+     * {
+     *    // The key exists. Do something...
+     * }
+     * ```
+     *
+     * ---
+     *
+     * @param key The key of the value to check.
+     *
+     * @returns `true` if the key exists, `false` otherwise.
+     */
+    public find(key: string): boolean
+    {
+        return this.knows(key) ?? this.exists(key);
+    }
+
+    /**
+     * Checks whether the value with the specified key exists within the persistent {@link localStorage}.
+     *
+     * ```ts
+     * if (jsonStorage.exists("key"))
+     * {
+     *    // The key exists. Do something...
+     * }
+     * ```
+     *
+     * ---
+     *
+     * @param key The key of the value to check.
+     *
+     * @returns `true` if the key exists, `false` otherwise.
+     */
+    public exists(key: string): boolean
+    {
+        return this._persistent.getItem(key) !== null;
+    }
+
+    /**
+     * Sets the value with the specified key in the default storage.  
+     * If the value is `undefined` or omitted, the key is removed from the storage.
+     *
+     * ```ts
+     * jsonStorage.set("key");
+     * jsonStorage.set("key", value);
+     * jsonStorage.set("key", obj?.value);
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the value to set.
+     *
+     * @param key The key of the value to set.
+     * @param newValue The new value to set. If it's `undefined` or omitted, the key is removed instead.
+     * @param persistent
+     * Whether to prefer the persistent {@link localStorage} over the volatile {@link sessionStorage}.  
+     * If omitted, it defaults to the `preferPersistence` value set in the constructor.
+     */
+    public set<T extends JSONValue>(key: string, newValue?: T, persistent = this._preferPersistence): void
     {
         const storage = persistent ? this._persistent : this._volatile;
 
-        this._set<T>(storage, propertyName, newValue);
-    }
-    /**
-     * Sets the value with the specified name in the volatile `sessionStorage`.
-     * If the value is `undefined`, the property is removed from the storage.
-     *
-     * @param propertyName The name of the property to set.
-     * @param newValue The new value to set.
-     */
-    public remember<T extends JSONValue>(propertyName: string, newValue?: T): void
-    {
-        this._set<T>(this._volatile, propertyName, newValue);
-    }
-    /**
-     * Sets the value with the specified name in the persistent `localStorage`.
-     * If the value is `undefined`, the property is removed from the storage.
-     *
-     * @param propertyName The name of the property to set.
-     * @param newValue The new value to set.
-     */
-    public write<T extends JSONValue>(propertyName: string, newValue?: T): void
-    {
-        this._set<T>(this._persistent, propertyName, newValue);
+        this._set<T>(storage, key, newValue);
     }
 
     /**
-     * Removes the value with the specified name from the volatile `sessionStorage`.
+     * Sets the value with the specified key in the volatile {@link sessionStorage}.
+     * If the value is `undefined` or omitted, the key is removed from the storage.
      *
-     * @param propertyName The name of the property to remove.
-     */
-    public forget(propertyName: string): void
-    {
-        this._volatile.removeItem(propertyName);
-    }
-    /**
-     * Removes the value with the specified name from the persistent `localStorage`.
+     * ```ts
+     * jsonStorage.remember("key");
+     * jsonStorage.remember("key", value);
+     * jsonStorage.remember("key", obj?.value);
+     * ```
      *
-     * @param propertyName The name of the property to remove.
-     */
-    public erase(propertyName: string): void
-    {
-        this._persistent.removeItem(propertyName);
-    }
-    /**
-     * Removes the value with the specified name from all the storages.
+     * ---
      *
-     * @param propertyName The name of the property to remove.
+     * @template T The type of the value to set.
+     *
+     * @param key The key of the value to set.
+     * @param newValue The new value to set. If it's `undefined` or omitted, the key is removed instead.
      */
-    public clear(propertyName: string): void
+    public remember<T extends JSONValue>(key: string, newValue?: T): void
     {
-        this._volatile.removeItem(propertyName);
-        this._persistent.removeItem(propertyName);
+        this._set<T>(this._volatile, key, newValue);
     }
 
-    public get [Symbol.toStringTag]() { return "JSONStorage"; }
+    /**
+     * Sets the value with the specified key in the persistent {@link localStorage}.
+     * If the value is `undefined` or omitted, the key is removed from the storage.
+     *
+     * ```ts
+     * jsonStorage.write("key");
+     * jsonStorage.write("key", value);
+     * jsonStorage.write("key", obj?.value);
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the value to set.
+     *
+     * @param key The key of the value to set.
+     * @param newValue The new value to set. If it's `undefined` or omitted, the key is removed instead.
+     */
+    public write<T extends JSONValue>(key: string, newValue?: T): void
+    {
+        this._set<T>(this._persistent, key, newValue);
+    }
+
+    /**
+     * Removes the value with the specified key from the default storage.
+     *
+     * ```ts
+     * jsonStorage.delete("key");
+     * ```
+     *
+     * ---
+     *
+     * @param key The key of the value to remove.
+     * @param persistent
+     * Whether to prefer the persistent {@link localStorage} over the volatile {@link sessionStorage}.  
+     * If omitted, it defaults to the `preferPersistence` value set in the constructor.
+     */
+    public delete(key: string, persistent?: boolean): void
+    {
+        const storage = persistent ? this._persistent : this._volatile;
+
+        storage.removeItem(key);
+    }
+
+    /**
+     * Removes the value with the specified key from the volatile {@link sessionStorage}.
+     *
+     * ```ts
+     * jsonStorage.forget("key");
+     * ```
+     *
+     * ---
+     *
+     * @param key The key of the value to remove.
+     */
+    public forget(key: string): void
+    {
+        this._volatile.removeItem(key);
+    }
+
+    /**
+     * Removes the value with the specified key from the persistent {@link localStorage}.
+     *
+     * ```ts
+     * jsonStorage.erase("key");
+     * ```
+     *
+     * ---
+     *
+     * @param key The key of the value to remove.
+     */
+    public erase(key: string): void
+    {
+        this._persistent.removeItem(key);
+    }
+
+    /**
+     * Removes the value with the specified key from both the
+     * volatile {@link sessionStorage} and the persistent {@link localStorage}.
+     *
+     * ```ts
+     * jsonStorage.clear("key");
+     * ```
+     *
+     * ---
+     *
+     * @param key The key of the value to remove.
+     */
+    public clear(key: string): void
+    {
+        this._volatile.removeItem(key);
+        this._persistent.removeItem(key);
+    }
+
+    public readonly [Symbol.toStringTag]: string = "JSONStorage";
 }

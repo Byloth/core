@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { dateDifference, dateRange, dateRound, TimeUnit } from "../../src/index.js";
+import { dateDifference, dateRange, TimeUnit } from "../../src/index.js";
 
 describe("dateDifference", () =>
 {
@@ -63,4 +63,4 @@ describe("dateRange", () =>
         expect(range.next().value).toBeInstanceOf(Date);
         expect(range.next().value).toBeUndefined();
     });
-}
+});

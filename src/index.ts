@@ -1,4 +1,4 @@
-export const VERSION = "2.0.0-rc.3";
+export const VERSION = "2.0.0-rc.12";
 
 export type { Constructor, Interval, Timeout } from "./core/types.js";
 
@@ -7,6 +7,7 @@ export { isBrowser, isNode, isWebWorker } from "./helpers.js";
 export {
     AggregatedIterator,
     AggregatedAsyncIterator,
+    CallableObject,
     Clock,
     Countdown,
     DeferredPromise,
@@ -29,6 +30,7 @@ export {
     SmartIterator,
     SmartAsyncIterator,
     SmartPromise,
+    SwitchableCallback,
     TimeoutException,
     TimedPromise,
     TypeException,
@@ -38,7 +40,12 @@ export {
 
 export type {
     AsyncGeneratorFunction,
+    AsyncIteratee,
     AsyncIteratorLike,
+    AsyncKeyedIteratee,
+    AsyncKeyedReducer,
+    AsyncReducer,
+    Callback,
     FulfilledHandler,
     GeneratorFunction,
     Iteratee,
@@ -48,22 +55,20 @@ export type {
     JSONValue,
     KeyedIteratee,
     KeyedReducer,
-    KeyedTypeGuardIteratee,
+    KeyedTypeGuardPredicate,
     MaybeAsyncKeyedIteratee,
     MaybeAsyncKeyedReducer,
-    MaybeAsyncKeyedTypeGuardIteratee,
-    MaybeAsyncReducer,
+    MaybeAsyncGeneratorFunction,
     MaybeAsyncIteratee,
     MaybeAsyncIteratorLike,
-    MaybeAsyncTypeGuardIteratee,
+    MaybeAsyncReducer,
     MaybePromise,
     PromiseExecutor,
     PromiseRejecter,
     PromiseResolver,
     Reducer,
     RejectedHandler,
-    Subscriber,
-    TypeGuardIteratee
+    TypeGuardPredicate
 
 } from "./models/types.js";
 
@@ -72,12 +77,14 @@ export {
     capitalize,
     chain,
     count,
+    Curve,
     delay,
     dateDifference,
     dateRange,
     dateRound,
     TimeUnit,
     enumerate,
+    getWeek,
     hash,
     loadScript,
     nextAnimationFrame,
@@ -86,6 +93,8 @@ export {
     shuffle,
     sum,
     unique,
+    WeekDay,
+    yieldToEventLoop,
     zip
 
 } from "./utils/index.js";

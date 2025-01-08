@@ -1,9 +1,10 @@
 export type {
     KeyedIteratee,
+    AsyncKeyedIteratee,
     MaybeAsyncKeyedIteratee,
-    KeyedTypeGuardIteratee,
-    MaybeAsyncKeyedTypeGuardIteratee,
+    KeyedTypeGuardPredicate,
     KeyedReducer,
+    AsyncKeyedReducer,
     MaybeAsyncKeyedReducer
 
 } from "./aggregators/types.js";
@@ -11,11 +12,13 @@ export type {
 export type {
     GeneratorFunction,
     AsyncGeneratorFunction,
+    MaybeAsyncGeneratorFunction,
     Iteratee,
+    AsyncIteratee,
     MaybeAsyncIteratee,
-    TypeGuardIteratee,
-    MaybeAsyncTypeGuardIteratee,
+    TypeGuardPredicate,
     Reducer,
+    AsyncReducer,
     MaybeAsyncReducer,
     IteratorLike,
     AsyncIteratorLike,
@@ -40,4 +43,4 @@ export type {
 
 } from "./promises/types.js";
 
-export type { Subscriber } from "./publisher.js";
+export type { Callback } from "./callbacks/types.js";
