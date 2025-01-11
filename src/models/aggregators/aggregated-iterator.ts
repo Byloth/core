@@ -23,15 +23,11 @@ import type { KeyedIteratee, KeyedTypeGuardPredicate, KeyedReducer } from "./typ
  * then perform specific operations on the groups themselves.
  *
  * ```ts
- * import { range, Random } from "@byloth/core";
+ * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+ *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+ *     .count();
  *
- * const iterator: SmartIterator<number> = range(10).map(() => Random.Integer(10) + 1);
- * const { odd, even } = iterator.groupBy((value) => value % 2 === 0 ? "even" : "odd")
- *     .count()
- *     .toObject();
- *
- * if (odd > even) { console.log("There are more odd numbers."); }
- * else { console.log("There are more even numbers."); }
+ * console.log(results.toObject()); // { odd: 4, even: 4 }
  * ```
  *
  * ---
@@ -134,15 +130,11 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * If the iterator is infinite, the function will never return.
      *
      * ```ts
-     * import { range, Random } from "@byloth/core";
+     * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .every((value) => value >= 0);
      *
-     * const iterator: SmartIterator<number> = range(10).map(() => Random.Integer(-5, 5));
-     * const { odd, even } = iterator.groupBy((value) => value % 2 === 0 ? "even" : "odd")
-     *     .every((value) => value >= 0)
-     *     .toObject();
-     *
-     * if (even) { console.log("All even numbers are positive."); }
-     * if (odd) { console.log("All odd numbers are positive."); }
+     * console.log(results.toObject()); // { odd: false, even: true }
      * ```
      *
      * ---
@@ -183,22 +175,18 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * If the iterator is infinite, the function will never return.
      *
      * ```ts
-     * import { range, Random } from "@byloth/core";
+     * const results = new SmartIterator<number>([-5, -4, -3, -2, -1, 0])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .some((value) => value >= 0);
      *
-     * const iterator: SmartIterator<number> = range(10).map(() => Random.Integer(-5, 5));
-     * const { odd, even } = iterator.groupBy((value) => value % 2 === 0 ? "even" : "odd")
-     *     .some((value) => value >= 0)
-     *     .toObject();
-     *
-     * if (even) { console.log("At least one even number is positive."); }
-     * if (odd) { console.log("At least one odd number is positive."); }
+     * console.log(results.toObject()); // { odd: false, even: true }
      * ```
      *
      * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
-     * @returns `true` if any element satisfies the condition, `false` otherwise.
+     * @returns A {@link ReducedIterator} object with the boolean results for each group.
      */
     public some(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, boolean>
     {
@@ -221,6 +209,10 @@ export default class AggregatedIterator<K extends PropertyKey, T>
 
     /**
      * Filters the elements of the iterator using a given condition.
+     *
+     * This method will iterate over all elements of the iterator checking if they satisfy the condition.  
+     * If the condition is satisfied, the element will be included in the new iterator.
+     *
      * Since the iterator is lazy, the filtering process will
      * be executed once the resulting iterator is materialized.
      *
@@ -228,32 +220,55 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
-     * The method will iterate over all elements of the iterator checking if they satisfy the condition.
-     * If the condition is satisfied, the element will be included in the result.
-     *
-     * Eventually, it will return a new {@link AggregatedIterator}
-     * object that will contain all the elements that satisfy the condition.
-     * If the iterator is infinite, the function will never return.
-     *
      * ```ts
-     * import { range, Random } from "@byloth/core";
+     * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .filter((value) => value >= 0);
      *
-     * const iterator: SmartIterator<number> = range(10).map(() => Random.Integer(-5, 5));
-     * const { odd, even } = iterator.groupBy((value) => value % 2 === 0 ? "even" : "odd")
-     *     .filter((value) => value >= 0)
-     *     .toObject();
-     *
-     * console.log("Even numbers:", even);
-     * console.log("Odd numbers:", odd);
+     * console.log(results.toObject()); // { odd: [3, 5], even: [0, 2, 6, 8] }
      * ```
      *
      * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
-     * @returns A new iterator with the elements that satisfy the condition.
+     * @returns A new {@link AggregatedIterator} with the elements that satisfy the condition.
      */
     public filter(predicate: KeyedIteratee<K, T, boolean>): AggregatedIterator<K, T>;
+
+    /**
+     * Filters the elements of the iterator using a given condition.
+     *
+     * This method will iterate over all elements of the iterator checking if they satisfy the condition.  
+     * If the condition is satisfied, the element will be included in the new iterator.
+     *
+     * Since the iterator is lazy, the filtering process will
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const results = new SmartIterator<number | string>([-3, "-1", 0, "2", "3", 5, 6, "8"])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .filter<number>((value) => typeof value === "number");
+     *
+     * console.log(results.toObject()); // { odd: [-3, 5], even: [0, 6] }
+     * ```
+     *
+     * ---
+     *
+     * @template S
+     * The type of the elements that satisfy the condition.  
+     * This allows the type-system to infer the correct type of the new iterator.
+     *
+     * It must be a subtype of the original type of the iterator.
+     *
+     * @param predicate The condition to check for each element of the iterator.
+     *
+     * @returns A new {@link AggregatedIterator} with the elements that satisfy the condition.
+     */
     public filter<S extends T>(predicate: KeyedTypeGuardPredicate<K, T, S>): AggregatedIterator<K, S>;
     public filter(predicate: KeyedIteratee<K, T, boolean>): AggregatedIterator<K, T>
     {

@@ -23,7 +23,7 @@ import { SmartIterator } from "../models/index.js";
  *
  * @param iterables The list of iterables to chain.
  *
- * @returns A {@link SmartIterator} object that chains the iterables into a single one.
+ * @returns A new {@link SmartIterator} object that chains the iterables into a single one.
  */
 export function chain<T>(...iterables: Iterable<T>[]): SmartIterator<T>
 {
@@ -89,7 +89,7 @@ export function count<T>(elements: Iterable<T>): number
  *
  * @param elements The iterable to enumerate.
  *
- * @returns A {@link SmartIterator} object that enumerates the elements of the given iterable.
+ * @returns A new {@link SmartIterator} object that enumerates the elements of the given iterable.
  */
 export function enumerate<T>(elements: Iterable<T>): SmartIterator<[number, T]>
 {

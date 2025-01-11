@@ -312,7 +312,11 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Filters the elements of the iterator using a given condition.  
+     * Filters the elements of the iterator using a given condition.
+     * 
+     * This method will iterate over all elements of the iterator checking if they satisfy the condition.  
+     * If the condition is satisfied, the element will be included in the new iterator.
+     *
      * Since the iterator is lazy, the filtering process will
      * be executed once the resulting iterator is materialized.
      *
@@ -336,7 +340,11 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     public filter(predicate: MaybeAsyncIteratee<T, boolean>): SmartAsyncIterator<T, R>;
 
     /**
-     * Filters the elements of the iterator using a given condition.  
+     * Filters the elements of the iterator using a given condition.
+     * 
+     * This method will iterate over all elements of the iterator checking if they satisfy the condition.  
+     * If the condition is satisfied, the element will be included in the new iterator.
+     *
      * Since the iterator is lazy, the filtering process will
      * be executed once the resulting iterator is materialized.
      *
@@ -385,7 +393,11 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Maps the elements of the iterator using a given transformation function.  
+     * Maps the elements of the iterator using a given transformation function.
+     *
+     * This method will iterate over all elements of the iterator applying the transformation function.  
+     * The result of each transformation will be included in the new iterator.
+     *
      * Since the iterator is lazy, the mapping process will
      * be executed once the resulting iterator is materialized.
      *
