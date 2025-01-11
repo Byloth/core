@@ -8,7 +8,7 @@ import { SmartIterator } from "../models/index.js";
  *
  * A new iterator will be created, holding the reference to the original one.  
  * This means that the original iterator won't be consumed until the
- * new one is and that consuming one of them will consume also the other.
+ * new one is and that consuming one of them will consume the other as well.
  *
  * ```ts
  * for (const value of chain([1, 2, 3], [4, 5, 6], [7, 8, 9]))
@@ -74,7 +74,7 @@ export function count<T>(elements: Iterable<T>): number
  *
  * A new iterator will be created, holding the reference to the original one.  
  * This means that the original iterator won't be consumed until the
- * new one is and that consuming one of them will consume also the other.
+ * new one is and that consuming one of them will consume the other as well.
  *
  * ```ts
  * for (const [index, value] of enumerate(["A", "M", "N", "Z"]))

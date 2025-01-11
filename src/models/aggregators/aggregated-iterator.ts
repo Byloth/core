@@ -18,7 +18,6 @@ import type { KeyedIteratee, KeyedTypeGuardPredicate, KeyedReducer } from "./typ
  * operations and transformation on the elements of the iterator,  
  * having also the knowledge and context of the groups to which
  * they belong, allowing to handle them in a grouped manner.
- * 
  *
  * This is particularly useful when you need to group elements and
  * then perform specific operations on the groups themselves.
@@ -128,7 +127,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      *
      * The method will iterate over all elements of the iterator checking if they satisfy the condition.  
      * Once a single element of one group doesn't satisfy the condition,
-     * the result for the respective group will set to `false`.  
+     * the result for the respective group will set to `false`.
      *
      * Eventually, it will return a new {@link ReducedIterator}
      * object that will contain all the boolean results for each group.  
@@ -137,10 +136,13 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * ```ts
      * import { range, Random } from "@byloth/core";
      *
-     * const iterator: SmartIterator<number> = range(10).map(() => Random.Integer(10) + 1);
+     * const iterator: SmartIterator<number> = range(10).map(() => Random.Integer(-5, 5));
      * const { odd, even } = iterator.groupBy((value) => value % 2 === 0 ? "even" : "odd")
-     *     .count()
+     *     .every((value) => value >= 0)
      *     .toObject();
+     *
+     * if (even) { console.log("All even numbers are positive."); }
+     * if (odd) { console.log("All odd numbers are positive."); }
      * ```
      *
      * ---
@@ -167,6 +169,37 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             for (const [key, [_, result]] of values) { yield [key, result]; }
         });
     }
+
+    /**
+     * Determines whether any elements of each group of the iterator satisfy a given condition.
+     * See also {@link AggregatedIterator.every}.
+     *
+     * The method will iterate over all elements of the iterator checking if they satisfy the condition.
+     * Once a single element of one group satisfies the condition,
+     * the result for the respective group will set to `true`.
+     *
+     * Eventually, it will return a new {@link ReducedIterator}
+     * object that will contain all the boolean results for each group.
+     * If the iterator is infinite, the function will never return.
+     *
+     * ```ts
+     * import { range, Random } from "@byloth/core";
+     *
+     * const iterator: SmartIterator<number> = range(10).map(() => Random.Integer(-5, 5));
+     * const { odd, even } = iterator.groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .some((value) => value >= 0)
+     *     .toObject();
+     *
+     * if (even) { console.log("At least one even number is positive."); }
+     * if (odd) { console.log("At least one odd number is positive."); }
+     * ```
+     *
+     * ---
+     *
+     * @param predicate The condition to check for each element of the iterator.
+     *
+     * @returns `true` if any element satisfies the condition, `false` otherwise.
+     */
     public some(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, boolean>
     {
         const values = new Map<K, [number, boolean]>();
@@ -186,6 +219,40 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
+    /**
+     * Filters the elements of the iterator using a given condition.
+     * Since the iterator is lazy, the filtering process will
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * The method will iterate over all elements of the iterator checking if they satisfy the condition.
+     * If the condition is satisfied, the element will be included in the result.
+     *
+     * Eventually, it will return a new {@link AggregatedIterator}
+     * object that will contain all the elements that satisfy the condition.
+     * If the iterator is infinite, the function will never return.
+     *
+     * ```ts
+     * import { range, Random } from "@byloth/core";
+     *
+     * const iterator: SmartIterator<number> = range(10).map(() => Random.Integer(-5, 5));
+     * const { odd, even } = iterator.groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .filter((value) => value >= 0)
+     *     .toObject();
+     *
+     * console.log("Even numbers:", even);
+     * console.log("Odd numbers:", odd);
+     * ```
+     *
+     * ---
+     *
+     * @param predicate The condition to check for each element of the iterator.
+     *
+     * @returns A new iterator with the elements that satisfy the condition.
+     */
     public filter(predicate: KeyedIteratee<K, T, boolean>): AggregatedIterator<K, T>;
     public filter<S extends T>(predicate: KeyedTypeGuardPredicate<K, T, S>): AggregatedIterator<K, S>;
     public filter(predicate: KeyedIteratee<K, T, boolean>): AggregatedIterator<K, T>
