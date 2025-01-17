@@ -103,10 +103,13 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         });
     }
     public async reduce(reducer: MaybeAsyncKeyedReducer<K, T, T>): Promise<ReducedIterator<K, T>>;
+    public async reduce<A extends PropertyKey>(reducer: MaybeAsyncKeyedReducer<K, T, A>, initialValue: MaybePromise<A>)
+        : Promise<ReducedIterator<K, A>>;
     public async reduce<A>(reducer: MaybeAsyncKeyedReducer<K, T, A>, initialValue: (key: K) => MaybePromise<A>)
         : Promise<ReducedIterator<K, A>>;
-    public async reduce<A>(reducer: MaybeAsyncKeyedReducer<K, T, A>, initialValue?: (key: K) => MaybePromise<A>)
-        : Promise<ReducedIterator<K, A>>
+    public async reduce<A>(
+        reducer: MaybeAsyncKeyedReducer<K, T, A>, initialValue?: MaybePromise<A> | ((key: K) => MaybePromise<A>)
+    ): Promise<ReducedIterator<K, A>>
     {
         const values = new Map<K, [number, A]>();
 
@@ -119,7 +122,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
             else if (initialValue !== undefined)
             {
                 index = 0;
-                accumulator = await initialValue(key);
+
+                if (initialValue instanceof Function) { accumulator = await initialValue(key); }
+                else { accumulator = await initialValue; }
             }
             else
             {

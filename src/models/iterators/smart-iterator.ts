@@ -124,7 +124,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     /**
      * Determines whether all elements of the iterator satisfy a given condition. See also {@link SmartIterator.some}.
      *
-     * The method will iterate over all elements of the iterator checking if they satisfy the condition.  
+     * This method will iterate over all elements of the iterator checking if they satisfy the condition.  
      * Once a single element doesn't satisfy the condition, the method will return `false` immediately.
      *
      * This may lead to an unknown final state of the iterator, which may be entirely or partially consumed.  
@@ -164,7 +164,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     /**
      * Determines whether any element of the iterator satisfies a given condition. See also {@link SmartIterator.every}.
      *
-     * The method will iterate over all elements of the iterator checking if they satisfy the condition.  
+     * This method will iterate over all elements of the iterator checking if they satisfy the condition.  
      * Once a single element satisfies the condition, the method will return `true` immediately.
      *
      * This may lead to an unknown final state of the iterator, which may be entirely or partially consumed.  
@@ -564,7 +564,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     /**
      * Finds the first element of the iterator that satisfies a given condition.
      *
-     * The method will iterate over all elements of the iterator checking if they satisfy the condition.
+     * This method will iterate over all elements of the iterator checking if they satisfy the condition.
      * The first element that satisfies the condition will be returned immediately.
      *
      * Only the elements that are necessary to find the first
@@ -593,7 +593,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     /**
      * Finds the first element of the iterator that satisfies a given condition.
      *
-     * The method will iterate over all elements of the iterator checking if they satisfy the condition.
+     * This method will iterate over all elements of the iterator checking if they satisfy the condition.
      * The first element that satisfies the condition will be returned immediately.
      *
      * Only the elements that are necessary to find the first
