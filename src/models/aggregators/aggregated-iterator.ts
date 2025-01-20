@@ -118,10 +118,11 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     }
 
     /**
-     * Determines whether all elements of each group of the iterator satisfy a given condition.  
-     * See also {@link AggregatedIterator.some}.
+     * Determines whether all elements of each group of the iterator satisfy a given condition.
+     * See also {@link AggregatedIterator.some}.  
+     * This method will consume the entire iterator in the process.
      *
-     * This method will iterate over all elements of the iterator checking if they satisfy the condition.  
+     * It will iterate over all elements of the iterator checking if they satisfy the condition.  
      * Once a single element of one group doesn't satisfy the condition,
      * the result for the respective group will set to `false`.
      *
@@ -164,9 +165,10 @@ export default class AggregatedIterator<K extends PropertyKey, T>
 
     /**
      * Determines whether any elements of each group of the iterator satisfy a given condition.
-     * See also {@link AggregatedIterator.every}.
+     * See also {@link AggregatedIterator.every}.  
+     * This method will consume the entire iterator in the process.
      *
-     * This method will iterate over all elements of the iterator checking if they satisfy the condition.
+     * It will iterate over all elements of the iterator checking if they satisfy the condition.
      * Once a single element of one group satisfies the condition,
      * the result for the respective group will set to `true`.
      *
@@ -338,9 +340,10 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     }
 
     /**
-     * Reduces the elements of the iterator using a given reducer function.
+     * Reduces the elements of the iterator using a given reducer function.  
+     * This method will consume the entire iterator in the process.
      *
-     * This method will iterate over all elements of the iterator applying the reducer function.  
+     * It will iterate over all elements of the iterator applying the reducer function.  
      * The result of each riteration will be passed as the accumulator to the next one.
      *
      * The first accumulator value will be the first element of the iterator.
@@ -367,9 +370,10 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     public reduce(reducer: KeyedReducer<K, T, T>): ReducedIterator<K, T>;
 
     /**
-     * Reduces the elements of the iterator using a given reducer function.
+     * Reduces the elements of the iterator using a given reducer function.  
+     * This method will consume the entire iterator in the process.
      *
-     * This method will iterate over all elements of the iterator applying the reducer function.  
+     * It will iterate over all elements of the iterator applying the reducer function.  
      * The result of each riteration will be passed as the accumulator to the next one.
      *
      * The first accumulator value will be the initial value provided.
@@ -397,6 +401,38 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * @returns A new {@link ReducedIterator} containing the reduced results for each group.
      */
     public reduce<A extends PropertyKey>(reducer: KeyedReducer<K, T, A>, initialValue: A): ReducedIterator<K, A>;
+
+    /**
+     * Reduces the elements of the iterator using a given reducer function.  
+     * This method will consume the entire iterator in the process.
+     *
+     * It will iterate over all elements of the iterator applying the reducer function.  
+     * The result of each riteration will be passed as the accumulator to the next one.
+     *
+     * The first accumulator value will be the initial value provided by the given function.
+     * The last accumulator value will be the final result of the reduction.
+     *
+     * Eventually, it will return a new {@link ReducedIterator}
+     * object that will contain all the reduced results for each group.
+     * If the iterator is infinite, the function will never return.
+     *
+     * ```ts
+     * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, { value }, currentValue) => ({ value: value + currentValue }), (key) => ({ value: 0 }));
+     *
+     * console.log(results.toObject()); // { odd: { value: 4 }, even: { value: 16 } }
+     * ```
+     *
+     * ---
+     *
+     * @template A The type of the accumulator value which will also be the type of the final result of the reduction.
+     *
+     * @param reducer The reducer function to apply to each element of the iterator.
+     * @param initialValue The function that provides the initial value of the accumulator.
+     *
+     * @returns A new {@link ReducedIterator} containing the reduced results for each group.
+     */
     public reduce<A>(reducer: KeyedReducer<K, T, A>, initialValue: (key: K) => A): ReducedIterator<K, A>;
     public reduce<A>(reducer: KeyedReducer<K, T, A>, initialValue?: A | ((key: K) => A)): ReducedIterator<K, A>
     {
