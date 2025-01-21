@@ -13,7 +13,7 @@
  *     // Uncaught Exception: The game saves may be corrupted. Try to restart the game.
  *     //     at /src/game/index.ts:37:15
  *     //     at /src/main.ts:23:17
- *     // 
+ *     //
  *     // Caused by SyntaxError: Unexpected end of JSON input
  *     //     at /src/models/saves.ts:47:17
  *     //     at /src/game/index.ts:12:9

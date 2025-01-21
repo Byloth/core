@@ -14,7 +14,7 @@ import type { KeyedIteratee, KeyedTypeGuardPredicate, KeyedReducer } from "./typ
  * It isn't directly iterable like its parent class but rather needs to specify on what you want to iterate.  
  * See the {@link AggregatedIterator.keys}, {@link AggregatedIterator.items}
  * & {@link AggregatedIterator.values} methods.  
- * It does, however, provides the same set of methods to perform
+ * It does, however, provide the same set of methods to perform
  * operations and transformation on the elements of the iterator,  
  * having also the knowledge and context of the groups to which
  * they belong, allowing to handle them in a grouped manner.
@@ -32,13 +32,13 @@ import type { KeyedIteratee, KeyedTypeGuardPredicate, KeyedReducer } from "./typ
  *
  * ---
  *
- * @template K The type of the keys of the elements.
- * @template T The type of the elements.
+ * @template K The type of the keys used to group the elements.
+ * @template T The type of the elements to aggregate.
  */
 export default class AggregatedIterator<K extends PropertyKey, T>
 {
     /**
-     * The internal {@link SmartIterator} that holds the elements to aggregate.
+     * The internal {@link SmartIterator} object that holds the elements to aggregate.
      */
     protected _elements: SmartIterator<[K, T]>;
 
@@ -124,11 +124,11 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      *
      * It will iterate over all elements of the iterator checking if they satisfy the condition.  
      * Once a single element of one group doesn't satisfy the condition,
-     * the result for the respective group will set to `false`.
+     * the result for the respective group will be `false`.
      *
      * Eventually, it will return a new {@link ReducedIterator}
      * object that will contain all the boolean results for each group.  
-     * If the iterator is infinite, the function will never return.
+     * If the iterator is infinite, the method will never return.
      *
      * ```ts
      * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
@@ -142,7 +142,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      *
      * @param predicate The condition to check for each element of the iterator.
      *
-     * @returns `true` if all elements satisfy the condition, `false` otherwise.
+     * @returns A new {@link ReducedIterator} containing the boolean results for each group.
      */
     public every(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, boolean>
     {
@@ -168,13 +168,13 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * See also {@link AggregatedIterator.every}.  
      * This method will consume the entire iterator in the process.
      *
-     * It will iterate over all elements of the iterator checking if they satisfy the condition.
+     * It will iterate over all elements of the iterator checking if they satisfy the condition.  
      * Once a single element of one group satisfies the condition,
-     * the result for the respective group will set to `true`.
+     * the result for the respective group will be `true`.
      *
      * Eventually, it will return a new {@link ReducedIterator}
-     * object that will contain all the boolean results for each group.
-     * If the iterator is infinite, the function will never return.
+     * object that will contain all the boolean results for each group.  
+     * If the iterator is infinite, the method will never return.
      *
      * ```ts
      * const results = new SmartIterator<number>([-5, -4, -3, -2, -1, 0])
@@ -188,7 +188,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      *
      * @param predicate The condition to check for each element of the iterator.
      *
-     * @returns A {@link ReducedIterator} object containing the boolean results for each group.
+     * @returns A {@link ReducedIterator} containing the boolean results for each group.
      */
     public some(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, boolean>
     {
@@ -213,12 +213,12 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * Filters the elements of the iterator using a given condition.
      *
      * This method will iterate over all elements of the iterator checking if they satisfy the condition.  
-     * If the condition is satisfied, the element will be included in the new iterator.
+     * If the condition is met, the element will be included in the new iterator.
      *
      * Since the iterator is lazy, the filtering process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.
+     * A new iterator will be created, holding the reference to the original one.  
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
@@ -242,12 +242,12 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * Filters the elements of the iterator using a given condition.
      *
      * This method will iterate over all elements of the iterator checking if they satisfy the condition.  
-     * If the condition is satisfied, the element will be included in the new iterator.
+     * If the condition is met, the element will be included in the new iterator.
      *
      * Since the iterator is lazy, the filtering process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.
+     * A new iterator will be created, holding the reference to the original one.  
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
@@ -265,7 +265,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * The type of the elements that satisfy the condition.  
      * This allows the type-system to infer the correct type of the new iterator.
      *
-     * It must be a subtype of the original type of the iterator.
+     * It must be a subtype of the original type of the elements.
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -344,14 +344,14 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * This method will consume the entire iterator in the process.
      *
      * It will iterate over all elements of the iterator applying the reducer function.  
-     * The result of each riteration will be passed as the accumulator to the next one.
+     * The result of each iteration will be passed as the accumulator to the next one.
      *
-     * The first accumulator value will be the first element of the iterator.
+     * The first accumulator value will be the first element of the iterator.  
      * The last accumulator value will be the final result of the reduction.
      *
      * Eventually, it will return a new {@link ReducedIterator}
-     * object that will contain all the reduced results for each group.
-     * If the iterator is infinite, the function will never return.
+     * object that will contain all the reduced results for each group.  
+     * If the iterator is infinite, the method will never return.
      *
      * ```ts
      * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
@@ -374,14 +374,14 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * This method will consume the entire iterator in the process.
      *
      * It will iterate over all elements of the iterator applying the reducer function.  
-     * The result of each riteration will be passed as the accumulator to the next one.
+     * The result of each iteration will be passed as the accumulator to the next one.
      *
-     * The first accumulator value will be the initial value provided.
+     * The first accumulator value will be the provided initial value.  
      * The last accumulator value will be the final result of the reduction.
      *
      * Eventually, it will return a new {@link ReducedIterator}
-     * object that will contain all the reduced results for each group.
-     * If the iterator is infinite, the function will never return.
+     * object that will contain all the reduced results for each group.  
+     * If the iterator is infinite, the method will never return.
      *
      * ```ts
      * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
@@ -407,14 +407,14 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * This method will consume the entire iterator in the process.
      *
      * It will iterate over all elements of the iterator applying the reducer function.  
-     * The result of each riteration will be passed as the accumulator to the next one.
+     * The result of each iteration will be passed as the accumulator to the next one.
      *
-     * The first accumulator value will be the initial value provided by the given function.
+     * The first accumulator value will be the provided initial value by the given function.  
      * The last accumulator value will be the final result of the reduction.
      *
      * Eventually, it will return a new {@link ReducedIterator}
-     * object that will contain all the reduced results for each group.
-     * If the iterator is infinite, the function will never return.
+     * object that will contain all the reduced results for each group.  
+     * If the iterator is infinite, the method will never return.
      *
      * ```ts
      * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
@@ -429,7 +429,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * @template A The type of the accumulator value which will also be the type of the final result of the reduction.
      *
      * @param reducer The reducer function to apply to each element of the iterator.
-     * @param initialValue The function that provides the initial value of the accumulator.
+     * @param initialValue The function that provides the initial value for the accumulator.
      *
      * @returns A new {@link ReducedIterator} containing the reduced results for each group.
      */
@@ -467,6 +467,35 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
+    /**
+     * Flattens the elements of the iterator using a given transformation function.
+     *
+     * This method will iterate over all elements of the iterator applying the transformation function.  
+     * The result of each transformation will be included in the new iterator.
+     *
+     * Since the iterator is lazy, the flattening process will
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const results = new SmartIterator<number[]>([[-3, -1], [0, 2], [3, 5], [6, 8]])
+     *     .groupBy(([value, _]) => value % 2 === 0 ? "even" : "odd")
+     *     .flatMap((key, values) => values);
+     *
+     * console.log(results.toObject()); // { odd: [-3, -1, 3, 5], even: [0, 2, 6, 8] }
+     * ```
+     *
+     * ---
+     *
+     * @template V The type of the elements after the transformation.
+     *
+     * @param iteratee The transformation function to apply to each element of the iterator.
+     *
+     * @returns A new {@link AggregatedIterator} containing the transformed elements.
+     */
     public flatMap<V>(iteratee: KeyedIteratee<K, T, Iterable<V>>): AggregatedIterator<K, V>
     {
         const elements = this._elements;
@@ -487,6 +516,32 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
+    /**
+     * Drops a given number of elements from the beginning of each group of the iterator.  
+     * The remaining elements will be included in the new iterator.
+     * See also {@link AggregatedIterator.take}.
+     *
+     * Since the iterator is lazy, the dropping process will
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .drop(2);
+     *
+     * console.log(results.toObject()); // { odd: [3, 5], even: [6, 8] }
+     * ```
+     *
+     * ---
+     *
+     * @param count The number of elements to drop from the beginning of each group.
+     *
+     * @returns A new {@link AggregatedIterator} containing the remaining elements.
+     */
     public drop(count: number): AggregatedIterator<K, T>
     {
         const elements = this._elements;
@@ -509,6 +564,33 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             }
         });
     }
+
+    /**
+     * Takes a given number of elements from the beginning of each group of the iterator.  
+     * The elements will be included in the new iterator.
+     * See also {@link AggregatedIterator.drop}.
+     *
+     * Since the iterator is lazy, the taking process will
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .take(2);
+     *
+     * console.log(results.toObject()); // { odd: [-3, -1], even: [0, 2] }
+     * ```
+     *
+     * ---
+     *
+     * @param count The number of elements to take from the beginning of each group.
+     *
+     * @returns A new {@link AggregatedIterator} containing the taken elements.
+     */
     public take(limit: number): AggregatedIterator<K, T>
     {
         const elements = this._elements;
@@ -529,7 +611,66 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
+    /**
+     * Finds the first element of each group of the iterator that satisfies a given condition.  
+     * This method will consume the entire iterator in the process.
+     *
+     * It will iterate over all elements of the iterator checking if they satisfy the condition.  
+     * Once the first element of one group satisfies the condition,
+     * the result for the respective group will be the element itself.
+     *
+     * Eventually, it will return a new {@link ReducedIterator}
+     * object that will contain the first element that satisfies the condition for each group.  
+     * If the iterator is infinite, the method will never return.
+     *
+     * ```ts
+     * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .find((key, value) => value > 0);
+     *
+     * console.log(results.toObject()); // { odd: 3, even: 2 }
+     * ```
+     *
+     * ---
+     *
+     * @param predicate The condition to check for each element of the iterator.
+     *
+     * @returns A new {@link ReducedIterator} containing the first element that satisfies the condition for each group.
+     */
     public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | undefined>;
+
+    /**
+     * Finds the first element of each group of the iterator that satisfies a given condition.  
+     * This method will consume the entire iterator in the process.
+     *
+     * It will iterate over all elements of the iterator checking if they satisfy the condition.  
+     * Once the first element of one group satisfies the condition,
+     * the result for the respective group will be the element itself.
+     *
+     * Eventually, it will return a new {@link ReducedIterator}
+     * object that will contain the first element that satisfies the condition for each group.  
+     * If the iterator is infinite, the method will never return.
+     *
+     * ```ts
+     * const results = new SmartIterator<number | string>([-3, "-1", 0, "2", "3", 5, 6, "8"])
+     *     .groupBy((value) => Number(value) % 2 === 0 ? "even" : "odd")
+     *     .find<number>((key, value) => typeof value === "number");
+     *
+     * console.log(results.toObject()); // { odd: -3, even: 0 }
+     * ```
+     *
+     * ---
+     *
+     * @template S
+     * The type of the elements that satisfy the condition.  
+     * This allows the type-system to infer the correct type of the new iterator.
+     *
+     * It must be a subtype of the original type of the elements.
+     *
+     * @param predicate The condition to check for each element of the iterator.
+     *
+     * @returns A new {@link ReducedIterator} containing the first element that satisfies the condition for each group.
+     */
     public find<S extends T>(predicate: KeyedTypeGuardPredicate<K, T, S>): ReducedIterator<K, S | undefined>;
     public find(predicate: KeyedIteratee<K, T, boolean>): ReducedIterator<K, T | undefined>
     {
@@ -551,10 +692,57 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
+    /**
+     * Enumerates the elements of the iterator.  
+     * Each element is paired with its index within the group in a new iterator.
+     *
+     * Since the iterator is lazy, the enumeration process will
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const results = new SmartIterator<number>([-3, 0, 2, -1, 3])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .enumerate();
+     *
+     * console.log(results.toObject()); // { odd: [[0, -3], [1, -1], [2, 3]], even: [[0, 0], [1, 2]] }
+     * ```
+     *
+     * ---
+     *
+     * @returns A new {@link AggregatedIterator} containing the enumerated elements.
+     */
     public enumerate(): AggregatedIterator<K, [number, T]>
     {
         return this.map((_, value, index) => [index, value]);
     }
+
+    /**
+     * Removes all duplicate elements from within each group of the iterator.  
+     * The first occurrence of each element will be included in the new iterator.
+     *
+     * Since the iterator is lazy, the uniqueness process will
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 6, -3, -1, 0, 5, 6, 8, 0, 2])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .unique();
+     *
+     * console.log(results.toObject()); // { odd: [-3, -1, 3, 5], even: [0, 2, 6, 8] }
+     * ```
+     *
+     * ---
+     *
+     * @returns A new {@link AggregatedIterator} containing only the unique elements.
+     */
     public unique(): AggregatedIterator<K, T>
     {
         const elements = this._elements;
@@ -577,6 +765,24 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
+    /**
+     * Counts the number of elements within each group of the iterator.  
+     * This method will consume the entire iterator in the process.
+     *
+     * If the iterator is infinite, the method will never return.
+     *
+     * ```ts
+     * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .count();
+     *
+     * console.log(results.toObject()); // { odd: 4, even: 4 }
+     * ```
+     *
+     * ---
+     *
+     * @returns A new {@link ReducedIterator} containing the number of elements for each group.
+     */
     public count(): ReducedIterator<K, number>
     {
         const counters = new Map<K, number>();
@@ -594,6 +800,27 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
+    /**
+     * Iterates over the elements of the iterator.  
+     * The elements are passed to the given iteratee function along with their key and index within the group.
+     *
+     * This method will consume the entire iterator in the process.  
+     * If the iterator is infinite, the method will never return.
+     *
+     * ```ts
+     * const aggregator = new SmartIterator<number>([-3, 0, 2, -1, 3])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd");
+     *
+     * aggregator.forEach((key, value, index) =>
+     * {
+     *     console.log(`${index}: ${value}`); // "0: -3", "0: 0", "1: 2", "1: -1", "2: 3"
+     * };
+     * ```
+     *
+     * ---
+     *
+     * @param iteratee The function to execute for each element of the iterator.
+     */
     public forEach(iteratee: KeyedIteratee<K, T>): void
     {
         const indexes = new Map<K, number>();
@@ -608,7 +835,35 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         }
     }
 
-    public rekey<J extends PropertyKey>(iteratee: KeyedIteratee<K, T, J>): AggregatedIterator<J, T>
+    /**
+     * Changes the key of each element on which the iterator is aggregated.  
+     * The new key is determined by the given iteratee function.
+     *
+     * Since the iterator is lazy, the reorganization process will
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .map((key, value, index) => index % 2 === 0 ? value : -value)
+     *     .reorganizeBy((key, value) => value >= 0 ? "+" : "-");
+     *
+     * console.log(results.toObject()); // { "+": [1, 0, 3, 6], "-": [-3, -2, -5, -8] }
+     * ```
+     *
+     * ---
+     *
+     * @template J The type of the new key.
+     *
+     * @param iteratee The function to determine the new key for each element of the iterator.
+     *
+     * @returns A new {@link AggregatedIterator} containing the elements reorganized by the new keys.
+     */
+    public reorganizeBy<J extends PropertyKey>(iteratee: KeyedIteratee<K, T, J>): AggregatedIterator<J, T>
     {
         const elements = this._elements;
 
@@ -627,6 +882,29 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
+    /**
+     * An utility method that returns a new {@link SmartIterator}
+     * object containing all the keys of the iterator.
+     *
+     * Since the iterator is lazy, the keys will be extracted
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const keys = new SmartIterator([-3, Symbol(), "A", { }, null, [1 , 2, 3], false])
+     *     .groupBy((value) => typeof value)
+     *     .keys();
+     *
+     * console.log(keys.toArray()); // ["number", "symbol", "string", "object", "boolean"]
+     * ```
+     *
+     * ---
+     *
+     * @returns A new {@link SmartIterator} containing all the keys of the iterator.
+     */
     public keys(): SmartIterator<K>
     {
         const elements = this._elements;
@@ -644,10 +922,58 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             }
         });
     }
+
+    /**
+     * An utility method that returns a new {@link SmartIterator}
+     * object containing all the items of the iterator.
+     *
+     * Since the iterator is lazy, the items will be extracted
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const items = new SmartIterator<number>([-3, 0, 2, -1, 3])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .items();
+     *
+     * console.log(items.toArray()); // [["odd", -3], ["even", 0], ["even", 2], ["odd", -1], ["odd", 3]]
+     * ```
+     *
+     * ---
+     *
+     * @returns A new {@link SmartIterator} containing all the items of the iterator.
+     */
     public items(): SmartIterator<[K, T]>
     {
         return this._elements;
     }
+
+    /**
+     * An utility method that returns a new {@link SmartIterator}
+     * object containing all the values of the iterator.
+     *
+     * Since the iterator is lazy, the values will be extracted
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const values = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .values();
+     *
+     * console.log(values.toArray()); // [-3, -1, 0, 2, 3, 5, 6, 8]
+     * ```
+     *
+     * ---
+     *
+     * @returns A new {@link SmartIterator} containing all the values of the iterator.
+     */
     public values(): SmartIterator<T>
     {
         const elements = this._elements;
@@ -658,12 +984,47 @@ export default class AggregatedIterator<K extends PropertyKey, T>
         });
     }
 
+    /**
+     * Materializes the iterator into an array of arrays.  
+     * This method will consume the entire iterator in the process.
+     *
+     * If the iterator is infinite, the method will never return.
+     *
+     * ```ts
+     * const aggregator = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd");
+     *
+     * console.log(aggregator.toArray()); // [[-3, -1, 3, 5], [0, 2, 6, 8]]
+     * ```
+     *
+     * ---
+     *
+     * @returns An {@link Array} of arrays containing the elements of the iterator.
+     */
     public toArray(): T[][]
     {
         const map = this.toMap();
 
         return Array.from(map.values());
     }
+
+    /**
+     * Materializes the iterator into a map.  
+     * This method will consume the entire iterator in the process.
+     *
+     * If the iterator is infinite, the method will never return.
+     *
+     * ```ts
+     * const aggregator = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd");
+     *
+     * console.log(aggregator.toMap()); // Map(2) { "odd" => [-3, -1, 3, 5], "even" => [0, 2, 6, 8] }
+     * ```
+     *
+     * ---
+     *
+     * @returns A {@link Map} containing the elements of the iterator.
+     */
     public toMap(): Map<K, T[]>
     {
         const groups = new Map<K, T[]>();
@@ -678,6 +1039,24 @@ export default class AggregatedIterator<K extends PropertyKey, T>
 
         return groups;
     }
+
+    /**
+     * Materializes the iterator into an object.  
+     * This method will consume the entire iterator in the process.
+     *
+     * If the iterator is infinite, the method will never return.
+     *
+     * ```ts
+     * const aggregator = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd");
+     *
+     * console.log(aggregator.toObject()); // { odd: [-3, -1, 3, 5], even: [0, 2, 6, 8] }
+     * ```
+     *
+     * ---
+     *
+     * @returns An {@link Object} containing the elements of the iterator.
+     */
     public toObject(): Record<K, T[]>
     {
         const groups = { } as Record<K, T[]>;

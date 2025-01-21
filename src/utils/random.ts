@@ -57,7 +57,7 @@ export default class Random
      *
      * ---
      *
-     * @param min The minimum value (included). 
+     * @param min The minimum value (included).
      * @param max The maximum value (excluded).
      *
      * @returns A random integer value.
@@ -107,7 +107,7 @@ export default class Random
      *
      * ---
      *
-     * @param min The minimum value (included). 
+     * @param min The minimum value (included).
      * @param max The maximum value (excluded).
      *
      * @returns A random decimal value

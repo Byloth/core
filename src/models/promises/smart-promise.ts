@@ -292,7 +292,7 @@ export default class SmartPromise<T = void> implements Promise<T>
      *     setTimeout(reject, Math.random() * 1_000);
      * });
      *
-     * 
+     *
      * promise
      *     .then(() => console.log("OK!")) // Logs "OK!" if the promise is fulfilled.
      *     .catch(() => console.log("KO!")) // Logs "KO!" if the promise is rejected.

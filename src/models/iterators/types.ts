@@ -90,7 +90,7 @@ export type AsyncGeneratorFunction<T, R = void, N = undefined> = () => AsyncGene
 
 /**
  * An utility type that represents a function that returns a
- * generator object that can be either synchronous or asynchronous.  
+ * generator object that can be either synchronous or asynchronous.
  *
  * ```ts
  * const generatorFn: MaybeAsyncGeneratorFunction<number> = [async] function*() { ... };

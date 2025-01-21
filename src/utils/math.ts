@@ -109,7 +109,7 @@ export function hash(value: string): number
  *
  * ---
  *
- * @template T The type of the values in the list. It must be or extend a `number` object. 
+ * @template T The type of the values in the list. It must be or extend a `number` object.
  *
  * @param values The list of values to sum.
  *

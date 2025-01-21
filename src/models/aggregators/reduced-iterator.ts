@@ -167,7 +167,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
         }
     }
 
-    public rekey<J extends PropertyKey>(iteratee: KeyedIteratee<K, T, J>): AggregatedIterator<J, T>
+    public reorganizeBy<J extends PropertyKey>(iteratee: KeyedIteratee<K, T, J>): AggregatedIterator<J, T>
     {
         const elements = this._elements.enumerate();
 
