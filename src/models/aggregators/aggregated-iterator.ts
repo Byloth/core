@@ -12,7 +12,7 @@ import type { KeyedIteratee, KeyedTypeGuardPredicate, KeyedReducer } from "./typ
  * (although it's still possible), but rather use the {@link SmartIterator.groupBy} method.
  *
  * It isn't directly iterable like its parent class but rather needs to specify on what you want to iterate.  
- * See the {@link AggregatedIterator.keys}, {@link AggregatedIterator.items}
+ * See the {@link AggregatedIterator.keys}, {@link AggregatedIterator.entries}
  * & {@link AggregatedIterator.values} methods.  
  * It does, however, provide the same set of methods to perform
  * operations and transformation on the elements of the iterator,  
@@ -925,9 +925,9 @@ export default class AggregatedIterator<K extends PropertyKey, T>
 
     /**
      * An utility method that returns a new {@link SmartIterator}
-     * object containing all the items of the iterator.
+     * object containing all the entries of the iterator.
      *
-     * Since the iterator is lazy, the items will be extracted
+     * Since the iterator is lazy, the entries will be extracted
      * be executed once the resulting iterator is materialized.
      *
      * A new iterator will be created, holding the reference to the original one.  
@@ -935,18 +935,18 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * new one is and that consuming one of them will consume the other as well.
      *
      * ```ts
-     * const items = new SmartIterator<number>([-3, 0, 2, -1, 3])
+     * const entries = new SmartIterator<number>([-3, 0, 2, -1, 3])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
-     *     .items();
+     *     .entries();
      *
-     * console.log(items.toArray()); // [["odd", -3], ["even", 0], ["even", 2], ["odd", -1], ["odd", 3]]
+     * console.log(entries.toArray()); // [["odd", -3], ["even", 0], ["even", 2], ["odd", -1], ["odd", 3]]
      * ```
      *
      * ---
      *
-     * @returns A new {@link SmartIterator} containing all the items of the iterator.
+     * @returns A new {@link SmartIterator} containing all the entries of the iterator.
      */
-    public items(): SmartIterator<[K, T]>
+    public entries(): SmartIterator<[K, T]>
     {
         return this._elements;
     }

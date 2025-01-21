@@ -20,7 +20,7 @@ import type { MaybeAsyncKeyedIteratee, MaybeAsyncKeyedReducer } from "./types.js
  * (although it's still possible), but rather use the {@link SmartAsyncIterator.groupBy} method.
  *
  * It isn't directly iterable like its parent class but rather needs to specify on what you want to iterate.  
- * See the {@link AggregatedAsyncIterator.keys}, {@link AggregatedAsyncIterator.items}
+ * See the {@link AggregatedAsyncIterator.keys}, {@link AggregatedAsyncIterator.entries}
  * & {@link AggregatedAsyncIterator.values} methods.  
  * It does, however, provide the same set of methods to perform
  * operations and transformations on the elements of the iterator,
@@ -994,9 +994,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
 
     /**
      * An utility method that returns a new {@link SmartAsyncIterator}
-     * object containing all the items of the iterator.
+     * object containing all the entries of the iterator.
      *
-     * Since the iterator is lazy, the items will be extracted
+     * Since the iterator is lazy, the entries will be extracted
      * be executed once the resulting iterator is materialized.
      *
      * A new iterator will be created, holding the reference to the original one.  
@@ -1004,18 +1004,18 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * new one is and that consuming one of them will consume the other as well.
      *
      * ```ts
-     * const items = new SmartAsyncIterator<number>([-3, 0, 2, -1, 3])
+     * const entries = new SmartAsyncIterator<number>([-3, 0, 2, -1, 3])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
-     *     .items();
+     *     .entries();
      *
-     * console.log(await items.toArray()); // [["odd", -3], ["even", 0], ["even", 2], ["odd", -1], ["odd", 3]]
+     * console.log(await entries.toArray()); // [["odd", -3], ["even", 0], ["even", 2], ["odd", -1], ["odd", 3]]
      * ```
      *
      * ---
      *
-     * @returns A new {@link SmartAsyncIterator} containing all the items of the iterator.
+     * @returns A new {@link SmartAsyncIterator} containing all the entries of the iterator.
      */
-    public items(): SmartAsyncIterator<[K, T]>
+    public entries(): SmartAsyncIterator<[K, T]>
     {
         return this._elements;
     }

@@ -192,7 +192,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
             }
         });
     }
-    public items(): SmartIterator<[K, T]>
+    public entries(): SmartIterator<[K, T]>
     {
         return this._elements;
     }
@@ -215,11 +215,11 @@ export default class ReducedIterator<K extends PropertyKey, T>
     }
     public toMap(): Map<K, T>
     {
-        return new Map(this.items());
+        return new Map(this.entries());
     }
     public toObject(): Record<K, T>
     {
-        return Object.fromEntries(this.items()) as Record<K, T>;
+        return Object.fromEntries(this.entries()) as Record<K, T>;
     }
 
     public readonly [Symbol.toStringTag]: string = "ReducedIterator";
