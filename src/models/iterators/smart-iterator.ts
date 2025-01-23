@@ -662,10 +662,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * const iterator = new SmartIterator<string>(["A", "M", "N", "Z"]);
      * const result = iterator.enumerate();
      *
-     * for (const [index, value] of result)
-     * {
-     *     console.log(`${index}: ${value}`); // "0: A", "1: M", "2: N", "3: Z"
-     * }
+     * console.log(result.toArray()); // [[0, "A"], [1, "M"], [2, "N"], [3, "Z"]]
      * ```
      *
      * ---

@@ -77,7 +77,31 @@ export type MaybeAsyncKeyedIteratee<K extends PropertyKey, T, R = void> =
  * An utility type that represents a {@link https://en.wikipedia.org/wiki/Predicate_(mathematical_logic)|predicate}-like
  * function with the addition of a `key` parameter, compared to the JavaScript's standard ones,
  * which act as a
- * {@link https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates|type guard}.
+ * {@link https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates|type guard}.  
+ * It can be used to filter the elements of an aggregated iterable
+ * while allowing the type-system to infer them correctly.
+ *
+ * ```ts
+ * import { SmartIterator } from "@byloth/core";
+ *
+ * const predicate: KeyedTypeGuardPredicate<string, number | string, string> =
+ *     (key: string, value: number | string): value is string => typeof value === "string";
+ *
+ * const results = new SmartIterator<number | string>([-3, -1, "0", 2, 3, "5", 6, "8"])
+ *     .groupBy((value) => Number(value) % 2 === 0 ? "even" : "odd")
+ *     .filter(predicate);
+ *
+ * console.log(results.toObject()); // { odd: ["0", "5", "8"], even: [] }
+ * ```
+ *
+ * ---
+ *
+ * @template K The type of the key used to aggregate elements in the iterable.
+ * @template T The type of the elements in the iterable.
+ * @template R
+ * The type of the return value of the predicate.  
+ * It must be a subtype of `T`. Default is `T`.
+ */
 export type KeyedTypeGuardPredicate<K extends PropertyKey, T, R extends T> =
     (key: K, value: T, index: number) => value is R;
 

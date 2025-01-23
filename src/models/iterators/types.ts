@@ -53,6 +53,7 @@ export type MaybeAsyncGenerator<T, R = void, N = undefined> = Generator<T, R, N>
  * ```ts
  * const generatorFn: GeneratorFunction<number> = function*() { ... };
  * const generator: Generator<number> = generatorFn();
+ *
  * for (const value of generator)
  * {
  *     console.log(value);
@@ -117,10 +118,8 @@ export type MaybeAsyncGeneratorFunction<T, R = void, N = undefined> = () => Mayb
  * ```ts
  * const iteratee: Iteratee<number, string> = (value: number) => `${value}`;
  * const values: string[] = [1, 2, 3, 4, 5].map(iteratee);
- * for (const value of values)
- * {
- *     console.log(value); // "1", "2", "3", "4", "5"
- * }
+ * 
+ * console.log(values); // ["1", "2", "3", "4", "5"]
  * ```
  *
  * ---
