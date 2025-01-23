@@ -1,10 +1,83 @@
 import type { MaybePromise } from "../promises/types.js";
 
+/**
+ * An utility type that represents an {@link https://en.wikipedia.org/wiki/Iteratee|iteratee}-like function
+ * with the addition of a `key` parameter, compared to the JavaScript's standard ones.  
+ * It can be used to transform the elements of an aggregated iterable.
+ *
+ * ```ts
+ * import { SmartIterator } from "@byloth/core";
+ *
+ * const iteratee: KeyedIteratee<string, number, string> = (key: string, value: number) => `${value}`;
+ * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+ *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+ *     .map(iteratee);
+ *
+ * console.log(results.toObject()); // { odd: ["-3", "-1", "3", "5"], even: ["0", "2", "6", "8"] }
+ * ```
+ *
+ * ---
+ *
+ * @template K The type of the key used to aggregate elements in the iterable.
+ * @template T The type of the elements in the iterable.
+ * @template R The type of the return value of the iteratee. Default is `void`.
+ */
 export type KeyedIteratee<K extends PropertyKey, T, R = void> = (key: K, value: T, index: number) => R;
+
+/**
+ * An utility type that represents an asynchronous {@link https://en.wikipedia.org/wiki/Iteratee|iteratee}-like
+ * function with the addition of a `key` parameter.  
+ * It can be used to transform the elements of an aggregated iterable asynchronously.
+ *
+ * ```ts
+ * import { SmartAsyncIterator } from "@byloth/core";
+ *
+ * const iteratee: AsyncKeyedIteratee<string, number, string> = async (key: string, value: number) => `${value}`;
+ * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+ *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+ *     .map(iteratee);
+ *
+ * console.log(await results.toObject()); // { odd: ["-3", "-1", "3", "5"], even: ["0", "2", "6", "8"] }
+ * ```
+ *
+ * ---
+ *
+ * @template K The type of the key used to aggregate elements in the iterable.
+ * @template T The type of the elements in the iterable.
+ * @template R The type of the return value of the iteratee. Default is `void`.
+ */
 export type AsyncKeyedIteratee<K extends PropertyKey, T, R = void> = (key: K, value: T, index: number) => Promise<R>;
+
+/**
+ * An utility type that represents an {@link https://en.wikipedia.org/wiki/Iteratee|iteratee}-like function
+ * with the addition of a `key` parameter, which can be either synchronous or asynchronous.  
+ * It can be used to transform the elements of an aggregated iterable.
+ *
+ * ```ts
+ * import { SmartAsyncIterator } from "@byloth/core";
+ *
+ * const iteratee: AsyncKeyedIteratee<string, number, string> = [async] (key: string, value: number) => `${value}`;
+ * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+ *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+ *     .map(iteratee);
+ *
+ * console.log(await results.toObject()); // { odd: ["-3", "-1", "3", "5"], even: ["0", "2", "6", "8"] }
+ * ```
+ *
+ * ---
+ *
+ * @template K The type of the key used to aggregate elements in the iterable.
+ * @template T The type of the elements in the iterable.
+ * @template R The type of the return value of the iteratee. Default is `void`.
+ */
 export type MaybeAsyncKeyedIteratee<K extends PropertyKey, T, R = void> =
     (key: K, value: T, index: number) => MaybePromise<R>;
 
+/**
+ * An utility type that represents a {@link https://en.wikipedia.org/wiki/Predicate_(mathematical_logic)|predicate}-like
+ * function with the addition of a `key` parameter, compared to the JavaScript's standard ones,
+ * which act as a
+ * {@link https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates|type guard}.
 export type KeyedTypeGuardPredicate<K extends PropertyKey, T, R extends T> =
     (key: K, value: T, index: number) => value is R;
 
