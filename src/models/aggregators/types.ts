@@ -6,8 +6,6 @@ import type { MaybePromise } from "../promises/types.js";
  * It can be used to transform the elements of an aggregated iterable.
  *
  * ```ts
- * import { SmartIterator } from "@byloth/core";
- *
  * const iteratee: KeyedIteratee<string, number, string> = (key: string, value: number) => `${value}`;
  * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
  *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -30,8 +28,6 @@ export type KeyedIteratee<K extends PropertyKey, T, R = void> = (key: K, value: 
  * It can be used to transform the elements of an aggregated iterable asynchronously.
  *
  * ```ts
- * import { SmartAsyncIterator } from "@byloth/core";
- *
  * const iteratee: AsyncKeyedIteratee<string, number, string> = async (key: string, value: number) => `${value}`;
  * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
  *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -50,12 +46,10 @@ export type AsyncKeyedIteratee<K extends PropertyKey, T, R = void> = (key: K, va
 
 /**
  * An utility type that represents an {@link https://en.wikipedia.org/wiki/Iteratee|iteratee}-like function
- * with the addition of a `key` parameter, which can be either synchronous or asynchronous.  
+ * with the addition of a `key` parameter that can be either synchronous or asynchronous.  
  * It can be used to transform the elements of an aggregated iterable.
  *
  * ```ts
- * import { SmartAsyncIterator } from "@byloth/core";
- *
  * const iteratee: AsyncKeyedIteratee<string, number, string> = [async] (key: string, value: number) => `${value}`;
  * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
  *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -82,8 +76,6 @@ export type MaybeAsyncKeyedIteratee<K extends PropertyKey, T, R = void> =
  * while allowing the type-system to infer them correctly.
  *
  * ```ts
- * import { SmartIterator } from "@byloth/core";
- *
  * const predicate: KeyedTypeGuardPredicate<string, number | string, string> =
  *     (key: string, value: number | string): value is string => typeof value === "string";
  *
@@ -112,9 +104,73 @@ export type KeyedTypeGuardPredicate<K extends PropertyKey, T, R extends T> =
 // export type MaybeAsyncKeyedTypeGuardPredicate<K extends PropertyKey, T, R extends T> =
 //     (key: K, value: T, index: number) => value is MaybePromise<R>;
 
+/**
+ * An utility type that represents a reducer-like function.  
+ * It can be used to reduce the elements of an aggregated iterable into a single value.
+ *
+ * ```ts
+ * const sum: KeyedReducer<string, number, number> =
+ *     (key: string, accumulator: number, value: number) => accumulator + value;
+ *
+ * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+ *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+ *     .reduce(sum);
+ *
+ * console.log(results.toObject()); // { odd: 4, even: 16 }
+ * ```
+ *
+ * ---
+ *
+ * @template K The type of the key used to aggregate elements in the iterable.
+ * @template T The type of the elements in the iterable.
+ * @template A The type of the accumulator.
+ */
 export type KeyedReducer<K extends PropertyKey, T, A> = (key: K, accumulator: A, value: T, index: number) => A;
+
+/**
+ * An utility type that represents an asynchronous reducer-like function.  
+ * It can be used to reduce the elements of an aggregated iterable into a single value.
+ *
+ * ```ts
+ * const sum: AsyncKeyedReducer<string, number, number> =
+ *     async (key: string, accumulator: number, value: number) => accumulator + value;
+ *
+ * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+ *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+ *     .reduce(sum);
+ *
+ * console.log(await results.toObject()); // { odd: 4, even: 16 }
+ * ```
+ *
+ * ---
+ *
+ * @template K The type of the key used to aggregate elements in the iterable.
+ * @template T The type of the elements in the iterable.
+ * @template A The type of the accumulator.
+ */
 export type AsyncKeyedReducer<K extends PropertyKey, T, A> =
     (key: K, accumulator: A, value: T, index: number) => Promise<A>;
 
+/**
+ * An utility type that represents a reducer-like function that can be either synchronous or asynchronous.  
+ * It can be used to reduce the elements of an aggregated iterable into a single value.
+ *
+ * ```ts
+ * const sum: MaybeAsyncKeyedReducer<string, number, number> =
+ *     [async] (key: string, accumulator: number, value: number) => accumulator + value;
+ *
+ * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+ *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+ *     .reduce(sum);
+ *
+ * console.log(await results.toObject()); // { odd: 4, even: 16 }
+ * ```
+ *
+ * ---
+ *
+ * @template K The type of the key used to aggregate elements in the iterable.
+ * @template T The type of the elements in the iterable.
+ * @template A The type of the accumulator.
+ */
 export type MaybeAsyncKeyedReducer<K extends PropertyKey, T, A> =
     (key: K, accumulator: A, value: T, index: number) => MaybePromise<A>;

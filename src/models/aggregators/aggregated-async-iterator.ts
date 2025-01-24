@@ -55,7 +55,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * Initializes a new instance of the {@link AggregatedAsyncIterator} class.
      *
      * ```ts
-     * const iterator = new AggregatedAsyncIterator([["A", 1], ["B", 2], ["A", 3], ["C", 4], ["B", 5]]);
+     * const iterator = new AggregatedAsyncIterator<string, number>([["A", 1], ["B", 2], ["A", 3], ["C", 4], ["B", 5]]);
      * ```
      *
      * ---
@@ -69,7 +69,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * ```ts
      * const elements = fetch([...]); // Promise<[["A", 1], ["B", 2], ["A", 3], ["C", 4], ["B", 5]]>
-     * const iterator = new AggregatedAsyncIterator(elements);
+     * const iterator = new AggregatedAsyncIterator<string, number>(elements);
      * ```
      *
      * ---
@@ -84,14 +84,14 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * ```ts
      * import { Random } from "@byloth/core";
      *
-     * const iterator = new AggregatedAsyncIterator({
+     * const iterator = new AggregatedAsyncIterator<string, number>({
      *     _index: 0,
      *     next: () =>
      *     {
      *         if (this._index >= 5) { return { done: true, value: undefined }; }
      *         this._index += 1;
      *
-     *         return { done: false, value: [Random.Choice(["A", "B", "C"]), this._index] };
+     *         return { done: false, value: [Random.Choice(["A", "B", "C"]), (this._index + 1)] };
      *     }
      * });
      * ```
@@ -108,14 +108,14 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * ```ts
      * import { Random } from "@byloth/core";
      *
-     * const iterator = new AggregatedAsyncIterator({
+     * const iterator = new AggregatedAsyncIterator<string, number>({
      *     _index: 0,
      *     next: async () =>
      *     {
      *         if (this._index >= 5) { return { done: true, value: undefined }; }
      *         this._index += 1;
      *
-     *         return { done: false, value: [Random.Choice(["A", "B", "C"]), this._index] };
+     *         return { done: false, value: [Random.Choice(["A", "B", "C"]), (this._index + 1)] };
      *     }
      * });
      * ```
@@ -132,7 +132,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * ```ts
      * import { range, Random } from "@byloth/core";
      *
-     * const iterator = new AggregatedAsyncIterator(function* ()
+     * const iterator = new AggregatedAsyncIterator<string, number>(function* ()
      * {
      *     for (const index of range(5))
      *     {
@@ -153,7 +153,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * ```ts
      * import { range, Random } from "@byloth/core";
      *
-     * const iterator = new AggregatedAsyncIterator(async function* ()
+     * const iterator = new AggregatedAsyncIterator<string, number>(async function* ()
      * {
      *     for await (const index of range(5))
      *     {
@@ -329,7 +329,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * It must be a subtype of the original type of the elements.
      *
-     * @param predicate The condition to check for each element of the iterator.
+     * @param predicate The type guard condition to check for each element of the iterator.
      *
      * @returns A new {@link AggregatedAsyncIterator} containing the elements that satisfy the condition.
      */
@@ -733,7 +733,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * It must be a subtype of the original type of the elements.
      *
-     * @param predicate The condition to check for each element of the iterator.
+     * @param predicate The type guard condition to check for each element of the iterator.
      *
      * @returns A new {@link ReducedIterator} containing the first element that satisfies the condition for each group.
      */

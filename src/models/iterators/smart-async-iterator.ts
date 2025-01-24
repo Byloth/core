@@ -367,7 +367,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * It must be a subtype of the original type of the elements.
      *
-     * @param predicate The condition to check for each element of the iterator.
+     * @param predicate The type guard condition to check for each element of the iterator.
      *
      * @returns A new {@link SmartAsyncIterator} containing only the elements that satisfy the condition.
      */
@@ -738,7 +738,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * It must be a subtype of the original type of the elements.
      *
-     * @param predicate The condition to check for each element of the iterator.
+     * @param predicate The type guard condition to check for each element of the iterator.
      *
      * @returns A promise that will resolve to the first element that satisfies the condition, `undefined` otherwise.
      */

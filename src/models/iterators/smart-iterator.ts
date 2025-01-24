@@ -259,7 +259,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * It must be a subtype of the original type of the elements.
      *
-     * @param predicate The condition to check for each element of the iterator.
+     * @param predicate The type guard condition to check for each element of the iterator.
      *
      * @returns A new {@link SmartIterator} containing only the elements that satisfy the condition.
      */
@@ -627,7 +627,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * It must be a subtype of the original type of the elements.
      *
-     * @param predicate The condition to check for each element of the iterator.
+     * @param predicate The type guard condition to check for each element of the iterator.
      *
      * @returns The first element that satisfies the condition, `undefined` otherwise.
      */
