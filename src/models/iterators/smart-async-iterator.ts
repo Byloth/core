@@ -7,7 +7,6 @@ import type {
     MaybeAsyncGeneratorFunction,
     MaybeAsyncIteratee,
     MaybeAsyncReducer,
-    MaybeAsyncIterable,
     MaybeAsyncIteratorLike
 
 } from "./types.js";
@@ -536,7 +535,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * new one is and that consuming one of them will consume the other as well.
      *
      * ```ts
-     * const iterator = new SmartAsyncIterator<number[]>([[-2, -1], [0], [1, 2], [3, 4, 5]]);
+     * const iterator = new SmartAsyncIterator<number[]>([[-2, -1], 0, 1, 2, [3, 4, 5]]);
      * const result = iterator.flatMap(async (value) => value);
      *
      * console.log(await result.toArray()); // [-2, -1, 0, 1, 2, 3, 4, 5]
@@ -550,7 +549,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * @returns A new {@link SmartAsyncIterator} containing the flattened elements.
      */
-    public flatMap<V>(iteratee: MaybeAsyncIteratee<T, MaybeAsyncIterable<V>>): SmartAsyncIterator<V, R>
+    public flatMap<V>(iteratee: MaybeAsyncIteratee<T, V | readonly V[]>): SmartAsyncIterator<V, R>
     {
         const iterator = this._iterator;
 
@@ -564,11 +563,11 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
                 if (result.done) { return result.value; }
 
                 const elements = await iteratee(result.value, index);
-
-                for await (const element of elements)
+                if (elements instanceof Array)
                 {
-                    yield element;
+                    for (const value of elements) { yield value; }
                 }
+                else { yield elements; }
 
                 index += 1;
             }
@@ -863,7 +862,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     }
 
     /**
-     * Iterates over all elements of the iterator applying a given function.  
+     * Iterates over all elements of the iterator.  
      * The elements are passed to the function along with their index.
      *
      * This method will consume the entire iterator in the process.  

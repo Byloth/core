@@ -547,7 +547,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * new one is and that consuming one of them will consume the other as well.
      *
      * ```ts
-     * const results = new SmartAsyncIterator<number>([[-3, -1], [0, 2], [3, 5], [6, 8]])
+     * const results = new SmartAsyncIterator<number>([[-3, -1], 0, 2, 3, 5, [6, 8]])
      *     .groupBy(async ([value, _]) => value % 2 === 0 ? "even" : "odd")
      *     .flatMap(async (key, values) => values);
      *
@@ -562,7 +562,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * @returns A new {@link AggregatedAsyncIterator} containing the transformed elements.
      */
-    public flatMap<V>(iteratee: MaybeAsyncKeyedIteratee<K, T, Iterable<V>>): AggregatedAsyncIterator<K, V>
+    public flatMap<V>(iteratee: MaybeAsyncKeyedIteratee<K, T, V | readonly V[]>): AggregatedAsyncIterator<K, V>
     {
         const elements = this._elements;
 
@@ -575,7 +575,11 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
                 const index = indexes.get(key) ?? 0;
                 const values = await iteratee(key, element, index);
 
-                for await (const value of values) { yield [key, value]; }
+                if (values instanceof Array)
+                {
+                    for (const value of values) { yield [key, value]; }
+                }
+                else { yield [key, values]; }
 
                 indexes.set(key, index + 1);
             }
@@ -792,7 +796,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * Removes all duplicate elements from within each group of the iterator.  
      * The first occurrence of each element will be included in the new iterator.
      *
-     * Since the iterator is lazy, the uniqueness process will
+     * Since the iterator is lazy, the deduplication process will
      * be executed once the resulting iterator is materialized.
      *
      * A new iterator will be created, holding the reference to the original one.  
@@ -994,7 +998,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
 
     /**
      * An utility method that returns a new {@link SmartAsyncIterator}
-     * object containing all the entries of the iterator.
+     * object containing all the entries of the iterator.  
+     * Each entry is a tuple containing the key and the element.
      *
      * Since the iterator is lazy, the entries will be extracted
      * be executed once the resulting iterator is materialized.

@@ -428,7 +428,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * new one is and that consuming one of them will consume the other as well.
      *
      * ```ts
-     * const iterator = new SmartIterator<number[]>([[-2, -1], [0], [1, 2], [3, 4, 5]]);
+     * const iterator = new SmartIterator<number[]>([[-2, -1], 0, 1, 2, [3, 4, 5]]);
      * const result = iterator.flatMap((value) => value);
      *
      * console.log(result.toArray()); // [-2, -1, 0, 1, 2, 3, 4, 5]
@@ -442,7 +442,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * @returns A new {@link SmartIterator} containing the flattened elements.
      */
-    public flatMap<V>(iteratee: Iteratee<T, Iterable<V>>): SmartIterator<V, R>
+    public flatMap<V>(iteratee: Iteratee<T, V | readonly V[]>): SmartIterator<V, R>
     {
         const iterator = this._iterator;
 
@@ -455,11 +455,12 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
                 const result = iterator.next();
                 if (result.done) { return result.value; }
 
-                const iterable = iteratee(result.value, index);
-                for (const value of iterable)
+                const elements = iteratee(result.value, index);
+                if (elements instanceof Array)
                 {
-                    yield value;
+                    for (const value of elements) { yield value; }
                 }
+                else { yield elements; }
 
                 index += 1;
             }
@@ -749,7 +750,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     }
 
     /**
-     * Iterates over all elements of the iterator applying a given function.  
+     * Iterates over all elements of the iterator.  
      * The elements are passed to the function along with their index.
      *
      * This method will consume the entire iterator in the process.  
@@ -946,7 +947,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * console.log(result); // [0, 1, 2, 3, 4]
      * ```
      *
-     * @returns The array containing all elements of the iterator.
+     * @returns The {@link Array} containing all elements of the iterator.
      */
     public toArray(): T[]
     {

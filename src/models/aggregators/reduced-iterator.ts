@@ -429,7 +429,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * @returns A new {@link AggregatedIterator} containing the flattened elements.
      */
-    public flatMap<V>(iteratee: KeyedIteratee<K, T, Iterable<V>>): AggregatedIterator<K, V>
+    public flatMap<V>(iteratee: KeyedIteratee<K, T, V | readonly V[]>): AggregatedIterator<K, V>
     {
         const elements = this._elements.enumerate();
 
@@ -437,7 +437,13 @@ export default class ReducedIterator<K extends PropertyKey, T>
         {
             for (const [index, [key, element]] of elements)
             {
-                for (const value of iteratee(key, element, index)) { yield [key, value]; }
+                const values = iteratee(key, element, index);
+
+                if (values instanceof Array)
+                {
+                    for (const value of values) { yield [key, value]; }
+                }
+                else { yield [key, values]; }
             }
         });
     }
@@ -461,9 +467,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
      *     .reduce((key, accumulator, value) => accumulator.concat(value), () => [])
-     *     .drop(2);
+     *     .drop(1);
      *
-     * console.log(results.toObject()); // { odd: [3, 5], even: [6, 8] }
+     * console.log(results.toObject()); // { even: [0, 2, 6, 8] }
      * ```
      *
      * ---
@@ -497,8 +503,25 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
-     * Only the taken elements will be consumed in the process.  
-     * The rest of the original iterator will ...
+     * Only the taken elements will be consumed from the original reduced iterator.
+     * The rest of the original reduced iterator will be available for further consumption.
+     *
+     * ```ts
+     * const reduced = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, accumulator, value) => accumulator.concat(value), () => []);
+     *
+     * const results = iterator.take(1);
+     *
+     * console.log(results.toObject()); // { odd: [-3, -1, 3, 5] }
+     * console.log(reduced.toObject()); // { even: [0, 2, 6, 8] }
+     * ```
+     *
+     * ---
+     *
+     * @param count The number of elements to take.
+     *
+     * @returns A new {@link ReducedIterator} containing the taken elements.
      */
     public take(count: number): ReducedIterator<K, T>
     {
@@ -515,10 +538,62 @@ export default class ReducedIterator<K extends PropertyKey, T>
         });
     }
 
+    public find()
+    {
+        // TODO!
+    }
+
+    /**
+     * Enumerates the elements of the reduced iterator.  
+     * Each element is paired with its index in a new iterator.
+     *
+     * Since the iterator is lazy, the enumeration process will
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const results = new ReducedIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, accumulator, value) => accumulator + value)
+     *     .enumerate();
+     *
+     * console.log(results.toObject()); // [[0, 4], [1, 16]]
+     * ```
+     *
+     * ---
+     *
+     * @returns A new {@link ReducedIterator} object containing the enumerated elements.
+     */
     public enumerate(): ReducedIterator<K, [number, T]>
     {
         return this.map((_, element, index) => [index, element]);
     }
+
+    /**
+     * Removes all duplicate elements from the reduced iterator.  
+     * The first occurrence of each element will be kept.
+     *
+     * Since the iterator is lazy, the deduplication process will
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const results = new ReducedIterator<number>([-3, -1, 0, 2, 3, 6, -3, -1, 1, 5, 6, 8, 7, 2])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .map((key, value) => Math.abs(value))
+     *     .reduce((key, accumulator, value) => accumulator + value)
+     *     .unique();
+     *
+     * console.log(results.toObject()); // { odd: 24 }
+     *
+     * @returns A new {@link ReducedIterator} containing only the unique elements.
+     */
     public unique(): ReducedIterator<K, T>
     {
         const elements = this._elements;
@@ -537,6 +612,25 @@ export default class ReducedIterator<K extends PropertyKey, T>
         });
     }
 
+    /**
+     * Counts the number of elements in the reduced iterator.  
+     * This method will consume the entire iterator in the process.
+     *
+     * If the iterator is infinite, the method will never return.
+     *
+     * ```ts
+     * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, accumulator, value) => accumulator + value)
+     *     .count();
+     *
+     * console.log(results); // 2
+     * ```
+     *
+     * ---
+     *
+     * @returns The number of elements in the iterator.
+     */
     public count(): number
     {
         let index = 0;
@@ -546,6 +640,28 @@ export default class ReducedIterator<K extends PropertyKey, T>
         return index;
     }
 
+    /**
+     * Iterates over all elements of the reduced iterator.  
+     * The elements are passed to the function along with their key and index.
+     *
+     * This method will consume the entire iterator in the process.  
+     * If the iterator is infinite, the method will never return.
+     *
+     * ```ts
+     * const reduced = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, accumulator, value) => accumulator + value);
+     * 
+     * reduced.forEach((key, value, index) =>
+     * {
+     *     console.log(`#${index} - ${key}: ${value}`); // "#0 - odd: 4", "#1 - even: 16"
+     * });
+     * ```
+     *
+     * ---
+     *
+     * @param iteratee The function to apply to each element of the reduced iterator.
+     */
     public forEach(iteratee: KeyedIteratee<K, T>): void
     {
         for (const [index, [key, element]] of this._elements.enumerate())
@@ -554,6 +670,34 @@ export default class ReducedIterator<K extends PropertyKey, T>
         }
     }
 
+    /**
+     * Reaggregates the elements of the reduced iterator.  
+     * The elements are grouped by a new key computed by the given iteratee function.
+     *
+     * Since the iterator is lazy, the reorganizing process will
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, -6, -8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, accumulator, value) => accumulator + value)
+     *     .reorganizeBy((key, value) => value > 0 ? "positive" : "negative");
+     *
+     * console.log(results.toObject()); // { positive: 4, negative: -12 }
+     * ```
+     *
+     * ---
+     *
+     * @template J The type of the new keys used to group the elements.
+     *
+     * @param iteratee The function to determine the new key of each element of the iterator.
+     *
+     * @returns A new {@link AggregatedIterator} containing the elements reorganized by the new keys.
+     */
     public reorganizeBy<J extends PropertyKey>(iteratee: KeyedIteratee<K, T, J>): AggregatedIterator<J, T>
     {
         const elements = this._elements.enumerate();
@@ -567,6 +711,30 @@ export default class ReducedIterator<K extends PropertyKey, T>
         });
     }
 
+    /**
+     * An utility method that returns a new {@link SmartIterator}
+     * object containing all the keys of the iterator.
+     *
+     * Since the iterator is lazy, the keys will be extracted
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const keys = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, accumulator, value) => accumulator + value)
+     *     .keys();
+     *
+     * console.log(keys.toArray()); // ["odd", "even"]
+     * ```
+     *
+     * ---
+     *
+     * @returns A new {@link SmartIterator} containing all the keys of the iterator.
+     */
     public keys(): SmartIterator<K>
     {
         const elements = this._elements;
@@ -579,10 +747,61 @@ export default class ReducedIterator<K extends PropertyKey, T>
             }
         });
     }
+
+    /**
+     * An utility method that returns a new {@link SmartIterator}
+     * object containing all the entries of the iterator.  
+     * Each entry is a tuple containing the key and the element.
+     *
+     * Since the iterator is lazy, the entries will be extracted
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const entries = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, accumulator, value) => accumulator + value)
+     *     .entries();
+     *
+     * console.log(entries.toArray()); // [["odd", 4], ["even", 16]]
+     * ```
+     *
+     * ---
+     *
+     * @returns A new {@link SmartIterator} containing all the entries of the iterator.
+     */
     public entries(): SmartIterator<[K, T]>
     {
         return this._elements;
     }
+
+    /**
+     * An utility method that returns a new {@link SmartIterator}
+     * object containing all the values of the iterator.
+     *
+     * Since the iterator is lazy, the values will be extracted
+     * be executed once the resulting iterator is materialized.
+     *
+     * A new iterator will be created, holding the reference to the original one.  
+     * This means that the original iterator won't be consumed until the
+     * new one is and that consuming one of them will consume the other as well.
+     *
+     * ```ts
+     * const values = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, accumulator, value) => accumulator + value)
+     *     .values();
+     *
+     * console.log(values.toArray()); // [4, 16]
+     * ```
+     *
+     * ---
+     *
+     * @returns A new {@link SmartIterator} containing all the values of the iterator.
+     */
     public values(): SmartIterator<T>
     {
         const elements = this._elements;
@@ -596,14 +815,70 @@ export default class ReducedIterator<K extends PropertyKey, T>
         });
     }
 
+    /**
+     * Materializes the iterator into an array.  
+     * This method will consume the entire iterator in the process.
+     *
+     * If the iterator is infinite, the method will never return.
+     *
+     * ```ts
+     * const reduced = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, accumulator, value) => accumulator + value);
+     *
+     * console.log(reduced.toArray()); // [4, 16]
+     * ```
+     *
+     * ---
+     *
+     * @returns The {@link Array} containing all elements of the iterator.
+     */
     public toArray(): T[]
     {
         return Array.from(this.values());
     }
+
+    /**
+     * Materializes the iterator into a map.  
+     * This method will consume the entire iterator in the process.
+     *
+     * If the iterator is infinite, the method will never return.
+     *
+     * ```ts
+     * const reduced = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, accumulator, value) => accumulator + value);
+     *
+     * console.log(reduced.toMap()); // Map(2) { "odd" => 4, "even" => 16 }
+     * ```
+     *
+     * ---
+     *
+     * @returns The {@link Map} containing all elements of the iterator.
+     */
     public toMap(): Map<K, T>
     {
         return new Map(this.entries());
     }
+
+    /**
+     * Materializes the iterator into an object.  
+     * This method will consume the entire iterator in the process.
+     *
+     * If the iterator is infinite, the method will never return.
+     *
+     * ```ts
+     * const reduced = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, accumulator, value) => accumulator + value);
+     *
+     * console.log(reduced.toObject()); // { odd: 4, even: 16 }
+     * ```
+     *
+     * ---
+     *
+     * @returns The {@link Object} containing all elements of the iterator.
+     */
     public toObject(): Record<K, T>
     {
         return Object.fromEntries(this.entries()) as Record<K, T>;
