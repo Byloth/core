@@ -36,12 +36,12 @@
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/core.js",
-        "types": "./src/index.ts"
+        "types": "./src/index.ts",
+        "default": "./dist/core.js"
       },
       "require": {
-        "default": "./dist/core.umd.cjs",
-        "types": "./src/index.ts"
+        "types": "./src/index.ts",
+        "default": "./dist/core.umd.cjs"
       }
     }
   },
@@ -58,10 +58,10 @@
   },
   "devDependencies": {
     "@byloth/eslint-config-typescript": "^3.0.3",
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.10.7",
     "husky": "^9.1.7",
-    "typescript": "^5.7.2",
-    "vite": "^5.4.11"
+    "typescript": "^5.7.3",
+    "vite": "^6.0.10"
   },
   "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c"
 }

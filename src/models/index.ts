@@ -5,7 +5,7 @@ export {
 
 } from "./aggregators/index.js";
 
-export { CallableObject, Publisher, SmartFunction, SwitchableCallback } from "./callbacks/index.js";
+export { CallableObject, Publisher, SwitchableCallback } from "./callbacks/index.js";
 export {
     Exception,
     FatalErrorException,

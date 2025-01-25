@@ -1,9 +1,10 @@
 export type {
     KeyedIteratee,
+    AsyncKeyedIteratee,
     MaybeAsyncKeyedIteratee,
-    KeyedTypeGuardIteratee,
-    MaybeAsyncKeyedTypeGuardIteratee,
+    KeyedTypeGuardPredicate,
     KeyedReducer,
+    AsyncKeyedReducer,
     MaybeAsyncKeyedReducer
 
 } from "./aggregators/types.js";
@@ -13,10 +14,11 @@ export type {
     AsyncGeneratorFunction,
     MaybeAsyncGeneratorFunction,
     Iteratee,
+    AsyncIteratee,
     MaybeAsyncIteratee,
-    TypeGuardIteratee,
-    MaybeAsyncTypeGuardIteratee,
+    TypeGuardPredicate,
     Reducer,
+    AsyncReducer,
     MaybeAsyncReducer,
     IteratorLike,
     AsyncIteratorLike,

@@ -40,7 +40,11 @@ export {
 
 export type {
     AsyncGeneratorFunction,
+    AsyncIteratee,
     AsyncIteratorLike,
+    AsyncKeyedIteratee,
+    AsyncKeyedReducer,
+    AsyncReducer,
     Callback,
     FulfilledHandler,
     GeneratorFunction,
@@ -51,22 +55,20 @@ export type {
     JSONValue,
     KeyedIteratee,
     KeyedReducer,
-    KeyedTypeGuardIteratee,
+    KeyedTypeGuardPredicate,
     MaybeAsyncKeyedIteratee,
     MaybeAsyncKeyedReducer,
-    MaybeAsyncKeyedTypeGuardIteratee,
     MaybeAsyncGeneratorFunction,
     MaybeAsyncIteratee,
     MaybeAsyncIteratorLike,
     MaybeAsyncReducer,
-    MaybeAsyncTypeGuardIteratee,
     MaybePromise,
     PromiseExecutor,
     PromiseRejecter,
     PromiseResolver,
     Reducer,
     RejectedHandler,
-    TypeGuardIteratee
+    TypeGuardPredicate
 
 } from "./models/types.js";
 
@@ -82,6 +84,7 @@ export {
     dateRound,
     TimeUnit,
     enumerate,
+    getWeek,
     hash,
     loadScript,
     nextAnimationFrame,
@@ -90,6 +93,7 @@ export {
     shuffle,
     sum,
     unique,
+    WeekDay,
     yieldToEventLoop,
     zip
 

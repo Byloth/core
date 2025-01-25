@@ -1,8 +1,33 @@
 import { ValueException } from "../models/exceptions/index.js";
 import { zip } from "./iterator.js";
 
-export function average<T extends number>(values: Iterable<T>): number;
-export function average<T extends number>(values: Iterable<T>, weights: Iterable<number>): number;
+/**
+ * Computes the average of a given list of values.  
+ * The values can be weighted using an additional list of weights.
+ *
+ * ```ts
+ * average([1, 2, 3, 4, 5]); // 3
+ * average([6, 8.5, 4], [3, 2, 1]); // 6.5
+ * ```
+ *
+ * ---
+ *
+ * @template T The type of the values in the list. It must be or extend a `number` object.
+ *
+ * @param values
+ * The list of values to compute the average.
+ *
+ * It must contain at least one element. Otherwise, a {@link ValueException} will be thrown.
+ *
+ * @param weights
+ * The list of weights to apply to the values.  
+ * It should contain the same number of elements as the values list or
+ * the smaller number of elements between the two lists will be considered.
+ *
+ * The sum of the weights must be greater than zero. Otherwise, a {@link ValueException} will be thrown.
+ *
+ * @returns The average of the specified values.
+ */
 export function average<T extends number>(values: Iterable<T>, weights?: Iterable<number>): number
 {
     if (weights === undefined)
@@ -43,6 +68,24 @@ export function average<T extends number>(values: Iterable<T>, weights?: Iterabl
     return _sum / _count;
 }
 
+/**
+ * An utility function to compute the hash of a given string.
+ *
+ * The hash is computed using a simple variation of the
+ * {@link http://www.cse.yorku.ca/~oz/hash.html#djb2|djb2} algorithm.  
+ * However, the hash is garanteed to be a 32-bit signed integer.
+ *
+ * ```ts
+ * hash("Hello, world!"); // -1880044555
+ * hash("How are you?"); // 1761539132
+ * ```
+ *
+ * ---
+ *
+ * @param value The string to hash.
+ *
+ * @returns The hash of the specified string.
+ */
 export function hash(value: string): number
 {
     let hashedValue = 0;
@@ -57,6 +100,21 @@ export function hash(value: string): number
     return hashedValue;
 }
 
+/**
+ * Sums all the values of a given list.
+ *
+ * ```ts
+ * sum([1, 2, 3, 4, 5]); // 15
+ * ```
+ *
+ * ---
+ *
+ * @template T The type of the values in the list. It must be or extend a `number` object.
+ *
+ * @param values The list of values to sum.
+ *
+ * @returns The sum of the specified values.
+ */
 export function sum<T extends number>(values: Iterable<T>): number
 {
     let _sum = 0;
