@@ -44,7 +44,7 @@ export default class Countdown extends GameLoop
     /**
      * The total duration of the countdown in milliseconds.
      *
-     * This protected property is the only one that can be modified directly by the derived classes.
+     * This protected property is the only one that can be modified directly by the derived classes.  
      * If you're looking for the public and readonly property, use the {@link Countdown.duration} getter instead.
      */
     protected _duration: number;
@@ -149,7 +149,7 @@ export default class Countdown extends GameLoop
      * ---
      *
      * @param remainingTime
-     * The remaining time to set as default when the countdown starts.
+     * The remaining time to set as default when the countdown starts.  
      * Default is the {@link Countdown.duration} itself.
      *
      * @returns A {@link SmartPromise} that will be resolved or rejected when the countdown expires or stops.

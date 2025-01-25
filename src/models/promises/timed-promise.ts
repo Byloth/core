@@ -15,7 +15,7 @@ import type { MaybePromise, PromiseExecutor } from "./types.js";
  *     setTimeout(() => resolve("Hello, World!"), Math.random() * 10_000);
  *
  * }, 5_000);
- * 
+ *
  * promise
  *     .then((result) => console.log(result))  // "Hello, World!"
  *     .catch((error) => console.error(error)); // TimeoutException: The operation has timed out.

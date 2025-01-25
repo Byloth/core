@@ -463,7 +463,7 @@ export default class JSONStorage
     }
 
     /**
-     * Sets the value with the specified key in the volatile {@link sessionStorage}.
+     * Sets the value with the specified key in the volatile {@link sessionStorage}.  
      * If the value is `undefined` or omitted, the key is removed from the storage.
      *
      * ```ts
@@ -485,7 +485,7 @@ export default class JSONStorage
     }
 
     /**
-     * Sets the value with the specified key in the persistent {@link localStorage}.
+     * Sets the value with the specified key in the persistent {@link localStorage}.  
      * If the value is `undefined` or omitted, the key is removed from the storage.
      *
      * ```ts

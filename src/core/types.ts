@@ -12,7 +12,7 @@
 export type Constructor<T extends object, P extends unknown[] = any[]> = new (...args: P) => T;
 
 /**
- * A type representing the return value of `setInterval` function,
+ * A type that represents the return value of `setInterval` function,
  * indipendently from the platform it's currently running on.
  *
  * For instance, in a browser environment, it's a `number` value representing the interval ID.  
@@ -29,7 +29,7 @@ export type Constructor<T extends object, P extends unknown[] = any[]> = new (..
 export type Interval = ReturnType<typeof setInterval>;
 
 /**
- * A type representing the return value of `setTimeout` function,
+ * A type that represents the return value of `setTimeout` function,
  * indipendently from the platform it's currently running on.
  *
  * For instance, in a browser environment, it's a `number` value representing the timeout ID.  

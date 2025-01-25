@@ -70,7 +70,7 @@ export default class GameLoop
     /**
      * A flag indicating whether the game loop is currently running or not.
      *
-     * This protected property is the only one that can be modified directly by the derived classes.
+     * This protected property is the only one that can be modified directly by the derived classes.  
      * If you're looking for the public and readonly property, use the {@link GameLoop.isRunning} getter instead.
      */
     protected _isRunning: boolean;

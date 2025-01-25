@@ -8,7 +8,7 @@ import { RangeException, SmartIterator } from "../models/index.js";
  *
  * A new iterator will be created, holding the reference to the original one.
  * This means that the original iterator won't be consumed until the
- * new one is and that consuming one of them will consume also the other.
+ * new one is and that consuming one of them will consume the other as well.
  *
  * ```ts
  * for (const value of chain([1, 2, 3], [4, 5, 6], [7, 8, 9]))
@@ -23,9 +23,9 @@ import { RangeException, SmartIterator } from "../models/index.js";
  *
  * @param iterables The list of iterables to chain.
  *
- * @returns A {@link SmartIterator} object that chains the iterables into a single one.
+ * @returns A new {@link SmartIterator} object that chains the iterables into a single one.
  */
-export function chain<T>(...iterables: Iterable<T>[]): SmartIterator<T>
+export function chain<T>(...iterables: readonly Iterable<T>[]): SmartIterator<T>
 {
     return new SmartIterator<T>(function* ()
     {
@@ -57,7 +57,7 @@ export function chain<T>(...iterables: Iterable<T>[]): SmartIterator<T>
  */
 export function count<T>(elements: Iterable<T>): number
 {
-    if (Array.isArray(elements)) { return elements.length; }
+    if (elements instanceof Array) { return elements.length; }
 
     let _count = 0;
     for (const _ of elements) { _count += 1; }
@@ -74,7 +74,7 @@ export function count<T>(elements: Iterable<T>): number
  *
  * A new iterator will be created, holding the reference to the original one.
  * This means that the original iterator won't be consumed until the
- * new one is and that consuming one of them will consume also the other.
+ * new one is and that consuming one of them will consume the other as well.
  *
  * ```ts
  * for (const [index, value] of enumerate(["A", "M", "N", "Z"]))
@@ -89,7 +89,7 @@ export function count<T>(elements: Iterable<T>): number
  *
  * @param elements The iterable to enumerate.
  *
- * @returns A {@link SmartIterator} object that enumerates the elements of the given iterable.
+ * @returns A new {@link SmartIterator} object containing the enumerated elements.
  */
 export function enumerate<T>(elements: Iterable<T>): SmartIterator<[number, T]>
 {
