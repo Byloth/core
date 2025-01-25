@@ -6,7 +6,7 @@ import { RangeException, SmartIterator } from "../models/index.js";
  * Since the iterator is lazy, the chaining process will be
  * executed only once the resulting iterator is materialized.
  *
- * A new iterator will be created, holding the reference to the original one.
+ * A new iterator will be created, holding the reference to the original one.  
  * This means that the original iterator won't be consumed until the
  * new one is and that consuming one of them will consume the other as well.
  *
@@ -66,13 +66,13 @@ export function count<T>(elements: Iterable<T>): number
 }
 
 /**
- * An utility function that enumerates the elements of an iterable.
+ * An utility function that enumerates the elements of an iterable.  
  * Each element is paired with its index in a new iterator.
  *
  * Since the iterator is lazy, the enumeration process will
  * be executed once the resulting iterator is materialized.
  *
- * A new iterator will be created, holding the reference to the original one.
+ * A new iterator will be created, holding the reference to the original one.  
  * This means that the original iterator won't be consumed until the
  * new one is and that consuming one of them will consume the other as well.
  *
@@ -106,7 +106,7 @@ export function enumerate<T>(elements: Iterable<T>): SmartIterator<[number, T]>
 }
 
 /**
- * An utility function that generates an iterator over a range of numbers.
+ * An utility function that generates an iterator over a range of numbers.  
  * The values are included between `0` (included) and `end` (excluded).
  *
  * The default step between the numbers is `1`.
@@ -130,7 +130,7 @@ export function enumerate<T>(elements: Iterable<T>): SmartIterator<[number, T]>
 export function range(end: number): SmartIterator<number>;
 
 /**
- * An utility function that generates an iterator over a range of numbers.
+ * An utility function that generates an iterator over a range of numbers.  
  * The values are included between `start` (included) and `end` (excluded).
  *
  * The step between the numbers can be specified with a custom value. Default is `1`.
@@ -263,7 +263,7 @@ export function unique<T>(elements: Iterable<T>): SmartIterator<T>
 }
 
 /**
- * An utility function that zips two iterables into a single one.
+ * An utility function that zips two iterables into a single one.  
  * The resulting iterable will contain the elements of the two iterables paired together.
  *
  * The function will stop when one of the two iterables is exhausted.

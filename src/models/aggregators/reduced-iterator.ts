@@ -352,7 +352,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * It will iterate over all the elements of the iterator applying the reducer function.  
      * The result of each iteration will be passed as the accumulator to the next one.
      *
-     * The first accumulator value will be the provided initial value.
+     * The first accumulator value will be the provided initial value.  
      * The last accumulator value will be the final result of the reduction.
      *
      * If the iterator is infinite, the method will never return.
@@ -503,7 +503,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
-     * Only the taken elements will be consumed from the original reduced iterator.
+     * Only the taken elements will be consumed from the original reduced iterator.  
      * The rest of the original reduced iterator will be available for further consumption.
      *
      * ```ts

@@ -276,7 +276,7 @@ export type MaybeAsyncReducer<T, A> = (accumulator: A, value: T, index: number) 
 export type IteratorLike<T, R = void, N = undefined> = Iterable<T, R, N> | Iterator<T, R, N>;
 
 /**
- * An union type that represents either an iterable or an iterator object that can be asynchronous.
+ * An union type that represents either an iterable or an iterator object that can be asynchronous.  
  * More in general, it represents an object that can be looped over in one way or another.
  *
  * ```ts

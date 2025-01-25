@@ -7,7 +7,7 @@ import type { KeyedIteratee, KeyedTypeGuardPredicate, KeyedReducer } from "./typ
 /**
  * A class representing an iterator that aggregates elements in a lazy and optimized way.
  *
- * It's part of the {@link SmartIterator} implementation, providing a way to group elements of an iterable by key.
+ * It's part of the {@link SmartIterator} implementation, providing a way to group elements of an iterable by key.  
  * For this reason, it isn't recommended to instantiate this class directly
  * (although it's still possible), but rather use the {@link SmartIterator.groupBy} method.
  *

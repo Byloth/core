@@ -8,12 +8,12 @@ import type { GeneratorFunction, Iteratee, TypeGuardPredicate, Reducer, Iterator
  * of the native {@link Iterable} & {@link Iterator} interfaces.
  *
  * It provides a set of utility methods to better manipulate and
- * transform iterators in a functional and highly performant way.
+ * transform iterators in a functional and highly performant way.  
  * It takes inspiration from the native {@link Array} methods like
  * {@link Array.map}, {@link Array.filter}, {@link Array.reduce}, etc...
  *
  * The class is lazy, meaning that the transformations are applied
- * only when the resulting iterator is materialized, not before.
+ * only when the resulting iterator is materialized, not before.  
  * This allows to chain multiple transformations without
  * the need to iterate over the elements multiple times.
  *
@@ -128,8 +128,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * This method will iterate over all elements of the iterator checking if they satisfy the condition.  
      * Once a single element doesn't satisfy the condition, the method will return `false` immediately.
      *
-     * This may lead to an unknown final state of the iterator, which may be entirely or partially consumed.
-     * For this reason, it's recommended to consider it as consumed in any case and to not use it anymore.
+     * This may lead to an unknown final state of the iterator, which may be entirely or partially consumed.  
+     * For this reason, it's recommended to consider it as consumed in any case and to not use it anymore.  
      * Consider using {@link SmartIterator.find} instead.
      *
      * If the iterator is infinite and every element satisfies the condition, the method will never return.
@@ -169,8 +169,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * This method will iterate over all elements of the iterator checking if they satisfy the condition.  
      * Once a single element satisfies the condition, the method will return `true` immediately.
      *
-     * This may lead to an unknown final state of the iterator, which may be entirely or partially consumed.
-     * For this reason, it's recommended to consider it as consumed in any case and to not use it anymore.
+     * This may lead to an unknown final state of the iterator, which may be entirely or partially consumed.  
+     * For this reason, it's recommended to consider it as consumed in any case and to not use it anymore.  
      * Consider using {@link SmartIterator.find} instead.
      *
      * If the iterator is infinite and no element satisfies the condition, the method will never return.
@@ -212,7 +212,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * Since the iterator is lazy, the filtering process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.
+     * A new iterator will be created, holding the reference to the original one.  
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
@@ -240,7 +240,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * Since the iterator is lazy, the filtering process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.
+     * A new iterator will be created, holding the reference to the original one.  
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
@@ -254,7 +254,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * ---
      *
      * @template S
-     * The type of the elements that satisfy the condition.
+     * The type of the elements that satisfy the condition.  
      * This allows the type-system to infer the correct type of the new iterator.
      *
      * It must be a subtype of the original type of the elements.
@@ -291,7 +291,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * Since the iterator is lazy, the mapping process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.
+     * A new iterator will be created, holding the reference to the original one.  
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
@@ -330,13 +330,13 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     }
 
     /**
-     * Reduces the elements of the iterator using a given reducer function.
+     * Reduces the elements of the iterator using a given reducer function.  
      * This method will consume the entire iterator in the process.
      *
      * It will iterate over all elements of the iterator applying the reducer function.  
      * The result of each iteration will be passed as the accumulator to the next one.
      *
-     * The first accumulator value will be the first element of the iterator.
+     * The first accumulator value will be the first element of the iterator.  
      * The last accumulator value will be the final result of the reduction.
      *
      * Also note that:
@@ -359,7 +359,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     public reduce(reducer: Reducer<T, T>): T;
 
     /**
-     * Reduces the elements of the iterator using a given reducer function.
+     * Reduces the elements of the iterator using a given reducer function.  
      * This method will consume the entire iterator in the process.
      *
      * It will iterate over all elements of the iterator applying the reducer function.  
@@ -420,7 +420,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * Since the iterator is lazy, the flattening process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.
+     * A new iterator will be created, holding the reference to the original one.  
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
@@ -471,11 +471,11 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * Since the iterator is lazy, the dropping process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.
+     * A new iterator will be created, holding the reference to the original one.  
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
-     * Only the dropped elements will be consumed in the process.
+     * Only the dropped elements will be consumed in the process.  
      * The rest of the iterator will be consumed only once the new one is.
      *
      * ```ts
@@ -524,11 +524,11 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * Since the iterator is lazy, the taking process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.
+     * A new iterator will be created, holding the reference to the original one.  
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
-     * Only the taken elements will be consumed from the original iterator.
+     * Only the taken elements will be consumed from the original iterator.  
      * The rest of the original iterator will be available for further consumption.
      *
      * ```ts
@@ -619,7 +619,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * ---
      *
      * @template S
-     * The type of the element that satisfies the condition.
+     * The type of the element that satisfies the condition.  
      * This allows the type-system to infer the correct type of the result.
      *
      * It must be a subtype of the original type of the elements.
@@ -645,13 +645,13 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     }
 
     /**
-     * Enumerates the elements of the iterator.
+     * Enumerates the elements of the iterator.  
      * Each element is be paired with its index in a new iterator.
      *
      * Since the iterator is lazy, the enumeration process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.
+     * A new iterator will be created, holding the reference to the original one.  
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
@@ -672,13 +672,13 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     }
 
     /**
-     * Removes all duplicate elements from the iterator.
+     * Removes all duplicate elements from the iterator.  
      * The first occurrence of each element will be kept.
      *
      * Since the iterator is lazy, the deduplication process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.
+     * A new iterator will be created, holding the reference to the original one.  
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
@@ -713,7 +713,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     }
 
     /**
-     * Counts the number of elements in the iterator.
+     * Counts the number of elements in the iterator.  
      * This method will consume the entire iterator in the process.
      *
      * If the iterator is infinite, the method will never return.
@@ -777,7 +777,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     }
 
     /**
-     * Advances the iterator to the next element and returns the result.
+     * Advances the iterator to the next element and returns the result.  
      * If the iterator requires it, a value must be provided to be passed to the next element.
      *
      * Once the iterator is done, the method will return an object with the `done` property set to `true`.
@@ -809,7 +809,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
 
     /**
      * An utility method that may be used to close the iterator gracefully,
-     * free the resources and perform any cleanup operation.
+     * free the resources and perform any cleanup operation.  
      * It may also be used to signal the end or to compute a specific final result of the iteration process.
      *
      * ```ts
@@ -845,7 +845,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
 
     /**
      * An utility method that may be used to close the iterator due to an error,
-     * free the resources and perform any cleanup operation.
+     * free the resources and perform any cleanup operation.  
      * It may also be used to signal that an error occurred during the iteration process or to handle it.
      *
      * ```ts
@@ -889,13 +889,14 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     }
 
     /**
-     * An utility method that aggregates the elements of the iterator using a given key function.
-     * The elements will be grouped by the resulting keys in a new specialized iterator. See {@link AggregatedIterator}.
+     * An utility method that aggregates the elements of the iterator using a given key function.  
+     * The elements will be grouped by the resulting keys in a new specialized iterator.
+     * See {@link AggregatedIterator}.
      *
      * Since the iterator is lazy, the grouping process will
      * be executed once the resulting iterator is materialized.
      *
-     * A new iterator will be created, holding the reference to the original one.
+     * A new iterator will be created, holding the reference to the original one.  
      * This means that the original iterator won't be consumed until the
      * the new one is and that consuming one of them will consume the other as well.
      *
@@ -925,7 +926,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     }
 
     /**
-     * Materializes the iterator into an array.
+     * Materializes the iterator into an array.  
      * This method will consume the entire iterator in the process.
      *
      * If the iterator is infinite, the method will never return.
