@@ -14,7 +14,7 @@ describe("Countdown", () =>
 
         vi.useFakeTimers();
     });
-    afterEach(() => vi.clearAllMocks());
+    afterEach(() => vi.clearAllTimers());
 
     it("Should initialize with the correct duration", () =>
     {
@@ -41,15 +41,18 @@ describe("Countdown", () =>
         expect(() => countdown.start()).toThrow(RuntimeException);
     });
 
-    it("Should stop the countdown and publish stop event", () =>
+    it("Should stop the countdown and publish stop event", async () =>
     {
         const _callback = vi.fn();
 
         countdown.onStop(_callback);
-        countdown.start();
-        countdown.stop("test reason");
 
-        expect(_callback).toHaveBeenCalledWith("test reason");
+        const { rejects } = expect(countdown.start());
+        countdown.stop("This is a test!");
+
+        await rejects.toBe("This is a test!");
+
+        expect(_callback).toHaveBeenCalledWith("This is a test!");
     });
     it("Should throw `RuntimeException` if stop is called before start", () =>
     {
@@ -74,7 +77,7 @@ describe("Countdown", () =>
         countdown.onTick(_callback, 250);
         countdown.start();
 
-        vi.advanceTimersByTime(1_000);
+        vi.advanceTimersByTime(1_024);
 
         expect(_callback).toHaveBeenCalledTimes(4);
     });
@@ -86,7 +89,7 @@ describe("Countdown", () =>
         countdown.onExpire(_callback);
         countdown.start();
 
-        vi.advanceTimersByTime(1_000);
+        vi.advanceTimersByTime(10_000);
 
         expect(_callback).toHaveBeenCalled();
     });

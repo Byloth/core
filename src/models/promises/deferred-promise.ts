@@ -79,7 +79,7 @@ export default class DeferredPromise<T = void, F = T, R = never> extends SmartPr
             _reject = reject;
         });
 
-        this._promise.then(onFulfilled as FulfilledHandler<F | R>, onRejected);
+        this._promise = this._promise.then(onFulfilled as FulfilledHandler<F | R>, onRejected);
 
         this._resolve = _resolve!;
         this._reject = _reject!;

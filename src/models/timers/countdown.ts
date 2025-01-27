@@ -231,7 +231,7 @@ export default class Countdown extends GameLoop
         if (tickStep < 0) { throw new RangeException("The tick step must be a non-negative number."); }
         if (tickStep === 0) { return this._publisher.subscribe("tick", callback); }
 
-        let lastTick = 0;
+        let lastTick = this.remainingTime;
 
         return this._publisher.subscribe("tick", (remainingTime: number) =>
         {

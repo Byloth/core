@@ -16,7 +16,7 @@ describe("GameLoop", () =>
         vi.useFakeTimers();
     });
 
-    afterEach(() => vi.clearAllMocks());
+    afterEach(() => vi.clearAllTimers());
 
     it("Should initialize with default values", () =>
     {

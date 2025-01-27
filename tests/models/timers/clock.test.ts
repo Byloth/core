@@ -13,7 +13,7 @@ describe("Clock", () =>
 
         vi.useFakeTimers();
     });
-    afterEach(() => vi.clearAllMocks());
+    afterEach(() => vi.clearAllTimers());
 
     it("Should start the clock and publish start event", () =>
     {
@@ -75,13 +75,13 @@ describe("Clock", () =>
         clock.onTick(_callback, 600);
         clock.start();
 
-        vi.advanceTimersByTime(200);
+        vi.advanceTimersByTime(216);
         expect(_callback).toHaveBeenCalledTimes(0);
 
-        vi.advanceTimersByTime(1400);
+        vi.advanceTimersByTime(1_000);
         expect(_callback).toHaveBeenCalledTimes(2);
 
-        vi.advanceTimersByTime(1000);
+        vi.advanceTimersByTime(1_216);
         expect(_callback).toHaveBeenCalledTimes(4);
     });
     it("Should throw `RangeException` if tickStep is negative", () =>
