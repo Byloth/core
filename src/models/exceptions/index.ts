@@ -26,8 +26,6 @@ export class FileException extends Exception
      * throw new FileException("An error occurred while trying to read the file.");
      * ```
      *
-     * ---
-     *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
      * @param name The name of the exception. Default is `"FileException"`.
@@ -60,8 +58,6 @@ export class FileExistsException extends FileException
      * ```ts
      * throw new FileExistsException("The file named 'data.json' already exists on the server.");
      * ```
-     *
-     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -96,8 +92,6 @@ export class FileNotFoundException extends FileException
      * throw new FileNotFoundException("The file named 'data.json' wasn't found on the server.");
      * ```
      *
-     * ---
-     *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
      * @param name The name of the exception. Default is `"FileNotFoundException"`.
@@ -130,8 +124,6 @@ export class KeyException extends Exception
      * ```ts
      * throw new KeyException("The 'id' key wasn't found in the dictionary.");
      * ```
-     *
-     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -174,8 +166,6 @@ export class NetworkException extends Exception
      * throw new NetworkException("Couldn't connect to the server. Please, try again later.");
      * ```
      *
-     * ---
-     *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
      * @param name The name of the exception. Default is `"NetworkException"`.
@@ -209,8 +199,6 @@ export class PermissionException extends Exception
      * throw new PermissionException("You don't have permission to access this resource.");
      * ```
      *
-     * ---
-     *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
      * @param name The name of the exception. Default is `"PermissionException"`.
@@ -243,8 +231,6 @@ export class ReferenceException extends Exception
      * ```ts
      * throw new ReferenceException("The 'canvas' element wasn't found in the document.");
      * ```
-     *
-     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -281,8 +267,6 @@ export class RuntimeException extends Exception
      * throw new RuntimeException("The received input seems to be malformed or corrupted.");
      * ```
      *
-     * ---
-     *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
      * @param name The name of the exception. Default is `"RuntimeException"`.
@@ -316,8 +300,6 @@ export class EnvironmentException extends RuntimeException
      * throw new EnvironmentException("The required environment variable 'API_KEY' isn't set.");
      * ```
      *
-     * ---
-     *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
      * @param name The name of the exception. Default is `"EnvironmentException"`.
@@ -349,8 +331,6 @@ export class TimeoutException extends Exception
      * ```ts
      * throw new TimeoutException("The task took too long to complete.");
      * ```
-     *
-     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -387,8 +367,6 @@ export class TypeException extends Exception
      * throw new TypeException("The 'username' argument must be a valid string.");
      * ```
      *
-     * ---
-     *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
      * @param name The name of the exception. Default is `"TypeException"`.
@@ -424,8 +402,6 @@ export class ValueException extends Exception
      * throw new ValueException("The 'grade' argument cannot be negative.");
      * ```
      *
-     * ---
-     *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
      * @param name The name of the exception. Default is `"ValueException"`.
@@ -460,8 +436,6 @@ export class RangeException extends ValueException
      * ```ts
      * throw new RangeException("The 'percentage' argument must be between 0 and 100.");
      * ```
-     *
-     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.

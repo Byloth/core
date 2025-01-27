@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { RangeException, SmartIterator } from "../../src/index.js";
 import { TimeUnit, WeekDay, dateDifference, dateRange, dateRound, getWeek } from "../../src/index.js";
@@ -83,7 +83,7 @@ describe("dateRange", () =>
         expect(dates[3].toISOString().slice(0, 10)).toBe("2025-01-04");
     });
 
-    it("Should throw `RangeException` if start date is not less than end date", () =>
+    it("Should throw `RangeException` if start date isn't less than end date", () =>
     {
         const start = new Date("2025-01-05");
         const end = new Date("2025-01-01");

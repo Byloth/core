@@ -17,8 +17,6 @@ import { RangeException, SmartIterator } from "../models/index.js";
  * }
  * ```
  *
- * ---
- *
  * @template T The type of elements in the iterables.
  *
  * @param iterables The list of iterables to chain.
@@ -46,8 +44,6 @@ export function chain<T>(...iterables: readonly Iterable<T>[]): SmartIterator<T>
  * ```ts
  * count([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]); // 10
  * ```
- *
- * ---
  *
  * @template T The type of elements in the iterable.
  *
@@ -83,8 +79,6 @@ export function count<T>(elements: Iterable<T>): number
  * }
  * ```
  *
- * ---
- *
  * @template T The type of elements in the iterable.
  *
  * @param elements The iterable to enumerate.
@@ -118,8 +112,6 @@ export function enumerate<T>(elements: Iterable<T>): SmartIterator<[number, T]>
  * }
  * ```
  *
- * ---
- *
  * @param end
  * The end value (excluded).
  *
@@ -141,8 +133,6 @@ export function range(end: number): SmartIterator<number>;
  *    console.log(number); // 2, 3, 4, 5, 6
  * }
  * ```
- *
- * ---
  *
  * @param start
  * The start value (included).
@@ -206,8 +196,6 @@ export function range(start: number, end?: number, step = 1): SmartIterator<numb
  * shuffle([1, 2, 3, 4, 5]); // [3, 1, 5, 2, 4]
  * ```
  *
- * ---
- *
  * @template T The type of elements in the iterable.
  *
  * @param iterable The iterable to shuffle.
@@ -237,8 +225,6 @@ export function shuffle<T>(iterable: Iterable<T>): T[]
  *     console.log(value); // 1, 2, 3, 4, 5
  * }
  * ```
- *
- * ---
  *
  * @template T The type of elements in the iterable.
  *
@@ -274,8 +260,6 @@ export function unique<T>(elements: Iterable<T>): SmartIterator<T>
  *     console.log(`${number} - ${char}`); // "1 - A", "2 - M", "3 - N", "4 - Z"
  * }
  * ```
- *
- * ---
  *
  * @template T The type of elements in the first iterable.
  * @template U The type of elements in the second iterable.

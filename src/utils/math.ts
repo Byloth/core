@@ -10,8 +10,6 @@ import { zip } from "./iterator.js";
  * average([6, 8.5, 4], [3, 2, 1]); // 6.5
  * ```
  *
- * ---
- *
  * @template T The type of the values in the list. It must be or extend a `number` object.
  *
  * @param values
@@ -80,8 +78,6 @@ export function average<T extends number>(values: Iterable<T>, weights?: Iterabl
  * hash("How are you?"); // 1761539132
  * ```
  *
- * ---
- *
  * @param value The string to hash.
  *
  * @returns The hash of the specified string.
@@ -106,8 +102,6 @@ export function hash(value: string): number
  * ```ts
  * sum([1, 2, 3, 4, 5]); // 15
  * ```
- *
- * ---
  *
  * @template T The type of the values in the list. It must be or extend a `number` object.
  *

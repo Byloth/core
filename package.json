@@ -52,7 +52,7 @@
     "preview": "vite preview",
     "typecheck": "tsc",
     "lint": "eslint .",
-    "test": "vitest",
+    "test": "vitest run",
     "prepare": "husky",
     "ci": "pnpm install --frozen-lockfile"
   },
@@ -60,6 +60,7 @@
     "@byloth/eslint-config-typescript": "^3.0.3",
     "@types/node": "^22.10.10",
     "husky": "^9.1.7",
+    "jsdom": "^26.0.0",
     "typescript": "^5.7.3",
     "vite": "^6.0.11",
     "vitest": "^3.0.4"

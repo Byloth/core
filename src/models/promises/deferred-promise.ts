@@ -19,8 +19,6 @@ import SmartPromise from "./smart-promise.js";
  * promise.resolve("Hello, World!");
  * ```
  *
- * ---
- *
  * @template T The type of value the promise expects to initially be resolved with. Default is `void`.
  * @template F
  * The type of value returned by the `onFulfilled` callback.  
@@ -64,8 +62,6 @@ export default class DeferredPromise<T = void, F = T, R = never> extends SmartPr
      * const promise = new DeferredPromise<string, string[]>((value: string) => value.split(" "));
      * ```
      *
-     * ---
-     *
      * @param onFulfilled The callback to execute once the promise is fulfilled.
      * @param onRejected The callback to execute once the promise is rejected.
      */
@@ -99,8 +95,6 @@ export default class DeferredPromise<T = void, F = T, R = never> extends SmartPr
      * deferred.then((result) => console.log(result)); // ["Hello,", "World!"]
      * deferred.watch(promise);
      * ```
-     *
-     * ---
      *
      * @param otherPromise The promise to watch.
      *

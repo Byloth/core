@@ -116,8 +116,6 @@ export enum WeekDay
  * dateDifference(start, end, TimeUnit.Minute); // 43200
  * ```
  *
- * ---
- *
  * @param start The start date.
  * @param end The end date.
  * @param unit The time unit to express the difference. `TimeUnit.Day` by default.
@@ -150,8 +148,6 @@ export function dateDifference(start: string | Date, end: string | Date, unit = 
  *     date.toISOString().slice(8, 10); // "01", "08", "15", "22", "29"
  * }
  * ```
- *
- * ---
  *
  * @param start The start date (included).
  * @param end
@@ -190,8 +186,6 @@ export function dateRange(start: string | Date, end: string | Date, step = TimeU
  *
  * dateRound(date, TimeUnit.Hour); // 2025-01-01T12:00:00.000Z
  * ```
- *
- * ---
  *
  * @param date The date to round.
  * @param unit
@@ -232,8 +226,6 @@ export function dateRound(date: string | Date, unit = TimeUnit.Day): Date
  *
  * getWeek(date, WeekDay.Monday); // 2024-12-30
  * ```
- *
- * ---
  *
  * @param date The date to get the week of.
  * @param firstDay The first day of the week. `WeekDay.Sunday` by default.

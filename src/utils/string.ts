@@ -5,8 +5,6 @@
  * capitalize('hello'); // 'Hello'
  * ```
  *
- * ---
- *
  * @param value The string to capitalize.
  *
  * @returns The capitalized string.

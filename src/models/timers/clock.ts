@@ -45,8 +45,6 @@ export default class Clock extends GameLoop
      * const clock = new Clock();
      * ```
      *
-     * ---
-     *
      * @param msIfNotBrowser
      * The interval in milliseconds at which the clock will tick if the environment is not a browser.  
      * `TimeUnit.Second` by default.
@@ -67,8 +65,6 @@ export default class Clock extends GameLoop
      * clock.onStart(() => { [...] }); // This callback will be executed.
      * clock.start();
      * ```
-     *
-     * ---
      *
      * @param elapsedTime The elapsed time to set as default when the clock starts. Default is `0`.
      */
@@ -112,8 +108,6 @@ export default class Clock extends GameLoop
      * clock.onTick((elapsedTime) => { [...] }); // This callback will be executed.
      * clock.start();
      * ```
-     *
-     * ---
      *
      * @param callback The callback that will be executed when the clock ticks.
      * @param tickStep

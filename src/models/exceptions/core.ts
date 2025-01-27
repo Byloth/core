@@ -36,8 +36,6 @@ export default class Exception extends Error
      * }
      * ```
      *
-     * ---
-     *
      * @param error The caught error to convert.
      *
      * @returns An instance of the {@link Exception} class.
@@ -67,8 +65,6 @@ export default class Exception extends Error
      * ```ts
      * throw new Exception("An error occurred while processing the request.");
      * ```
-     *
-     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -125,8 +121,6 @@ export class FatalErrorException extends Exception
      * throw new FatalErrorException("This error should never happen. Please, contact the support team.");
      * ```
      *
-     * ---
-     *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
      * @param name The name of the exception. Default is `"FatalErrorException"`.
@@ -169,8 +163,6 @@ export class NotImplementedException extends FatalErrorException
      * ```ts
      * throw new NotImplementedException("This method hasn't been implemented yet. Check back later.");
      * ```
-     *
-     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.

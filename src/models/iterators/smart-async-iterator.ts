@@ -36,8 +36,6 @@ import type {
  * console.log(await result); // 31
  * ```
  *
- * ---
- *
  * @template T The type of elements in the iterator.
  * @template R The type of the final result of the iterator. Default is `void`.
  * @template N The type of the argument passed to the `next` method. Default is `undefined`.
@@ -56,8 +54,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * const iterator = new SmartAsyncIterator<string>(["A", "B", "C"]);
      * ```
      *
-     * ---
-     *
      * @param iterable The iterable object to wrap.
      */
     public constructor(iterable: Iterable<T>);
@@ -68,8 +64,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * ```ts
      * const iterator = new SmartAsyncIterator<number>([1, 2, 3, 4, 5]);
      * ```
-     *
-     * ---
      *
      * @param iterable The asynchronous iterable object to wrap.
      */
@@ -92,8 +86,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * })
      * ```
      *
-     * ---
-     *
      * @param iterator The iterator object to wrap.
      */
     public constructor(iterator: Iterator<T, R, N>);
@@ -115,8 +107,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * })
      * ```
      *
-     * ---
-     *
      * @param iterator The asynchronous iterator object to wrap.
      */
     public constructor(iterator: AsyncIterator<T, R, N>);
@@ -130,8 +120,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *     for (let i = 2; i < 65_536; i *= 2) { yield (i - 1); }
      * });
      * ```
-     *
-     * ---
      *
      * @param generatorFn The generator function to wrap.
      */
@@ -147,8 +135,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * });
      * ```
      *
-     * ---
-     *
      * @param generatorFn The asynchronous generator function to wrap.
      */
     public constructor(generatorFn: AsyncGeneratorFunction<T, R, N>);
@@ -159,8 +145,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * ```ts
      * const iterator = new SmartAsyncIterator(values);
      * ```
-     *
-     * ---
      *
      * @param argument The synchronous or asynchronous iterable, iterator or generator function to wrap.
      */
@@ -248,8 +232,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // false
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
      * @returns A promise that will resolve to `true` if all elements satisfy the condition, `false` otherwise.
@@ -288,8 +270,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * console.log(result); // true
      * ```
-     *
-     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -330,8 +310,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(await result.toArray()); // [-2, -1]
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
      * @returns A new {@link SmartAsyncIterator} containing only the elements that satisfy the condition.
@@ -357,8 +335,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * console.log(await result.toArray()); // [-2, 1]
      * ```
-     *
-     * ---
      *
      * @template S
      * The type of the elements that satisfy the condition.  
@@ -409,8 +385,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(await result.toArray()); // [2, 1, 0, 1, 2]
      * ```
      *
-     * ---
-     *
      * @template V The type of the elements after the transformation.
      *
      * @param iteratee The transformation function to apply to each element of the iterator.
@@ -457,8 +431,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // 15
      * ```
      *
-     * ---
-     *
      * @param reducer The reducer function to apply to each element of the iterator.
      *
      * @returns A promise that will resolve to the final result of the reduction.
@@ -483,8 +455,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * console.log(result); // 25
      * ```
-     *
-     * ---
      *
      * @template A The type of the accumulator value which will also be the type of the final result of the reduction.
      *
@@ -538,8 +508,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(await result.toArray()); // [-2, -1, 0, 1, 2, 3, 4, 5]
      * ```
      *
-     * ---
-     *
      * @template V The type of the elements after the transformation.
      *
      * @param iteratee The transformation function to apply to each element of the iterator.
@@ -591,8 +559,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * console.log(await result.toArray()); // [1, 2]
      * ```
-     *
-     * ---
      *
      * @param count The number of elements to drop.
      *
@@ -646,8 +612,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(await iterator.toArray()); // [1, 2]
      * ```
      *
-     * ---
-     *
      * @param limit The number of elements to take.
      *
      * @returns A new {@link SmartAsyncIterator} containing the taken elements.
@@ -694,8 +658,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // 1
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
      * @returns A promise that will resolve to the first element that satisfies the condition, `undefined` otherwise.
@@ -722,8 +684,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * console.log(result); // -2
      * ```
-     *
-     * ---
      *
      * @template S
      * The type of the element that satisfies the condition.  
@@ -772,8 +732,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * }
      * ```
      *
-     * ---
-     *
      * @returns A new {@link SmartAsyncIterator} containing the enumerated elements.
      */
     public enumerate(): SmartAsyncIterator<[number, T], R>
@@ -798,8 +756,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * console.log(await result.toArray()); // [1, 2, 3, 4, 5]
      * ```
-     *
-     * ---
      *
      * @returns A new {@link SmartAsyncIterator} containing only the unique elements.
      */
@@ -836,8 +792,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // 5
      * ```
      *
-     * ---
-     *
      * @returns A promise that will resolve to the number of elements in the iterator.
      */
     public async count(): Promise<number>
@@ -867,8 +821,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *     console.log(`${index}: ${value}`); // "0: A", "1: M", "2: N", "3: Z"
      * }
      * ```
-     *
-     * ---
      *
      * @param iteratee The function to apply to each element of the iterator.
      *
@@ -909,8 +861,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // { done: true, value: undefined }
      * ```
      *
-     * ---
-     *
      * @param values The value to pass to the next element, if required.
      *
      * @returns A promise that will resolve to the result of the iteration, containing the value of the operation.
@@ -942,8 +892,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *     console.log(value); // 1, 2, 3, 4, 5
      * }
      * ```
-     *
-     * ---
      *
      * @param value The final value of the iterator.
      *
@@ -988,8 +936,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * }
      * ```
      *
-     * ---
-     *
      * @param error The error to throw into the iterator.
      *
      * @returns A promise that will resolve to the final result of the iterator.
@@ -1019,8 +965,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * console.log(await result.toObject()); // { odd: [1, 3, 5, 7, 9], even: [2, 4, 6, 8, 10] }
      * ```
-     *
-     * ---
      *
      * @template K The type of the keys used to group the elements.
      *

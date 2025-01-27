@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { RangeException, SmartIterator } from "../../src/index.js";
 import { chain, count, enumerate, range, shuffle, unique, zip } from "../../src/index.js";

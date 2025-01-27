@@ -14,8 +14,6 @@ import type { MaybePromise } from "../promises/types.js";
  * console.log(results.toObject()); // { odd: ["-3", "-1", "3", "5"], even: ["0", "2", "6", "8"] }
  * ```
  *
- * ---
- *
  * @template K The type of the key used to aggregate elements in the iterable.
  * @template T The type of the elements in the iterable.
  * @template R The type of the return value of the iteratee. Default is `void`.
@@ -36,8 +34,6 @@ export type KeyedIteratee<K extends PropertyKey, T, R = void> = (key: K, value: 
  * console.log(await results.toObject()); // { odd: ["-3", "-1", "3", "5"], even: ["0", "2", "6", "8"] }
  * ```
  *
- * ---
- *
  * @template K The type of the key used to aggregate elements in the iterable.
  * @template T The type of the elements in the iterable.
  * @template R The type of the return value of the iteratee. Default is `void`.
@@ -57,8 +53,6 @@ export type AsyncKeyedIteratee<K extends PropertyKey, T, R = void> = (key: K, va
  *
  * console.log(await results.toObject()); // { odd: ["-3", "-1", "3", "5"], even: ["0", "2", "6", "8"] }
  * ```
- *
- * ---
  *
  * @template K The type of the key used to aggregate elements in the iterable.
  * @template T The type of the elements in the iterable.
@@ -85,8 +79,6 @@ export type MaybeAsyncKeyedIteratee<K extends PropertyKey, T, R = void> =
  *
  * console.log(results.toObject()); // { odd: ["0", "5", "8"], even: [] }
  * ```
- *
- * ---
  *
  * @template K The type of the key used to aggregate elements in the iterable.
  * @template T The type of the elements in the iterable.
@@ -119,8 +111,6 @@ export type KeyedTypeGuardPredicate<K extends PropertyKey, T, R extends T> =
  * console.log(results.toObject()); // { odd: 4, even: 16 }
  * ```
  *
- * ---
- *
  * @template K The type of the key used to aggregate elements in the iterable.
  * @template T The type of the elements in the iterable.
  * @template A The type of the accumulator.
@@ -141,8 +131,6 @@ export type KeyedReducer<K extends PropertyKey, T, A> = (key: K, accumulator: A,
  *
  * console.log(await results.toObject()); // { odd: 4, even: 16 }
  * ```
- *
- * ---
  *
  * @template K The type of the key used to aggregate elements in the iterable.
  * @template T The type of the elements in the iterable.
@@ -165,8 +153,6 @@ export type AsyncKeyedReducer<K extends PropertyKey, T, A> =
  *
  * console.log(await results.toObject()); // { odd: 4, even: 16 }
  * ```
- *
- * ---
  *
  * @template K The type of the key used to aggregate elements in the iterable.
  * @template T The type of the elements in the iterable.

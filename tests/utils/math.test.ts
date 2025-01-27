@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { ValueException } from "../../src/index.js";
 import { average, hash, sum } from "../../src/index.js";
@@ -23,7 +23,7 @@ describe("average", () =>
         expect(() => average([1, 2, 3], [1, 0, 1])).toThrow(ValueException);
         expect(() => average([1, 2, 3], [1, -1, 1])).toThrow(ValueException);
     });
-    it("Should throw `ValueException` if the sum of weights is not greater than zero", () =>
+    it("Should throw `ValueException` if the sum of weights isn't greater than zero", () =>
     {
         expect(() => average([1, 2, 3], [0, 0, 0])).toThrow(ValueException);
     });

@@ -32,8 +32,6 @@ import type { KeyedIteratee, KeyedReducer, KeyedTypeGuardPredicate } from "./typ
  * console.log(results.toObject()); // { odd: 4, even: 4 }
  * ```
  *
- * ---
- *
  * @template K The type of the key used to group the elements.
  * @template T The type of the elements in the iterator.
  */
@@ -50,8 +48,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * ```ts
      * const results = new ReducedIterator<string, number>([["A", 1], ["B", 2], ["C", 4]]);
      * ```
-     *
-     * ---
      *
      * @param iterable A reduced iterable object.
      */
@@ -73,8 +69,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * });
      * ```
      *
-     * ---
-     *
      * @param iterator An reduced iterator object.
      */
     public constructor(iterator: Iterator<[K, T]>);
@@ -94,8 +88,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * });
      * ```
      *
-     * ---
-     *
      * @param generatorFn A generator function that produces the reduced elements.
      */
     public constructor(generatorFn: GeneratorFunction<[K, T]>);
@@ -106,8 +98,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * ```ts
      * const results = new ReducedIterator(reducedValues);
      * ```
-     *
-     * ---
      *
      * @param argument An iterable, iterator or generator function that produces the reduced elements.
      */
@@ -138,8 +128,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results); // true
      * ```
-     *
-     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -177,8 +165,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * console.log(results); // true
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
      * @returns `true` if any element satisfies the condition, `false` otherwise.
@@ -215,8 +201,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * console.log(results.toObject()); // { odd: 4, even: 16 }
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
      * @returns A new {@link ReducedIterator} containing only the elements that satisfy the condition.
@@ -244,8 +228,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results.toObject()); // { odd: 4 }
      * ```
-     *
-     * ---
      *
      * @template S
      * The type of the elements that satisfy the condition.  
@@ -293,8 +275,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * console.log(results.toObject()); // { odd: 8, even: 32 }
      * ```
      *
-     * ---
-     *
      * @template V The type of the elements after the transformation.
      *
      * @param iteratee The transformation function to apply to each element of the iterator.
@@ -337,8 +317,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * console.log(result); // 20
      * ```
      *
-     * ---
-     *
      * @param reducer The reducer function to apply to the elements of the iterator.
      *
      * @returns The final value after reducing all the elements of the iterator.
@@ -365,8 +343,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(result); // { value: 20 }
      * ```
-     *
-     * ---
      *
      * @template A The type of the accumulator value which will also be the type of the final result of the reduction.
      *
@@ -421,8 +397,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * console.log(results.toObject()); // { odd: [-3, -1, 3, 5], even: [0, 2, 6, 8] }
      * ```
      *
-     * ---
-     *
      * @template V The type of the elements after the transformation.
      *
      * @param iteratee The transformation function to apply to each element of the iterator.
@@ -471,8 +445,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results.toObject()); // { even: [0, 2, 6, 8] }
      * ```
-     *
-     * ---
      * 
      * @param count The number of elements to drop.
      *
@@ -517,8 +489,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * console.log(reduced.toObject()); // { even: [0, 2, 6, 8] }
      * ```
      *
-     * ---
-     *
      * @param count The number of elements to take.
      *
      * @returns A new {@link ReducedIterator} containing the taken elements.
@@ -561,8 +531,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results.toObject()); // [[0, 4], [1, 16]]
      * ```
-     *
-     * ---
      *
      * @returns A new {@link ReducedIterator} object containing the enumerated elements.
      */
@@ -625,8 +593,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * console.log(results); // 2
      * ```
      *
-     * ---
-     *
      * @returns The number of elements in the iterator.
      */
     public count(): number
@@ -655,8 +621,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *     console.log(`#${index} - ${key}: ${value}`); // "#0 - odd: 4", "#1 - even: 16"
      * });
      * ```
-     *
-     * ---
      *
      * @param iteratee The function to apply to each element of the reduced iterator.
      */
@@ -687,8 +651,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results.toObject()); // { positive: 4, negative: -12 }
      * ```
-     *
-     * ---
      *
      * @template J The type of the new keys used to group the elements.
      *
@@ -729,8 +691,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * console.log(keys.toArray()); // ["odd", "even"]
      * ```
      *
-     * ---
-     *
      * @returns A new {@link SmartIterator} containing all the keys of the iterator.
      */
     public keys(): SmartIterator<K>
@@ -767,8 +727,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * console.log(entries.toArray()); // [["odd", 4], ["even", 16]]
      * ```
      *
-     * ---
-     *
      * @returns A new {@link SmartIterator} containing all the entries of the iterator.
      */
     public entries(): SmartIterator<[K, T]>
@@ -795,8 +753,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(values.toArray()); // [4, 16]
      * ```
-     *
-     * ---
      *
      * @returns A new {@link SmartIterator} containing all the values of the iterator.
      */
@@ -827,8 +783,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * console.log(reduced.toArray()); // [4, 16]
      * ```
      *
-     * ---
-     *
      * @returns The {@link Array} containing all elements of the iterator.
      */
     public toArray(): T[]
@@ -850,8 +804,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * console.log(reduced.toMap()); // Map(2) { "odd" => 4, "even" => 16 }
      * ```
      *
-     * ---
-     *
      * @returns The {@link Map} containing all elements of the iterator.
      */
     public toMap(): Map<K, T>
@@ -872,8 +824,6 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(reduced.toObject()); // { odd: 4, even: 16 }
      * ```
-     *
-     * ---
      *
      * @returns The {@link Object} containing all elements of the iterator.
      */

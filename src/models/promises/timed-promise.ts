@@ -21,8 +21,6 @@ import type { MaybePromise, PromiseExecutor } from "./types.js";
  *     .catch((error) => console.error(error)); // TimeoutException: The operation has timed out.
  * ```
  *
- * ---
- *
  * @template T The type of value the promise will eventually resolve to. Default is `void`.
  */
 export default class TimedPromise<T = void> extends SmartPromise<T>
@@ -37,8 +35,6 @@ export default class TimedPromise<T = void> extends SmartPromise<T>
      *
      * }, 5_000);
      * ```
-     *
-     * ---
      *
      * @param executor
      * The function responsible for eventually resolving or rejecting the promise.  

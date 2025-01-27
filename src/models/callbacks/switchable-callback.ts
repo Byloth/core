@@ -20,8 +20,6 @@ import type { Callback } from "./types.js";
  * window.addEventListener("pointerup", () => { onPointerMove.switch("released"); });
  * ```
  *
- * ---
- *
  * @template T The type signature of the callback. Default is `(...args: any[]) => any`.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -167,8 +165,6 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      * onPointerMove.register("released", () => { [...] });
      * ```
      *
-     * ---
-     *
      * @param key The key that will be associated with the implementation.
      * @param callback The implementation to register.
      */
@@ -198,8 +194,6 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      * onPointerMove.unregister("released");
      * ```
      *
-     * ---
-     *
      * @param key The key that is associated with the implementation to unregister.
      */
     public unregister(key: string): void
@@ -226,8 +220,6 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      * window.addEventListener("pointermove", onPointerMove);
      * window.addEventListener("pointerup", () => { onPointerMove.switch("released"); });
      * ```
-     *
-     * ---
      *
      * @param key The key that is associated with the implementation to switch to.
      */

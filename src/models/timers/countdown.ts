@@ -78,8 +78,6 @@ export default class Countdown extends GameLoop
      * const countdown = new Countdown(10_000);
      * ```
      *
-     * ---
-     *
      * @param duration
      * The total duration of the countdown in milliseconds.
      *
@@ -146,8 +144,6 @@ export default class Countdown extends GameLoop
      * countdown.start();
      * ```
      *
-     * ---
-     *
      * @param remainingTime
      * The remaining time to set as default when the countdown starts.  
      * Default is the {@link Countdown.duration} itself.
@@ -176,8 +172,6 @@ export default class Countdown extends GameLoop
      * countdown.onStop(() => { [...] }); // This callback will be executed.
      * countdown.stop();
      * ```
-     *
-     * ---
      *
      * @param reason
      * The reason why the countdown has stopped.
@@ -220,8 +214,6 @@ export default class Countdown extends GameLoop
      * countdown.onTick((remainingTime) => { [...] }); // This callback will be executed.
      * countdown.start();
      * ```
-     *
-     * ---
      *
      * @param callback The callback that will be executed when the countdown ticks.
      * @param tickStep

@@ -20,8 +20,6 @@ export default class Curve
      * }
      * ```
      *
-     * ---
-     *
      * @param values The number of values to generate.
      *
      * @returns A {@link SmartIterator} object that generates the values following a linear curve.
@@ -46,8 +44,6 @@ export default class Curve
      *     console.log(value); // 0, 0.04, 0.16, 0.36, 0.64, 1
      * }
      * ```
-     *
-     * ---
      *
      * @param values The number of values to generate.
      * @param base

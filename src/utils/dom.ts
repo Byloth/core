@@ -6,8 +6,6 @@
  * await loadScript("https://analytics.service/script.js?id=0123456789");
  * ```
  *
- * ---
- *
  * @param scriptUrl The URL of the script to load.
  * @param scriptType The type of the script to load. Default is `"text/javascript"`.
  *
