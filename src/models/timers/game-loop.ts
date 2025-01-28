@@ -1,9 +1,9 @@
-import type { Interval } from "../core/types.js";
-import { isBrowser } from "../helpers.js";
+import type { Interval } from "../../core/types.js";
+import { isBrowser } from "../../helpers.js";
 
-import Publisher from "./callbacks/publisher.js";
-import { FatalErrorException, RuntimeException } from "./exceptions/index.js";
-import type { Callback } from "./types.js";
+import Publisher from "../callbacks/publisher.js";
+import { FatalErrorException, RuntimeException } from "../exceptions/index.js";
+import type { Callback } from "../types.js";
 
 interface GameLoopEventMap
 {

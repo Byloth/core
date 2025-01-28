@@ -10,6 +10,7 @@ export {
     Exception,
     FatalErrorException,
     NotImplementedException,
+    EnvironmentException,
     FileException,
     FileExistsException,
     FileNotFoundException,
@@ -25,12 +26,7 @@ export {
 
 } from "./exceptions/index.js";
 
-import GameLoop from "./game-loop.js";
-
 export { SmartIterator, SmartAsyncIterator } from "./iterators/index.js";
 export { JSONStorage } from "./json/index.js";
 export { DeferredPromise, SmartPromise, TimedPromise } from "./promises/index.js";
-
-export { Clock, Countdown } from "./timers/index.js";
-
-export { GameLoop };
+export { Clock, Countdown, GameLoop } from "./timers/index.js";

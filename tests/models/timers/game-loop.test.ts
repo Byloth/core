@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { FatalErrorException, RuntimeException } from "../../src/index.js";
-import { GameLoop } from "../../src/index.js";
+import { FatalErrorException, RuntimeException } from "../../../src/index.js";
+import { GameLoop } from "../../../src/index.js";
 
 describe("GameLoop", () =>
 {

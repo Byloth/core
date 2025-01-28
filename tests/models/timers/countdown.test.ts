@@ -48,11 +48,12 @@ describe("Countdown", () =>
         countdown.onStop(_callback);
 
         const { rejects } = expect(countdown.start());
-        countdown.stop("This is a test!");
+        const reason = new Error("An error occurred");
+        countdown.stop(reason);
 
-        await rejects.toBe("This is a test!");
+        await rejects.toBe(reason);
 
-        expect(_callback).toHaveBeenCalledWith("This is a test!");
+        expect(_callback).toHaveBeenCalledWith(reason);
     });
     it("Should throw `RuntimeException` if stop is called before start", () =>
     {
