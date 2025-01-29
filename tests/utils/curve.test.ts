@@ -45,7 +45,7 @@ describe("Curve", () =>
             );
         });
 
-        it("Should throw a `ValueException` if base is negative", () =>
+        it("Should throw `ValueException` if base is negative", () =>
         {
             expect(() => Curve.Exponential(6, -1)).toThrow(ValueException);
         });
