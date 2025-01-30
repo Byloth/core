@@ -1,5 +1,6 @@
 import AggregatedAsyncIterator from "../aggregators/aggregated-async-iterator.js";
 import { ValueException } from "../exceptions/index.js";
+import type { MaybePromise } from "../types.js";
 
 import type {
     GeneratorFunction,
@@ -897,11 +898,13 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * @returns A promise that will resolve to the final result of the iterator.
      */
-    public async return(value?: R): Promise<IteratorResult<T, R>>
+    public async return(value?: MaybePromise<R>): Promise<IteratorResult<T, R>>
     {
-        if (this._iterator.return) { return this._iterator.return(value); }
+        const _value = (await value) as R;
 
-        return { done: true, value: value as R };
+        if (this._iterator.return) { return await this._iterator.return(_value); }
+
+        return { done: true, value: _value };
     }
 
     /**

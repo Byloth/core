@@ -46,12 +46,34 @@ describe("SmartIterator", () =>
         expect(iterator.toArray()).toEqual([1, 2, 3]);
     });
 
-    it("Should map values correctly", () =>
+    it("Should return `true` if every value matches the predicate", () =>
     {
-        const iterator = new SmartIterator([1, 2, 3]);
+        const iterator = new SmartIterator([2, 4, 6, 8, 10]);
 
-        const results = iterator.map((x) => x * 2);
-        expect(results.toArray()).toEqual([2, 4, 6]);
+        const results = iterator.every((value) => value % 2 === 0);
+        expect(results).toBe(true);
+    });
+    it("Should return `false` if not every value matches the predicate", () =>
+    {
+        const iterator = new SmartIterator([2, 4, 5, 6, 7, 8, 10]);
+
+        const results = iterator.every((value) => value % 2 === 0);
+        expect(results).toBe(false);
+    });
+
+    it("Should return `true` if some values match the predicate", () =>
+    {
+        const iterator = new SmartIterator([1, 2, 3, 4, 5]);
+
+        const results = iterator.some((value) => value % 2 === 0);
+        expect(results).toBe(true);
+    });
+    it("Should return `false` if no values match the predicate", () =>
+    {
+        const iterator = new SmartIterator([1, 3, 5, 7, 9]);
+
+        const results = iterator.some((value) => value % 2 === 0);
+        expect(results).toBe(false);
     });
 
     it("Should filter values correctly", () =>
@@ -60,6 +82,13 @@ describe("SmartIterator", () =>
 
         const results = iterator.filter((x) => x % 2 === 0);
         expect(results.toArray()).toEqual([2, 4]);
+    });
+    it("Should map values correctly", () =>
+    {
+        const iterator = new SmartIterator([1, 2, 3]);
+
+        const results = iterator.map((x) => x * 2);
+        expect(results.toArray()).toEqual([2, 4, 6]);
     });
 
     it("Should reduce values correctly", () =>
@@ -84,19 +113,12 @@ describe("SmartIterator", () =>
         expect(() => iterator.reduce((acc, value) => acc + value)).toThrow(ValueException);
     });
 
-    it("Should find the first matching value", () =>
+    it("Should flatten elements with `flatMap`", () =>
     {
-        const iterator = new SmartIterator([1, 2, 3, 4, 5]);
+        const iterator = new SmartIterator([1, [2, 3], 4, 5, [6, 7, 8]]);
 
-        const results = iterator.find((x) => x > 3);
-        expect(results).toBe(4);
-    });
-    it("Should return undefined when no matching value is found", () =>
-    {
-        const iterator = new SmartIterator([1, 2, 3]);
-
-        const results = iterator.find((x) => x > 3);
-        expect(results).toBeUndefined();
+        const results = iterator.flatMap((x) => x);
+        expect(results.toArray()).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     });
 
     it("Should drop the specified number of elements", () =>
@@ -114,13 +136,21 @@ describe("SmartIterator", () =>
         expect(results.toArray()).toEqual([1, 2, 3]);
     });
 
-    it("Should count the number of elements", () =>
+    it("Should find the first matching value", () =>
     {
         const iterator = new SmartIterator([1, 2, 3, 4, 5]);
 
-        const results = iterator.count();
-        expect(results).toBe(5);
+        const results = iterator.find((x) => x > 3);
+        expect(results).toBe(4);
     });
+    it("Should return `undefined` when no matching value is found", () =>
+    {
+        const iterator = new SmartIterator([1, 2, 3]);
+
+        const results = iterator.find((x) => x > 3);
+        expect(results).toBeUndefined();
+    });
+
     it("Should enumerate elements with their indices", () =>
     {
         const iterator = new SmartIterator(["A", "B", "C"]);
@@ -135,22 +165,20 @@ describe("SmartIterator", () =>
         const results = iterator.unique();
         expect(results.toArray()).toEqual([1, 2, 3, 4, 5]);
     });
-
-    it("Should `flatMap` elements correctly", () =>
+    it("Should count the number of elements", () =>
     {
-        const iterator = new SmartIterator([1, [2, 3], 4, 5, [6, 7, 8]]);
+        const iterator = new SmartIterator([1, 2, 3, 4, 5]);
 
-        const results = iterator.flatMap((x) => x);
-        expect(results.toArray()).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+        const results = iterator.count();
+        expect(results).toBe(5);
     });
 
-    it("Should execute `forEach` correctly", () =>
+    it("Should iterate over elements with `forEach`", () =>
     {
-        const _iteratee = vi.fn((x: number) => results.push(x));
+        const results: number[] = [];
+        const _iteratee = vi.fn((x: number) => { results.push(x); });
 
         const iterator = new SmartIterator([1, 2, 3]);
-        const results: number[] = [];
-
         iterator.forEach(_iteratee);
 
         expect(results).toEqual([1, 2, 3]);
@@ -159,15 +187,20 @@ describe("SmartIterator", () =>
 
     it("Should handle return method correctly", () =>
     {
-        const _iterator: Iterator<number, string, undefined> = {
+        const _iterator: IterableIterator<number, string> = {
             next: () => ({ done: false, value: 1 }),
-            return: () => ({ done: true, value: "done" })
+            return: (value?: string) =>
+            {
+                return { done: true, value: value ?? "Naturally done!" };
+            },
+
+            [Symbol.iterator]: () => _iterator
         };
 
-        const iterator = new SmartIterator(_iterator);
-        const results = iterator.return();
+        const iterator = new SmartIterator(_iterator as Iterator<number, string>);
+        const results = iterator.return("Prematurely done!");
 
-        expect(results).toEqual({ done: true, value: "done" });
+        expect(results).toEqual({ done: true, value: "Prematurely done!" });
     });
     it("Should handle throw method correctly", () =>
     {
