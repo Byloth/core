@@ -26,10 +26,9 @@ describe("SmartPromise", () =>
             setTimeout(() => resolve("Hello, world!"), 100);
         });
 
-        vi.advanceTimersByTime(100);
+        promise.then((value) => { expect(value).toBe("Hello, world!"); });
 
-        const result = await promise;
-        expect(result).toBe("Hello, world!");
+        await vi.advanceTimersByTimeAsync(100);
 
         expect(promise.isPending).toBe(false);
         expect(promise.isFulfilled).toBe(true);
@@ -42,42 +41,34 @@ describe("SmartPromise", () =>
             setTimeout(() => reject(new Error("An error occurred")), 100);
         });
 
-        vi.advanceTimersByTime(100);
+        promise.catch((error) => { expect(error).toEqual(new Error("An error occurred")); });
 
-        try
-        {
-            await promise;
-        }
-        catch (error)
-        {
-            expect(error).toEqual(new Error("An error occurred"));
+        await vi.advanceTimersByTimeAsync(100);
 
-            expect(promise.isPending).toBe(false);
-            expect(promise.isFulfilled).toBe(false);
-            expect(promise.isRejected).toBe(true);
-        }
+        expect(promise.isPending).toBe(false);
+        expect(promise.isFulfilled).toBe(false);
+        expect(promise.isRejected).toBe(true);
     });
 
     it("Should wrap an existing promise", async () =>
     {
-        const nativePromise = new Promise<string>((resolve, reject) =>
+        const _promise = new Promise<string>((resolve, reject) =>
         {
             setTimeout(() => resolve("Hello, world!"), 100);
         });
 
-        const smartPromise = SmartPromise.FromPromise(nativePromise);
-        expect(smartPromise.isPending).toBe(true);
-        expect(smartPromise.isFulfilled).toBe(false);
-        expect(smartPromise.isRejected).toBe(false);
+        const promise = SmartPromise.FromPromise(_promise);
+        expect(promise.isPending).toBe(true);
+        expect(promise.isFulfilled).toBe(false);
+        expect(promise.isRejected).toBe(false);
 
-        vi.advanceTimersByTime(100);
+        promise.then((value) => { expect(value).toBe("Hello, world!"); });
 
-        const result = await smartPromise;
-        expect(result).toBe("Hello, world!");
+        await vi.advanceTimersByTimeAsync(100);
 
-        expect(smartPromise.isPending).toBe(false);
-        expect(smartPromise.isFulfilled).toBe(true);
-        expect(smartPromise.isRejected).toBe(false);
+        expect(promise.isPending).toBe(false);
+        expect(promise.isFulfilled).toBe(true);
+        expect(promise.isRejected).toBe(false);
     });
 
     it("Should handle then callbacks", async () =>
@@ -87,10 +78,10 @@ describe("SmartPromise", () =>
             setTimeout(() => resolve("Hello, world!"), 100);
         });
 
-        vi.advanceTimersByTime(100);
+        promise.then((value) => `${value}!!`)
+            .then((value) => { expect(value).toBe("Hello, world!!!"); });
 
-        const result = await promise.then((value) => `${value}!!`);
-        expect(result).toBe("Hello, world!!!");
+        await vi.advanceTimersByTimeAsync(100);
 
         expect(promise.isPending).toBe(false);
         expect(promise.isFulfilled).toBe(true);
@@ -103,10 +94,10 @@ describe("SmartPromise", () =>
             setTimeout(() => reject(new Error("An error occurred")), 100);
         });
 
-        vi.advanceTimersByTime(100);
+        promise.catch((error) => "Recovered from error")
+            .then((value) => { expect(value).toBe("Recovered from error"); });
 
-        const result = await promise.catch((error) => "Recovered from error");
-        expect(result).toBe("Recovered from error");
+        await vi.advanceTimersByTimeAsync(100);
 
         expect(promise.isPending).toBe(false);
         expect(promise.isFulfilled).toBe(false);
@@ -119,10 +110,10 @@ describe("SmartPromise", () =>
             setTimeout(() => resolve("Hello, world!"), 100);
         });
 
-        vi.advanceTimersByTime(100);
-
         let finallyCalled = false;
-        await promise.finally(() => { finallyCalled = true; });
+        promise.finally(() => { finallyCalled = true; });
+
+        await vi.advanceTimersByTimeAsync(100);
 
         expect(finallyCalled).toBe(true);
 

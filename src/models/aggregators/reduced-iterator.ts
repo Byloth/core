@@ -507,9 +507,75 @@ export default class ReducedIterator<K extends PropertyKey, T>
         });
     }
 
-    public find()
+    /**
+     * Finds the first element of the reduced iterator that satisfies the given condition.
+     *
+     * This method will iterate over all the elements of the iterator checking if they satisfy the condition.  
+     * The first element that satisfies the condition will be returned immediately.
+     *
+     * Only the elements that are necessary to find the first
+     * satisfying one will be consumed from the original iterator.  
+     * The rest of the iterator will be available for further consumption.
+     *
+     * Also note that:
+     * - If no element satisfies the condition, `undefined` will be returned once the entire iterator is consumed.
+     * - If the iterator is infinite and no element satisfies the condition, the method will never return.
+     *
+     * ```ts
+     * const results = new SmartIterator<number>([-3, -3, -1, 0, 1, 2, 5, 6, 8])
+     *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, accumulator, value) => accumulator + value)
+     *     .find((key, value) => value > 0);
+     * 
+     * console.log(results); // 16
+     * 
+     * @param predicate The condition to check for each element of the iterator.
+     *
+     * @returns The first element that satisfies the condition, `undefined` otherwise.
+     */
+    public find(predicate: KeyedIteratee<K, T, boolean>): T | undefined;
+
+    /**
+     * Finds the first element of the reduced iterator that satisfies the given type guard predicate.
+     *
+     * This method will iterate over all the elements of the iterator checking if they satisfy the condition.  
+     * The first element that satisfies the condition will be returned immediately.
+     *
+     * Only the elements that are necessary to find the first
+     * satisfying one will be consumed from the original iterator.  
+     * The rest of the iterator will be available for further consumption.
+     *
+     * Also note that:
+     * - If no element satisfies the condition, `undefined` will be returned once the entire iterator is consumed.
+     * - If the iterator is infinite and no element satisfies the condition, the method will never return.
+     *
+     * ```ts
+     * const results = new SmartIterator<number | string>(["-3", -3, "-1", 0, 1, 2, "5", 6, 8])
+     *     .groupBy((value) => Number(value) % 2 === 0 ? "even" : "odd")
+     *     .reduce((key, accumulator, value) => accumulator + value)
+     *     .find<number>((key, value) => typeof value === "number");
+     * 
+     * console.log(results); // 16
+     *
+     * @template S
+     * The type of the elements that satisfy the condition.  
+     * This allows the type-system to infer the correct type of the result.
+     *
+     * It must be a subtype of the original type of the elements.
+     *
+     * @param predicate The type guard condition to check for each element of the iterator.
+     *
+     * @returns The first element that satisfies the condition, `undefined` otherwise.
+     */
+    public find<S extends T>(predicate: KeyedTypeGuardPredicate<K, T, S>): S | undefined;
+    public find(predicate: KeyedIteratee<K, T, boolean>): T | undefined
     {
-        // TODO!
+        for (const [index, [key, element]] of this._elements.enumerate())
+        {
+            if (predicate(key, element, index)) { return element; }
+        }
+
+        return undefined;
     }
 
     /**

@@ -16,10 +16,9 @@ describe("TimedPromise", () =>
 
         }, 500);
 
-        vi.advanceTimersByTime(500);
+        promise.then((result) => { expect(result).toBe("Hello, world!"); });
 
-        const result = await promise;
-        expect(result).toBe("Hello, world!");
+        await vi.advanceTimersByTimeAsync(500);
     });
     it("Should reject with `TimeoutException` after timeout", async () =>
     {
@@ -29,17 +28,13 @@ describe("TimedPromise", () =>
 
         }, 500);
 
-        vi.advanceTimersByTime(500);
-
-        try
-        {
-            await promise;
-        }
-        catch (error)
+        promise.catch((error) =>
         {
             expect(error).toBeInstanceOf(TimeoutException);
             expect((error as TimeoutException).message).toBe("The operation has timed out.");
-        }
+        });
+
+        await vi.advanceTimersByTimeAsync(500);
     });
     it("Should reject with provided reason before timeout", async () =>
     {
@@ -50,26 +45,19 @@ describe("TimedPromise", () =>
 
         }, 500);
 
-        vi.advanceTimersByTime(500);
+        promise.catch((error) => { expect(error).toBe(reason); });
 
-        try
-        {
-            await promise;
-        }
-        catch (error)
-        {
-            expect(error).toBe(reason);
-        }
+        await vi.advanceTimersByTimeAsync(500);
     });
 
     it("Should resolve immediately if no timeout is provided", async () =>
     {
-        const result = await new TimedPromise<string>((resolve) =>
+        const promise = new TimedPromise<string>((resolve) =>
         {
             resolve("Immediate resolve");
         });
 
-        expect(result).toBe("Immediate resolve");
+        promise.then((result) => { expect(result).toBe("Immediate resolve"); });
     });
     it("Should reject immediately if no timeout is provided", async () =>
     {
@@ -78,16 +66,12 @@ describe("TimedPromise", () =>
             setTimeout(() => resolve("Hello, world!"), 100);
         });
 
-        vi.advanceTimersByTime(100);
-
-        try
-        {
-            await promise;
-        }
-        catch (error)
+        promise.catch((error) =>
         {
             expect(error).toBeInstanceOf(TimeoutException);
             expect((error as TimeoutException).message).toBe("The operation has timed out.");
-        }
+        });
+
+        await vi.advanceTimersByTimeAsync(100);
     });
 });

@@ -235,7 +235,8 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * @param predicate The condition to check for each element of the iterator.
      *
-     * @returns A promise that will resolve to `true` if all elements satisfy the condition, `false` otherwise.
+     * @returns
+     * A {@link Promise} that will resolve to `true` if all elements satisfy the condition, `false` otherwise.
      */
     public async every(predicate: MaybeAsyncIteratee<T, boolean>): Promise<boolean>
     {
@@ -274,7 +275,8 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * @param predicate The condition to check for each element of the iterator.
      *
-     * @returns A promise that will resolve to `true` if any element satisfies the condition, `false` otherwise.
+     * @returns
+     * A {@link Promise} that will resolve to `true` if any element satisfies the condition, `false` otherwise.
      */
     public async some(predicate: MaybeAsyncIteratee<T, boolean>): Promise<boolean>
     {
@@ -434,7 +436,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * @param reducer The reducer function to apply to each element of the iterator.
      *
-     * @returns A promise that will resolve to the final result of the reduction.
+     * @returns A {@link Promise} that will resolve to the final result of the reduction.
      */
     public async reduce(reducer: MaybeAsyncReducer<T, T>): Promise<T>;
 
@@ -462,7 +464,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * @param reducer The reducer function to apply to each element of the iterator.
      * @param initialValue The initial value of the accumulator.
      *
-     * @returns A promise that will resolve to the final result of the reduction.
+     * @returns A {@link Promise} that will resolve to the final result of the reduction.
      */
     public async reduce<A>(reducer: MaybeAsyncReducer<T, A>, initialValue: A): Promise<A>;
     public async reduce<A>(reducer: MaybeAsyncReducer<T, A>, initialValue?: A): Promise<A>
@@ -661,7 +663,8 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * @param predicate The condition to check for each element of the iterator.
      *
-     * @returns A promise that will resolve to the first element that satisfies the condition, `undefined` otherwise.
+     * @returns
+     * A {@link Promise} that will resolve to the first element that satisfies the condition, `undefined` otherwise.
      */
     public async find(predicate: MaybeAsyncIteratee<T, boolean>): Promise<T | undefined>;
 
@@ -694,7 +697,8 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * @param predicate The type guard condition to check for each element of the iterator.
      *
-     * @returns A promise that will resolve to the first element that satisfies the condition, `undefined` otherwise.
+     * @returns
+     * A {@link Promise} that will resolve to the first element that satisfies the condition, `undefined` otherwise. 
      */
     public async find<S extends T>(predicate: MaybeAsyncIteratee<T, boolean>): Promise<S | undefined>;
     public async find(predicate: MaybeAsyncIteratee<T, boolean>): Promise<T | undefined>
@@ -793,7 +797,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // 5
      * ```
      *
-     * @returns A promise that will resolve to the number of elements in the iterator.
+     * @returns A {@link Promise} that will resolve to the number of elements in the iterator.
      */
     public async count(): Promise<number>
     {
@@ -825,7 +829,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * @param iteratee The function to apply to each element of the iterator.
      *
-     * @returns A promise that will resolve once the iteration is complete.
+     * @returns A {@link Promise} that will resolve once the iteration is complete.
      */
     public async forEach(iteratee: MaybeAsyncIteratee<T>): Promise<void>
     {
@@ -864,7 +868,8 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * @param values The value to pass to the next element, if required.
      *
-     * @returns A promise that will resolve to the result of the iteration, containing the value of the operation.
+     * @returns
+     * A {@link Promise} that will resolve to the result of the iteration, containing the value of the operation.
      */
     public next(...values: N extends undefined ? [] : [N]): Promise<IteratorResult<T, R>>
     {
@@ -896,7 +901,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * @param value The final value of the iterator.
      *
-     * @returns A promise that will resolve to the final result of the iterator.
+     * @returns A {@link Promise} that will resolve to the final result of the iterator.
      */
     public async return(value?: MaybePromise<R>): Promise<IteratorResult<T, R>>
     {
@@ -941,7 +946,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * @param error The error to throw into the iterator.
      *
-     * @returns A promise that will resolve to the final result of the iterator.
+     * @returns A {@link Promise} that will resolve to the final result of the iterator.
      */
     public throw(error: unknown): Promise<IteratorResult<T, R>>
     {
@@ -1001,7 +1006,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // [0, 1, 2, 3, 4]
      * ```
      *
-     * @returns A promise that will resolve to an array containing all elements of the iterator.
+     * @returns A {@link Promise} that will resolve to an array containing all elements of the iterator.
      */
     public toArray(): Promise<T[]>
     {
