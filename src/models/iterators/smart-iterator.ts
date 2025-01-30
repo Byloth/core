@@ -57,7 +57,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * const iterator = new SmartIterator<number, void, number>({
      *     _sum: 0, _count: 0,
      *
-     *     next: function (value: number)
+     *     next: function(value: number)
      *     {
      *         this._sum += value;
      *         this._count += 1;

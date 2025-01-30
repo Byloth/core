@@ -76,7 +76,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * const iterator = new SmartAsyncIterator<number, void, number>({
      *     _sum: 0, _count: 0,
      *
-     *     next: function (value: number)
+     *     next: function(value: number)
      *     {
      *         this._sum += value;
      *         this._count += 1;
@@ -97,7 +97,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * const iterator = new SmartAsyncIterator<number, void, number>({
      *     _sum: 0, _count: 0,
      *
-     *     next: async function (value: number)
+     *     next: async function(value: number)
      *     {
      *         this._sum += value;
      *         this._count += 1;

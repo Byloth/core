@@ -59,37 +59,37 @@ describe("Countdown", () =>
         expect(() => countdown.stop()).toThrow(RuntimeException);
     });
 
-    it("Should publish tick events", () =>
+    it("Should publish tick events", async () =>
     {
         const _callback = vi.fn();
 
         countdown.onTick(_callback);
         countdown.start();
 
-        vi.advanceTimersByTime(304);
+        await vi.advanceTimersByTimeAsync(304);
 
         expect(_callback).toHaveBeenCalledTimes(20);
     });
-    it("Should execute tick callback only if elapsed time is greater than tickStep", () =>
+    it("Should execute tick callback only if elapsed time is greater than tickStep", async () =>
     {
         const _callback = vi.fn();
 
         countdown.onTick(_callback, 250);
         countdown.start();
 
-        vi.advanceTimersByTime(1_024);
+        await vi.advanceTimersByTimeAsync(1_024);
 
         expect(_callback).toHaveBeenCalledTimes(4);
     });
 
-    it("Should publish expire event when time is up", () =>
+    it("Should publish expire event when time is up", async () =>
     {
         const _callback = vi.fn();
 
         countdown.onExpire(_callback);
         countdown.start();
 
-        vi.advanceTimersByTime(10_000);
+        await vi.advanceTimersByTimeAsync(10_000);
 
         expect(_callback).toHaveBeenCalled();
     });

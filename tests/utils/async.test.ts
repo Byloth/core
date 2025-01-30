@@ -7,17 +7,21 @@ describe("delay", () =>
 {
     it("Should resolve after the specified number of milliseconds", async () =>
     {
-        let milliseconds = 100;
+        vi.useFakeTimers();
 
-        const start = Date.now();
-        await delay(milliseconds);
-        const difference = Date.now() - start;
+        const milliseconds = 100;
 
-        milliseconds -= 1;
-        expect(difference).toBeGreaterThanOrEqual(milliseconds);
+        let resolved = false;
+        delay(milliseconds)
+            .then(() => { resolved = true; });
 
-        milliseconds += (milliseconds / 10);
-        expect(difference).toBeLessThan(milliseconds);
+        await vi.advanceTimersByTimeAsync(milliseconds - 1);
+        expect(resolved).toBe(false);
+
+        await vi.advanceTimersByTimeAsync(1);
+        expect(resolved).toBe(true);
+
+        vi.clearAllTimers();
     });
 });
 

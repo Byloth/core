@@ -56,32 +56,32 @@ describe("Clock", () =>
         expect(() => clock.stop()).toThrow(FatalErrorException);
     });
 
-    it("Should publish tick event at each tick", () =>
+    it("Should publish tick event at each tick", async () =>
     {
         const _callback = vi.fn();
 
         clock.onTick(_callback);
         clock.start();
 
-        vi.advanceTimersByTime(304);
+        await vi.advanceTimersByTimeAsync(304);
 
         expect(_callback).toHaveBeenCalledTimes(20);
     });
 
-    it("Should execute tick callback only if elapsed time is greater than tickStep", () =>
+    it("Should execute tick callback only if elapsed time is greater than tickStep", async () =>
     {
         const _callback = vi.fn();
 
         clock.onTick(_callback, 600);
         clock.start();
 
-        vi.advanceTimersByTime(216);
+        await vi.advanceTimersByTimeAsync(216);
         expect(_callback).toHaveBeenCalledTimes(0);
 
-        vi.advanceTimersByTime(1_000);
+        await vi.advanceTimersByTimeAsync(1_000);
         expect(_callback).toHaveBeenCalledTimes(2);
 
-        vi.advanceTimersByTime(1_216);
+        await vi.advanceTimersByTimeAsync(1_216);
         expect(_callback).toHaveBeenCalledTimes(4);
     });
     it("Should throw `RangeException` if tickStep is negative", () =>

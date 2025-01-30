@@ -13,9 +13,9 @@ describe("chain", () =>
     });
     it("Should chain multiple iterables into a single one", () =>
     {
-        const result = Array.from(chain([1, 2, 3], [4, 5, 6], [7, 8, 9]));
+        const results = Array.from(chain([1, 2, 3], [4, 5, 6], [7, 8, 9]));
 
-        expect(result).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        expect(results).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     });
 });
 
@@ -38,9 +38,9 @@ describe("enumerate", () =>
     });
     it("Should enumerate the elements of an iterable", () =>
     {
-        const result = Array.from(enumerate(["A", "M", "N", "Z"]));
+        const results = Array.from(enumerate(["A", "M", "N", "Z"]));
 
-        expect(result).toEqual([[0, "A"], [1, "M"], [2, "N"], [3, "Z"]]);
+        expect(results).toEqual([[0, "A"], [1, "M"], [2, "N"], [3, "Z"]]);
     });
 });
 
@@ -104,9 +104,9 @@ describe("unique", () =>
     });
     it("Should filter the elements of an iterable ensuring they are all unique", () =>
     {
-        const result = Array.from(unique([1, 1, 2, 3, 2, 3, 4, 5, 5, 4]));
+        const results = Array.from(unique([1, 1, 2, 3, 2, 3, 4, 5, 5, 4]));
 
-        expect(result).toEqual([1, 2, 3, 4, 5]);
+        expect(results).toEqual([1, 2, 3, 4, 5]);
     });
 });
 
@@ -120,8 +120,8 @@ describe("zip", () =>
     });
     it("Should zip two iterables into a single one", () =>
     {
-        const result = Array.from(zip([1, 2, 3, 4], ["A", "M", "N", "Z"]));
+        const results = Array.from(zip([1, 2, 3, 4], ["A", "M", "N", "Z"]));
 
-        expect(result).toEqual([[1, "A"], [2, "M"], [3, "N"], [4, "Z"]]);
+        expect(results).toEqual([[1, "A"], [2, "M"], [3, "N"], [4, "Z"]]);
     });
 });
