@@ -177,7 +177,7 @@ describe("SmartAsyncIterator", () =>
         expect(resolved).toBe(true);
     });
 
-    it("Should filter values correctly", async () =>
+    it("Should filter values based on a condition", async () =>
     {
         const iterator = new SmartAsyncIterator(_toAsync([1, 2, 3, 4, 5]));
         const results = iterator.filter(async (value) => value % 2 === 0);
@@ -197,7 +197,7 @@ describe("SmartAsyncIterator", () =>
         await vi.advanceTimersByTimeAsync(100);
         expect(resolved).toBe(true);
     });
-    it("Should map values correctly", async () =>
+    it("Should map values using a transformation function", async () =>
     {
         const iterator = new SmartAsyncIterator(_toAsync([1, 2, 3, 4, 5]));
         const results = iterator.map(async (value) => value * 2);
@@ -218,7 +218,7 @@ describe("SmartAsyncIterator", () =>
         expect(resolved).toBe(true);
     });
 
-    it("Should reduce values correctly", async () =>
+    it("Should reduce values using a reducer function", async () =>
     {
         const iterator = new SmartAsyncIterator(_toAsync([1, 2, 3, 4, 5]));
 
@@ -237,7 +237,7 @@ describe("SmartAsyncIterator", () =>
         await vi.advanceTimersByTimeAsync(100);
         expect(resolved).toBe(true);
     });
-    it("Should reduce values with initial value correctly", async () =>
+    it("Should reduce values using a reducer function with initial value", async () =>
     {
         const iterator = new SmartAsyncIterator(_toAsync([1, 2, 3, 4, 5]));
 
@@ -271,7 +271,7 @@ describe("SmartAsyncIterator", () =>
         }
     });
 
-    it("Should flatten elements with `flatMap`", async () =>
+    it("Should flatten values using a transformation function", async () =>
     {
         const iterator = new SmartAsyncIterator(_toAsync([1, [2, 3], 4, 5, [6, 7, 8]]));
         const results = iterator.flatMap(async (value) => value);
@@ -292,7 +292,7 @@ describe("SmartAsyncIterator", () =>
         expect(resolved).toBe(true);
     });
 
-    it("Should drop the specified number of elements", async () =>
+    it("Should drop the specified number of values", async () =>
     {
         const iterator = new SmartAsyncIterator(_toAsync([1, 2, 3, 4, 5]));
         const results = iterator.drop(3);
@@ -312,7 +312,7 @@ describe("SmartAsyncIterator", () =>
         await vi.advanceTimersByTimeAsync(100);
         expect(resolved).toBe(true);
     });
-    it("Should take the specified number of elements", async () =>
+    it("Should take the specified number of values", async () =>
     {
         const iterator = new SmartAsyncIterator(_toAsync([1, 2, 3, 4, 5]));
         const results = iterator.take(3);
@@ -333,7 +333,7 @@ describe("SmartAsyncIterator", () =>
         expect(resolved).toBe(true);
     });
 
-    it("Should find the first matching value", async () =>
+    it("Should find the first value that satisfies a condition", async () =>
     {
         const iterator = new SmartAsyncIterator(_toAsync([1, 2, 3, 4, 5]));
 
@@ -372,7 +372,7 @@ describe("SmartAsyncIterator", () =>
         expect(resolved).toBe(true);
     });
 
-    it("Should enumerate elements with their indices", async () =>
+    it("Should enumerate values with their indices", async () =>
     {
         const iterator = new SmartAsyncIterator(_toAsync(["A", "B", "C"]));
         const results = iterator.enumerate();
@@ -392,7 +392,7 @@ describe("SmartAsyncIterator", () =>
         await vi.advanceTimersByTimeAsync(100);
         expect(resolved).toBe(true);
     });
-    it("Should remove duplicate elements", async () =>
+    it("Should remove duplicate values", async () =>
     {
         const iterator = new SmartAsyncIterator(_toAsync([1, 2, 2, 1, 3, 1, 4, 3, 4, 5, 5]));
         const results = iterator.unique();
@@ -412,7 +412,7 @@ describe("SmartAsyncIterator", () =>
         await vi.advanceTimersByTimeAsync(100);
         expect(resolved).toBe(true);
     });
-    it("Should count the number of elements", async () =>
+    it("Should count the number of values", async () =>
     {
         const iterator = new SmartAsyncIterator(_toAsync([1, 2, 3, 4, 5]));
         const results = iterator.count();
@@ -432,7 +432,7 @@ describe("SmartAsyncIterator", () =>
         expect(resolved).toBe(true);
     });
 
-    it("Should iterate over elements with `forEach`", async () =>
+    it("Should iterate over all values", async () =>
     {
         const results: number[] = [];
         const _iteratee = vi.fn(async (x: MaybePromise<number>) => { results.push(await x); });
@@ -501,7 +501,7 @@ describe("SmartAsyncIterator", () =>
         }
     });
 
-    it("Should group elements by key", async () =>
+    it("Should group values by key", async () =>
     {
         const iterator = new SmartAsyncIterator(_toAsync([1, 2, 3, 4, 5, 6]));
         const results = iterator.groupBy(async (value) => (value % 2 === 0 ? "even" : "odd"));

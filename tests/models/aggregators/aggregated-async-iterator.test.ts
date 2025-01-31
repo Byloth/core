@@ -239,18 +239,18 @@ describe("AggregatedAsyncIterator", () =>
         expect(resolved).toBe(true);
     });
 
-    it("Should find the first element that satisfies a condition", async () =>
+    it("Should find the first element of each group that satisfies a condition", async () =>
     {
         const aggregator = new SmartAsyncIterator(_toAsync([-3, -1, 0, 2, 3, 5, 6, 8]))
             .groupBy(async (value) => value % 2 === 0 ? "even" : "odd");
 
         let resolved = false;
-        aggregator.find(async (key, value) => value >= 0)
+        aggregator.find(async (key, value) => value > 5)
             .then((result) =>
             {
                 resolved = true;
 
-                expect(result.toObject()).toEqual({ odd: 3, even: 0 });
+                expect(result.toObject()).toEqual({ odd: undefined, even: 6 });
             });
 
         await vi.advanceTimersByTimeAsync(700);
@@ -260,7 +260,7 @@ describe("AggregatedAsyncIterator", () =>
         expect(resolved).toBe(true);
     });
 
-    it("Should enumerate elements", async () =>
+    it("Should enumerate the elements with their indices within each group", async () =>
     {
         const aggregator = new SmartAsyncIterator(_toAsync([-3, 0, 2, -1, 3]))
             .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -281,7 +281,7 @@ describe("AggregatedAsyncIterator", () =>
         await vi.advanceTimersByTimeAsync(100);
         expect(resolved).toBe(true);
     });
-    it("Should remove duplicate elements", async () =>
+    it("Should remove all duplicate elements within each group", async () =>
     {
         const aggregator = new SmartAsyncIterator(_toAsync([-3, -1, 0, 2, 3, 6, -3, -1, 0, 5, 6, 8, 0, 2]))
             .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -302,7 +302,7 @@ describe("AggregatedAsyncIterator", () =>
         await vi.advanceTimersByTimeAsync(100);
         expect(resolved).toBe(true);
     });
-    it("Should group elements by key and count them", async () =>
+    it("Should count the number of elements within each group", async () =>
     {
         const aggregator = new SmartAsyncIterator(_toAsync([-3, -1, 0, 2, 3, 5, 6, 8]))
             .groupBy(async (value) => value % 2 === 0 ? "even" : "odd");
@@ -323,14 +323,16 @@ describe("AggregatedAsyncIterator", () =>
         expect(resolved).toBe(true);
     });
 
-    it("Should iterate over the elements of the iterator", async () =>
+    it("Should iterate over the elements", async () =>
     {
         const results: [string, number, number][] = [];
+        const _iteratee = vi.fn((key: string, value: number, index: number) => { results.push([key, value, index]); });
+
         const aggregator = new SmartAsyncIterator(_toAsync([-3, 0, 2, -1, 3]))
             .groupBy(async (value) => value % 2 === 0 ? "even" : "odd");
 
         let resolved = false;
-        aggregator.forEach(async (key, value, index) => { results.push([key, value, index]); })
+        aggregator.forEach(_iteratee)
             .then(() =>
             {
                 resolved = true;
@@ -349,9 +351,11 @@ describe("AggregatedAsyncIterator", () =>
 
         await vi.advanceTimersByTimeAsync(100);
         expect(resolved).toBe(true);
+
+        expect(_iteratee).toHaveBeenCalledTimes(5);
     });
 
-    it("Should reorganize elements by a new key", async () =>
+    it("Should change the key of each element on which the iterator is aggregated", async () =>
     {
         const aggregator = new SmartAsyncIterator(_toAsync([-3, -1, 0, 2, 3, 5, 6, 8]))
             .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -374,7 +378,7 @@ describe("AggregatedAsyncIterator", () =>
         expect(resolved).toBe(true);
     });
 
-    it("Should return all keys of the iterator", async () =>
+    it("Should return all keys", async () =>
     {
         const keys = new SmartAsyncIterator(_toAsync([-3, Symbol(), "A", { }, null, [1, 2, 3], false]))
             .groupBy(async (value) => typeof value)
@@ -395,7 +399,7 @@ describe("AggregatedAsyncIterator", () =>
         await vi.advanceTimersByTimeAsync(100);
         expect(resolved).toBe(true);
     });
-    it("Should return all entries of the iterator", async () =>
+    it("Should return all entries", async () =>
     {
         const entries = new SmartAsyncIterator(_toAsync([-3, 0, 2, -1, 3]))
             .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -422,7 +426,7 @@ describe("AggregatedAsyncIterator", () =>
         await vi.advanceTimersByTimeAsync(100);
         expect(resolved).toBe(true);
     });
-    it("Should return all values of the iterator", async () =>
+    it("Should return all values", async () =>
     {
         const values = new SmartAsyncIterator(_toAsync([-3, -1, 0, 2, 3, 5, 6, 8]))
             .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")

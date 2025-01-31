@@ -1,10 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { SmartIterator } from "../../../src/index.js";
 
 describe("ReducedIterator", () =>
 {
-    it("Should return `true` if every value matches the predicate", () =>
+    it("Should return `true` if every element matches the predicate", () =>
     {
         const reduced = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -13,7 +13,7 @@ describe("ReducedIterator", () =>
         const results = reduced.every((key, value) => value > 0);
         expect(results).toBe(true);
     });
-    it("Should return `false` if not every value matches the predicate", () =>
+    it("Should return `false` if not every element matches the predicate", () =>
     {
         const reduced = new SmartIterator([-3, -1, 0, 2, -3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -23,7 +23,7 @@ describe("ReducedIterator", () =>
         expect(results).toBe(false);
     });
 
-    it("Should return `true` if some values match the predicate", () =>
+    it("Should return `true` if some elements match the predicate", () =>
     {
         const reduced = new SmartIterator([-3, -1, 0, 2, -3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -32,7 +32,7 @@ describe("ReducedIterator", () =>
         const results = reduced.some((key, value) => value > 0);
         expect(results).toBe(true);
     });
-    it("Should return `false` if no values match the predicate", () =>
+    it("Should return `false` if no elements match the predicate", () =>
     {
         const reduced = new SmartIterator([-3, -1, 0, -2, -3, -5, 6, -8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -70,7 +70,7 @@ describe("ReducedIterator", () =>
         const results = reduced.reduce((key, acc, value) => acc + value);
         expect(results).toBe(20);
     });
-    it("Should reduce elements with an initial value", () =>
+    it("Should reduce elements using a reducer function with an initial value", () =>
     {
         const reduced = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -100,7 +100,7 @@ describe("ReducedIterator", () =>
         expect(results.toObject()).toEqual({ odd: [-3, -1, 3, 5], even: [16] });
     });
 
-    it("Should drop a given number of elements", () =>
+    it("Should drop a specified number of elements", () =>
     {
         const reduced = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -109,7 +109,7 @@ describe("ReducedIterator", () =>
         const results = reduced.drop(1);
         expect(results.toObject()).toEqual({ even: 16 });
     });
-    it("Should take a given number of elements", () =>
+    it("Should take a specified number of elements", () =>
     {
         const reduced = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -128,7 +128,7 @@ describe("ReducedIterator", () =>
         const results = reduced.find((key, value) => value > 0);
         expect(results).toBe(16);
     });
-    it("Should return `undefined` when no matching value is found", () =>
+    it("Should return `undefined` when no matching element is found", () =>
     {
         const reduced = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -138,7 +138,7 @@ describe("ReducedIterator", () =>
         expect(results).toBeUndefined();
     });
 
-    it("Should enumerate elements", () =>
+    it("Should enumerate elements with their indices", () =>
     {
         const reduced = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -169,16 +169,16 @@ describe("ReducedIterator", () =>
     it("Should iterate over all elements", () =>
     {
         const results: [string, number, number][] = [];
+        const _iteratee = vi.fn((key: string, value: number, index: number) => { results.push([key, value, index]); });
+
         const iterator = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd")
             .reduce((key, acc, value) => acc + value);
 
-        iterator.forEach((key, value, index) => { results.push([key, value, index]); });
+        iterator.forEach(_iteratee);
 
-        expect(results).toEqual([
-            ["odd", 4, 0],
-            ["even", 16, 1]
-        ]);
+        expect(results).toEqual([["odd", 4, 0], ["even", 16, 1]]);
+        expect(_iteratee).toHaveBeenCalledTimes(2);
     });
 
     it("Should reorganize elements by a new key", () =>
@@ -231,7 +231,6 @@ describe("ReducedIterator", () =>
 
         expect(reduced.toArray()).toEqual([4, 16]);
     });
-
     it("Should materialize the iterator into a map", () =>
     {
         const reduced = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])
@@ -243,7 +242,6 @@ describe("ReducedIterator", () =>
             ["even", 16]
         ]));
     });
-
     it("Should materialize the iterator into an object", () =>
     {
         const reduced = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])

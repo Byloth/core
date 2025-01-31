@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { SmartIterator } from "../../../src/index.js";
 
@@ -21,7 +21,7 @@ describe("AggregatedIterator", () =>
         expect(results.toObject()).toEqual({ odd: false, even: true });
     });
 
-    it("Should filter elements by a condition", () =>
+    it("Should filter elements based on a condition", () =>
     {
         const aggregator = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd");
@@ -46,7 +46,7 @@ describe("AggregatedIterator", () =>
         const results = aggregator.reduce((key, acc, value) => acc + value);
         expect(results.toObject()).toEqual({ odd: 4, even: 16 });
     });
-    it("Should reduce elements with an initial value", () =>
+    it("Should reduce elements using a reducer function with an initial value", () =>
     {
         const aggregator = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd");
@@ -54,7 +54,7 @@ describe("AggregatedIterator", () =>
         const results = aggregator.reduce<number>((key, acc, value) => acc + value, 10);
         expect(results.toObject()).toEqual({ odd: 14, even: 26 });
     });
-    it("Should reduce elements with a function that returns an initial value", () =>
+    it("Should reduce elements using a reducer function with a function that returns an initial value", () =>
     {
         const aggregator = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd");
@@ -98,11 +98,11 @@ describe("AggregatedIterator", () =>
         const aggregator = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd");
 
-        const results = aggregator.find((key, value) => value > 0);
-        expect(results.toObject()).toEqual({ odd: 3, even: 2 });
+        const results = aggregator.find((key, value) => value > 5);
+        expect(results.toObject()).toEqual({ odd: undefined, even: 6 });
     });
 
-    it("Should enumerate the elements of the iterator", () =>
+    it("Should enumerate the elements with their indices within each group", () =>
     {
         const aggregator = new SmartIterator([-3, 0, 2, -1, 3])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd");
@@ -110,7 +110,7 @@ describe("AggregatedIterator", () =>
         const results = aggregator.enumerate();
         expect(results.toObject()).toEqual({ odd: [[0, -3], [1, -1], [2, 3]], even: [[0, 0], [1, 2]] });
     });
-    it("Should remove all duplicate elements from within each group", () =>
+    it("Should remove all duplicate elements within each group", () =>
     {
         const aggregator = new SmartIterator([-3, -1, 0, 2, 3, 6, -3, -1, 0, 5, 6, 8, 0, 2])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd");
@@ -127,21 +127,18 @@ describe("AggregatedIterator", () =>
         expect(results.toObject()).toEqual({ odd: 4, even: 4 });
     });
 
-    it("Should iterate over the elements of the iterator", () =>
+    it("Should iterate over all elements", () =>
     {
         const results: [string, number, number][] = [];
+        const _iteratee = vi.fn((key: string, value: number, index: number) => { results.push([key, value, index]); });
+
         const iterator = new SmartIterator([-3, 0, 2, -1, 3])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd");
 
-        iterator.forEach((key, value, index) => { results.push([key, value, index]); });
+        iterator.forEach(_iteratee);
 
-        expect(results).toEqual([
-            ["odd", -3, 0],
-            ["even", 0, 0],
-            ["even", 2, 1],
-            ["odd", -1, 1],
-            ["odd", 3, 2]
-        ]);
+        expect(results).toEqual([["odd", -3, 0], ["even", 0, 0], ["even", 2, 1], ["odd", -1, 1], ["odd", 3, 2]]);
+        expect(_iteratee).toHaveBeenCalledTimes(5);
     });
 
     it("Should change the key of each element on which the iterator is aggregated", () =>
@@ -155,7 +152,7 @@ describe("AggregatedIterator", () =>
         expect(results.toObject()).toEqual({ "+": [1, 0, 3, 6], "-": [-3, -2, -5, -8] });
     });
 
-    it("Should return all keys of the iterator", () =>
+    it("Should return all keys", () =>
     {
         const aggregator = new SmartIterator([-3, Symbol(), "A", { }, null, [1, 2, 3], false])
             .groupBy((value) => typeof value);
@@ -163,7 +160,7 @@ describe("AggregatedIterator", () =>
         const keys = aggregator.keys();
         expect(keys.toArray()).toEqual(["number", "symbol", "string", "object", "boolean"]);
     });
-    it("Should return all entries of the iterator", () =>
+    it("Should return all entries", () =>
     {
         const aggregator = new SmartIterator([-3, 0, 2, -1, 3])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd");
@@ -177,7 +174,7 @@ describe("AggregatedIterator", () =>
             ["odd", 3]
         ]);
     });
-    it("Should return all values of the iterator", () =>
+    it("Should return all values", () =>
     {
         const aggregator = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd");
