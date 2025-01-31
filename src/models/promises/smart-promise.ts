@@ -22,8 +22,6 @@ import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "./types
  * console.log(promise.isFulfilled); // true
  * ```
  *
- * ---
- *
  * @template T The type of value the promise will eventually resolve to. Default is `void`.
  */
 export default class SmartPromise<T = void> implements Promise<T>
@@ -41,8 +39,6 @@ export default class SmartPromise<T = void> implements Promise<T>
      * const response = await request;
      * console.log(smartRequest.isFulfilled); // true
      * ```
-     *
-     * ---
      *
      * @param promise The promise to wrap.
      *
@@ -116,8 +112,6 @@ export default class SmartPromise<T = void> implements Promise<T>
      * });
      * ```
      *
-     * ---
-     *
      * @param executor
      * The function responsible for eventually resolving or rejecting the promise.  
      * Similarly to the native {@link Promise} object, it's immediately executed after the promise is created.
@@ -159,8 +153,6 @@ export default class SmartPromise<T = void> implements Promise<T>
      * console.log(await promise.then()); // "Hello, World!"
      * ```
      *
-     * ---
-     *
      * @returns A new {@link Promise} identical to the original one.
      */
     public then(onFulfilled?: null): Promise<T>;
@@ -179,8 +171,6 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * promise.then((result) => console.log(result)); // "Hello, World!"
      * ```
-     *
-     * ---
      *
      * @template F The type of value the new promise will eventually resolve to. Default is `T`.
      *
@@ -213,8 +203,6 @@ export default class SmartPromise<T = void> implements Promise<T>
      * promise.then(() => console.log("OK!"), () => console.log("KO!")); // "OK!" or "KO!"
      * ```
      *
-     * ---
-     *
      * @template F The type of value the new promise will eventually resolve to. Default is `T`.
      * @template R The type of value the new promise will eventually resolve to. Default is `never`.
      *
@@ -244,8 +232,6 @@ export default class SmartPromise<T = void> implements Promise<T>
      * promise.catch(); // Uncaught Error: An unknown error occurred.
      * ```
      *
-     * ---
-     *
      * @returns A new {@link Promise} identical to the original one.
      */
     public catch(onRejected?: null): Promise<T>;
@@ -267,8 +253,6 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * promise.catch((reason) => console.error(reason)); // "Error: An unknown error occurred."
      * ```
-     *
-     * ---
      *
      * @template R The type of value the new promise will eventually resolve to. Default is `T`.
      *
@@ -298,8 +282,6 @@ export default class SmartPromise<T = void> implements Promise<T>
      *     .catch(() => console.log("KO!")) // Logs "KO!" if the promise is rejected.
      *     .finally(() => console.log("Done!")); // Always logs "Done!".
      * ```
-     *
-     * ---
      *
      * @param onFinally The callback to execute when once promise is settled.
      *

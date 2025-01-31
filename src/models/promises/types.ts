@@ -9,8 +9,6 @@
  * }
  * ```
  *
- * ---
- *
  * @template T The type of the value.
  */
 export type MaybePromise<T> = T | PromiseLike<T>;
@@ -25,8 +23,6 @@ export type MaybePromise<T> = T | PromiseLike<T>;
  * await new Promise<string>((resolve) => resolve("Hello, World!"))
  *     .then(onFulfilled);
  * ```
- *
- * ---
  *
  * @template T The type of value accepted by the function. Default is `void`.
  * @template R The type of value returned by the function. Default is `T`.
@@ -44,8 +40,6 @@ export type FulfilledHandler<T = void, R = T> = (value: T) => MaybePromise<R>;
  *     .catch(onRejected);
  * ```
  *
- * ---
- *
  * @template E The type of value accepted by the function. Default is `unknown`.
  * @template R The type of value returned by the function. Default is `never`.
  */
@@ -61,8 +55,6 @@ export type RejectedHandler<E = unknown, R = never> = (reason: E) => MaybePromis
  * await new Promise<string>((resolve) => { _resolve = resolve; });
  * ```
  *
- * ---
- *
  * @template T The type of the value accepted by the function. Default is `void`.
  */
 export type PromiseResolver<T = void> = (result: MaybePromise<T>) => void;
@@ -76,8 +68,6 @@ export type PromiseResolver<T = void> = (result: MaybePromise<T>) => void;
  *
  * await new Promise<string>((_, reject) => { _reject = reject; });
  * ```
- *
- * ---
  *
  * @template E The type of the value accepted by the function. Default is `unknown`.
  */
@@ -95,8 +85,6 @@ export type PromiseRejecter<E = unknown> = (reason?: MaybePromise<E>) => void;
  *
  * await new Promise<string>(executor);
  * ```
- *
- * ---
  *
  * @template T The type of value accepted by the `resolve` function. Default is `void`.
  * @template E The type of value accepted by the `reject` function. Default is `unknown`.

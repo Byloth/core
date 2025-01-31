@@ -30,8 +30,6 @@ import type { Callback } from "./types.js";
  * });
  * ```
  *
- * ---
- *
  * @template T
  * A map containing the names of the emittable events and the
  * related callback signatures that can be subscribed to them.  
@@ -93,8 +91,6 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
      * publisher.publish("player:move", { x: 10, y: 20 });
      * ```
      *
-     * ---
-     *
      * @template K The key of the map containing the callback signature to publish.
      *
      * @param event The name of the event to publish.
@@ -122,8 +118,6 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
      *     unsubscribe = publisher.subscribe("player:move", ({ x, y }) => { [...] });
      * });
      * ```
-     *
-     * ---
      *
      * @template K The key of the map containing the callback signature to subscribe.
      *
@@ -161,8 +155,6 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
      * publisher.subscribe("player:spawn", (evt) => publisher.subscribe("player:move", onPlayerMove));
      * publisher.subscribe("player:death", () => publisher.unsubscribe("player:move", onPlayerMove));
      * ```
-     *
-     * ---
      *
      * @template K The key of the map containing the callback signature to unsubscribe.
      *

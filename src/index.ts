@@ -11,6 +11,7 @@ export {
     Clock,
     Countdown,
     DeferredPromise,
+    EnvironmentException,
     Exception,
     FatalErrorException,
     FileException,

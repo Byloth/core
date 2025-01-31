@@ -1,5 +1,6 @@
 import AggregatedAsyncIterator from "../aggregators/aggregated-async-iterator.js";
 import { ValueException } from "../exceptions/index.js";
+import type { MaybePromise } from "../types.js";
 
 import type {
     GeneratorFunction,
@@ -36,8 +37,6 @@ import type {
  * console.log(await result); // 31
  * ```
  *
- * ---
- *
  * @template T The type of elements in the iterator.
  * @template R The type of the final result of the iterator. Default is `void`.
  * @template N The type of the argument passed to the `next` method. Default is `undefined`.
@@ -56,8 +55,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * const iterator = new SmartAsyncIterator<string>(["A", "B", "C"]);
      * ```
      *
-     * ---
-     *
      * @param iterable The iterable object to wrap.
      */
     public constructor(iterable: Iterable<T>);
@@ -68,8 +65,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * ```ts
      * const iterator = new SmartAsyncIterator<number>([1, 2, 3, 4, 5]);
      * ```
-     *
-     * ---
      *
      * @param iterable The asynchronous iterable object to wrap.
      */
@@ -82,7 +77,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * const iterator = new SmartAsyncIterator<number, void, number>({
      *     _sum: 0, _count: 0,
      *
-     *     next: function (value: number)
+     *     next: function(value: number)
      *     {
      *         this._sum += value;
      *         this._count += 1;
@@ -91,8 +86,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *     }
      * })
      * ```
-     *
-     * ---
      *
      * @param iterator The iterator object to wrap.
      */
@@ -105,7 +98,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * const iterator = new SmartAsyncIterator<number, void, number>({
      *     _sum: 0, _count: 0,
      *
-     *     next: async function (value: number)
+     *     next: async function(value: number)
      *     {
      *         this._sum += value;
      *         this._count += 1;
@@ -114,8 +107,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *     }
      * })
      * ```
-     *
-     * ---
      *
      * @param iterator The asynchronous iterator object to wrap.
      */
@@ -131,8 +122,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * });
      * ```
      *
-     * ---
-     *
      * @param generatorFn The generator function to wrap.
      */
     public constructor(generatorFn: GeneratorFunction<T, R, N>);
@@ -147,8 +136,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * });
      * ```
      *
-     * ---
-     *
      * @param generatorFn The asynchronous generator function to wrap.
      */
     public constructor(generatorFn: AsyncGeneratorFunction<T, R, N>);
@@ -159,8 +146,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * ```ts
      * const iterator = new SmartAsyncIterator(values);
      * ```
-     *
-     * ---
      *
      * @param argument The synchronous or asynchronous iterable, iterator or generator function to wrap.
      */
@@ -248,11 +233,10 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // false
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
-     * @returns A promise that will resolve to `true` if all elements satisfy the condition, `false` otherwise.
+     * @returns
+     * A {@link Promise} that will resolve to `true` if all elements satisfy the condition, `false` otherwise.
      */
     public async every(predicate: MaybeAsyncIteratee<T, boolean>): Promise<boolean>
     {
@@ -289,11 +273,10 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // true
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
-     * @returns A promise that will resolve to `true` if any element satisfies the condition, `false` otherwise.
+     * @returns
+     * A {@link Promise} that will resolve to `true` if any element satisfies the condition, `false` otherwise.
      */
     public async some(predicate: MaybeAsyncIteratee<T, boolean>): Promise<boolean>
     {
@@ -330,8 +313,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(await result.toArray()); // [-2, -1]
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
      * @returns A new {@link SmartAsyncIterator} containing only the elements that satisfy the condition.
@@ -358,8 +339,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(await result.toArray()); // [-2, 1]
      * ```
      *
-     * ---
-     *
      * @template S
      * The type of the elements that satisfy the condition.  
      * This allows the type-system to infer the correct type of the new iterator.
@@ -378,11 +357,9 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return new SmartAsyncIterator<T, R>(async function* ()
         {
             let index = 0;
-
             while (true)
             {
                 const result = await iterator.next();
-
                 if (result.done) { return result.value; }
                 if (await predicate(result.value, index)) { yield result.value; }
 
@@ -411,8 +388,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(await result.toArray()); // [2, 1, 0, 1, 2]
      * ```
      *
-     * ---
-     *
      * @template V The type of the elements after the transformation.
      *
      * @param iteratee The transformation function to apply to each element of the iterator.
@@ -426,7 +401,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return new SmartAsyncIterator<V, R>(async function* ()
         {
             let index = 0;
-
             while (true)
             {
                 const result = await iterator.next();
@@ -460,11 +434,9 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // 15
      * ```
      *
-     * ---
-     *
      * @param reducer The reducer function to apply to each element of the iterator.
      *
-     * @returns A promise that will resolve to the final result of the reduction.
+     * @returns A {@link Promise} that will resolve to the final result of the reduction.
      */
     public async reduce(reducer: MaybeAsyncReducer<T, T>): Promise<T>;
 
@@ -487,14 +459,12 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // 25
      * ```
      *
-     * ---
-     *
      * @template A The type of the accumulator value which will also be the type of the final result of the reduction.
      *
      * @param reducer The reducer function to apply to each element of the iterator.
      * @param initialValue The initial value of the accumulator.
      *
-     * @returns A promise that will resolve to the final result of the reduction.
+     * @returns A {@link Promise} that will resolve to the final result of the reduction.
      */
     public async reduce<A>(reducer: MaybeAsyncReducer<T, A>, initialValue: A): Promise<A>;
     public async reduce<A>(reducer: MaybeAsyncReducer<T, A>, initialValue?: A): Promise<A>
@@ -541,8 +511,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(await result.toArray()); // [-2, -1, 0, 1, 2, 3, 4, 5]
      * ```
      *
-     * ---
-     *
      * @template V The type of the elements after the transformation.
      *
      * @param iteratee The transformation function to apply to each element of the iterator.
@@ -556,7 +524,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return new SmartAsyncIterator<V, R>(async function* ()
         {
             let index = 0;
-
             while (true)
             {
                 const result = await iterator.next();
@@ -596,8 +563,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(await result.toArray()); // [1, 2]
      * ```
      *
-     * ---
-     *
      * @param count The number of elements to drop.
      *
      * @returns A new {@link SmartAsyncIterator} containing the remaining elements.
@@ -609,7 +574,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return new SmartAsyncIterator<T, R | undefined>(async function* ()
         {
             let index = 0;
-
             while (index < count)
             {
                 const result = await iterator.next();
@@ -651,8 +615,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(await iterator.toArray()); // [1, 2]
      * ```
      *
-     * ---
-     *
      * @param limit The number of elements to take.
      *
      * @returns A new {@link SmartAsyncIterator} containing the taken elements.
@@ -664,7 +626,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return new SmartAsyncIterator<T, R | undefined>(async function* ()
         {
             let index = 0;
-
             while (index < limit)
             {
                 const result = await iterator.next();
@@ -700,22 +661,21 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // 1
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
-     * @returns A promise that will resolve to the first element that satisfies the condition, `undefined` otherwise.
+     * @returns
+     * A {@link Promise} that will resolve to the first element that satisfies the condition, `undefined` otherwise.
      */
     public async find(predicate: MaybeAsyncIteratee<T, boolean>): Promise<T | undefined>;
 
     /**
      * Finds the first element of the iterator that satisfies a given condition.
      *
-     * This method will iterate over all elements of the iterator checking if they satisfy the condition.
+     * This method will iterate over all elements of the iterator checking if they satisfy the condition.  
      * The first element that satisfies the condition will be returned immediately.
      *
      * Only the elements that are necessary to find the first
-     * satisfying one will be consumed from the original iterator.
+     * satisfying one will be consumed from the original iterator.  
      * The rest of the original iterator will be available for further consumption.
      *
      * Also note that:
@@ -729,8 +689,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // -2
      * ```
      *
-     * ---
-     *
      * @template S
      * The type of the element that satisfies the condition.  
      * This allows the type-system to infer the correct type of the result.
@@ -739,7 +697,8 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * @param predicate The type guard condition to check for each element of the iterator.
      *
-     * @returns A promise that will resolve to the first element that satisfies the condition, `undefined` otherwise.
+     * @returns
+     * A {@link Promise} that will resolve to the first element that satisfies the condition, `undefined` otherwise. 
      */
     public async find<S extends T>(predicate: MaybeAsyncIteratee<T, boolean>): Promise<S | undefined>;
     public async find(predicate: MaybeAsyncIteratee<T, boolean>): Promise<T | undefined>
@@ -778,8 +737,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * }
      * ```
      *
-     * ---
-     *
      * @returns A new {@link SmartAsyncIterator} containing the enumerated elements.
      */
     public enumerate(): SmartAsyncIterator<[number, T], R>
@@ -805,8 +762,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(await result.toArray()); // [1, 2, 3, 4, 5]
      * ```
      *
-     * ---
-     *
      * @returns A new {@link SmartAsyncIterator} containing only the unique elements.
      */
     public unique(): SmartAsyncIterator<T, R>
@@ -816,11 +771,9 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
         return new SmartAsyncIterator<T, R>(async function* ()
         {
             const values = new Set<T>();
-
             while (true)
             {
                 const result = await iterator.next();
-
                 if (result.done) { return result.value; }
                 if (values.has(result.value)) { continue; }
 
@@ -844,9 +797,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // 5
      * ```
      *
-     * ---
-     *
-     * @returns A promise that will resolve to the number of elements in the iterator.
+     * @returns A {@link Promise} that will resolve to the number of elements in the iterator.
      */
     public async count(): Promise<number>
     {
@@ -876,11 +827,9 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * }
      * ```
      *
-     * ---
-     *
      * @param iteratee The function to apply to each element of the iterator.
      *
-     * @returns A promise that will resolve once the iteration is complete.
+     * @returns A {@link Promise} that will resolve once the iteration is complete.
      */
     public async forEach(iteratee: MaybeAsyncIteratee<T>): Promise<void>
     {
@@ -917,11 +866,10 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // { done: true, value: undefined }
      * ```
      *
-     * ---
-     *
      * @param values The value to pass to the next element, if required.
      *
-     * @returns A promise that will resolve to the result of the iteration, containing the value of the operation.
+     * @returns
+     * A {@link Promise} that will resolve to the result of the iteration, containing the value of the operation.
      */
     public next(...values: N extends undefined ? [] : [N]): Promise<IteratorResult<T, R>>
     {
@@ -951,17 +899,17 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * }
      * ```
      *
-     * ---
-     *
      * @param value The final value of the iterator.
      *
-     * @returns A promise that will resolve to the final result of the iterator.
+     * @returns A {@link Promise} that will resolve to the final result of the iterator.
      */
-    public async return(value?: R): Promise<IteratorResult<T, R>>
+    public async return(value?: MaybePromise<R>): Promise<IteratorResult<T, R>>
     {
-        if (this._iterator.return) { return this._iterator.return(value); }
+        const _value = (await value) as R;
 
-        return { done: true, value: value as R };
+        if (this._iterator.return) { return await this._iterator.return(_value); }
+
+        return { done: true, value: _value };
     }
 
     /**
@@ -996,11 +944,9 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * }
      * ```
      *
-     * ---
-     *
      * @param error The error to throw into the iterator.
      *
-     * @returns A promise that will resolve to the final result of the iterator.
+     * @returns A {@link Promise} that will resolve to the final result of the iterator.
      */
     public throw(error: unknown): Promise<IteratorResult<T, R>>
     {
@@ -1027,8 +973,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      *
      * console.log(await result.toObject()); // { odd: [1, 3, 5, 7, 9], even: [2, 4, 6, 8, 10] }
      * ```
-     *
-     * ---
      *
      * @template K The type of the keys used to group the elements.
      *
@@ -1062,7 +1006,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * console.log(result); // [0, 1, 2, 3, 4]
      * ```
      *
-     * @returns A promise that will resolve to an array containing all elements of the iterator.
+     * @returns A {@link Promise} that will resolve to an array containing all elements of the iterator.
      */
     public toArray(): Promise<T[]>
     {

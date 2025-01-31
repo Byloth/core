@@ -14,11 +14,11 @@ jobs:
         with:
           version: latest
 
-      - name: Configuring Node.js 20 (LTS)
+      - name: Configuring Node.js 22 (LTS)
         uses: actions/setup-node@v4
         with:
           cache: pnpm
-          node-version: 20
+          node-version: 22
 
       - name: Installing dependencies
         run: pnpm run ci
@@ -29,6 +29,8 @@ jobs:
 
       - name: Checking type consistency
         run: pnpm run typecheck
+      - name: Testing the source code
+        run: pnpm run test
       - name: Building the source code
         run: pnpm build
       - name: Creating the artifact

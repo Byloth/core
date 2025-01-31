@@ -8,11 +8,9 @@
  * doSomethingElse();
  * ```
  *
- * ---
- *
  * @param milliseconds The number of milliseconds to wait before resolving the promise.
  *
- * @returns A promise that resolves after the specified number of milliseconds.
+ * @returns A {@link Promise} that resolves after the specified number of milliseconds.
  */
 export function delay(milliseconds: number): Promise<void>
 {
@@ -31,9 +29,7 @@ export function delay(milliseconds: number): Promise<void>
  * $el.style.opacity = "1";
  * ```
  *
- * ---
- *
- * @returns A promise that resolves on the next animation frame.
+ * @returns A {@link Promise} that resolves on the next animation frame.
  */
 export function nextAnimationFrame(): Promise<void>
 {
@@ -53,9 +49,7 @@ export function nextAnimationFrame(): Promise<void>
  * }
  * ```
  *
- * ---
- *
- * @returns A promise that resolves on the next microtask.
+ * @returns A {@link Promise} that resolves on the next microtask.
  */
 export function yieldToEventLoop(): Promise<void>
 {

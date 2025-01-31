@@ -1,5 +1,5 @@
 
-import { SmartIterator } from "../models/index.js";
+import { RangeException, SmartIterator } from "../models/index.js";
 
 /**
  * An enumeration that represents the time units and their conversion factors.  
@@ -116,8 +116,6 @@ export enum WeekDay
  * dateDifference(start, end, TimeUnit.Minute); // 43200
  * ```
  *
- * ---
- *
  * @param start The start date.
  * @param end The end date.
  * @param unit The time unit to express the difference. `TimeUnit.Day` by default.
@@ -126,10 +124,15 @@ export enum WeekDay
  */
 export function dateDifference(start: string | Date, end: string | Date, unit = TimeUnit.Day): number
 {
+    let _round: (value: number) => number;
+
     start = new Date(start);
     end = new Date(end);
 
-    return Math.floor((end.getTime() - start.getTime()) / unit);
+    if (start < end) { _round = Math.floor; }
+    else { _round = Math.ceil; }
+
+    return _round((end.getTime() - start.getTime()) / unit);
 }
 
 /**
@@ -146,16 +149,20 @@ export function dateDifference(start: string | Date, end: string | Date, unit = 
  * }
  * ```
  *
- * ---
- *
  * @param start The start date (included).
- * @param end The end date (excluded).
+ * @param end
+ * The end date (excluded).
+ *
+ * Must be greater than the start date. Otherwise, a {@link RangeException} will be thrown.
+ *
  * @param step The time unit to express the step between the dates. `TimeUnit.Day` by default.
  *
  * @returns A {@link SmartIterator} object that generates the dates in the range.
  */
 export function dateRange(start: string | Date, end: string | Date, step = TimeUnit.Day): SmartIterator<Date>
 {
+    if (start >= end) { throw new RangeException("The end date must be greater than the start date."); }
+
     return new SmartIterator<Date>(function* ()
     {
         const endTime = new Date(end).getTime();
@@ -180,17 +187,33 @@ export function dateRange(start: string | Date, end: string | Date, step = TimeU
  * dateRound(date, TimeUnit.Hour); // 2025-01-01T12:00:00.000Z
  * ```
  *
- * ---
- *
  * @param date The date to round.
- * @param unit The time unit to express the rounding. `TimeUnit.Day` by default.
+ * @param unit
+ * The time unit to express the rounding. `TimeUnit.Day` by default.
+ *
+ * Must be greater than a millisecond and less than or equal to a day.  
+ * Otherwise, a {@link RangeException} will be thrown.
  *
  * @returns The rounded date.
  */
 export function dateRound(date: string | Date, unit = TimeUnit.Day): Date
 {
-    date = new Date(date);
+    if (unit <= TimeUnit.Millisecond)
+    {
+        throw new RangeException(
+            "Rounding a timestamp by milliseconds or less makes no sense." +
+            "Use the timestamp value directly instead."
+        );
+    }
+    if (unit > TimeUnit.Day)
+    {
+        throw new RangeException(
+            "Rounding by more than a day leads to unexpected results. " +
+            "Consider using other methods to round dates by weeks, months or years."
+        );
+    }
 
+    date = new Date(date);
     return new Date(Math.floor(date.getTime() / unit) * unit);
 }
 
@@ -203,8 +226,6 @@ export function dateRound(date: string | Date, unit = TimeUnit.Day): Date
  *
  * getWeek(date, WeekDay.Monday); // 2024-12-30
  * ```
- *
- * ---
  *
  * @param date The date to get the week of.
  * @param firstDay The first day of the week. `WeekDay.Sunday` by default.

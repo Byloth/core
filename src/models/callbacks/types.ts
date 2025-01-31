@@ -8,8 +8,6 @@
  * const callback: Callback<[PointerEvent]> = (evt: PointerEvent): void => { [...] };
  * ```
  *
- * ---
- *
  * @template A
  * The type of the arguments that the function accepts.  
  * It must be an array of types, even if it's empty. Default is `[]`.

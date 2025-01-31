@@ -1,9 +1,9 @@
-import type { Interval } from "../core/types.js";
-import { isBrowser } from "../helpers.js";
+import type { Interval } from "../../core/types.js";
+import { isBrowser } from "../../helpers.js";
 
-import Publisher from "./callbacks/publisher.js";
-import { FatalErrorException, RuntimeException } from "./exceptions/index.js";
-import type { Callback } from "./types.js";
+import Publisher from "../callbacks/publisher.js";
+import { FatalErrorException, RuntimeException } from "../exceptions/index.js";
+import type { Callback } from "../types.js";
 
 interface GameLoopEventMap
 {
@@ -120,8 +120,6 @@ export default class GameLoop
      * const loop = new GameLoop((elapsedTime: number) => { [...] });
      * ```
      *
-     * ---
-     *
      * @param callback The function that will be executed at each iteration of the game loop.
      * @param msIfNotBrowser
      * The interval in milliseconds that will be used if the current environment isn't a browser. Default is `40`.
@@ -171,8 +169,6 @@ export default class GameLoop
      * loop.start();
      * ```
      *
-     * ---
-     *
      * @param elapsedTime The elapsed time to set as default when the game loop starts. Default is `0`.
      */
     public start(elapsedTime = 0): void
@@ -218,8 +214,6 @@ export default class GameLoop
      * loop.onStart(() => { console.log("The game loop has started."); });
      * ```
      *
-     * ---
-     *
      * @param callback The function that will be executed when the game loop starts.
      *
      * @returns A function that can be used to unsubscribe from the event.
@@ -235,8 +229,6 @@ export default class GameLoop
      * ```ts
      * loop.onStop(() => { console.log("The game loop has stopped."); });
      * ```
-     *
-     * ---
      *
      * @param callback The function that will be executed when the game loop stops.
      *

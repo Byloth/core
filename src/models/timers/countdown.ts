@@ -2,9 +2,10 @@ import { TimeUnit } from "../../utils/date.js";
 
 import Publisher from "../callbacks/publisher.js";
 import { FatalErrorException, RangeException, RuntimeException } from "../exceptions/index.js";
-import GameLoop from "../game-loop.js";
 import { DeferredPromise, SmartPromise } from "../promises/index.js";
 import type { Callback } from "../types.js";
+
+import GameLoop from "./game-loop.js";
 
 interface CountdownEventMap
 {
@@ -78,8 +79,6 @@ export default class Countdown extends GameLoop
      * const countdown = new Countdown(10_000);
      * ```
      *
-     * ---
-     *
      * @param duration
      * The total duration of the countdown in milliseconds.
      *
@@ -146,8 +145,6 @@ export default class Countdown extends GameLoop
      * countdown.start();
      * ```
      *
-     * ---
-     *
      * @param remainingTime
      * The remaining time to set as default when the countdown starts.  
      * Default is the {@link Countdown.duration} itself.
@@ -176,8 +173,6 @@ export default class Countdown extends GameLoop
      * countdown.onStop(() => { [...] }); // This callback will be executed.
      * countdown.stop();
      * ```
-     *
-     * ---
      *
      * @param reason
      * The reason why the countdown has stopped.
@@ -221,8 +216,6 @@ export default class Countdown extends GameLoop
      * countdown.start();
      * ```
      *
-     * ---
-     *
      * @param callback The callback that will be executed when the countdown ticks.
      * @param tickStep
      * The minimum time in milliseconds that must pass from the previous execution of the callback to the next one.
@@ -239,7 +232,7 @@ export default class Countdown extends GameLoop
         if (tickStep < 0) { throw new RangeException("The tick step must be a non-negative number."); }
         if (tickStep === 0) { return this._publisher.subscribe("tick", callback); }
 
-        let lastTick = 0;
+        let lastTick = this.remainingTime;
 
         return this._publisher.subscribe("tick", (remainingTime: number) =>
         {

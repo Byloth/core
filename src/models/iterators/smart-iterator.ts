@@ -28,8 +28,6 @@ import type { GeneratorFunction, Iteratee, TypeGuardPredicate, Reducer, Iterator
  * console.log(result); // 31
  * ```
  *
- * ---
- *
  * @template T The type of elements in the iterator.
  * @template R The type of the final result of the iterator. Default is `void`.
  * @template N The type of the argument required by the `next` method. Default is `undefined`.
@@ -48,8 +46,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * const iterator = new SmartIterator<string>(["A", "B", "C"]);
      * ```
      *
-     * ---
-     *
      * @param iterable The iterable object to wrap.
      */
     public constructor(iterable: Iterable<T, R, N>);
@@ -61,7 +57,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * const iterator = new SmartIterator<number, void, number>({
      *     _sum: 0, _count: 0,
      *
-     *     next: function (value: number)
+     *     next: function(value: number)
      *     {
      *         this._sum += value;
      *         this._count += 1;
@@ -70,8 +66,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *     }
      * })
      * ```
-     *
-     * ---
      *
      * @param iterator The iterator object to wrap.
      */
@@ -87,8 +81,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * });
      * ```
      *
-     * ---
-     *
      * @param generatorFn The generator function to wrap.
      */
     public constructor(generatorFn: GeneratorFunction<T, R, N>);
@@ -99,8 +91,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * ```ts
      * const iterator = new SmartIterator(values);
      * ```
-     *
-     * ---
      *
      * @param argument The iterable, iterator or generator function to wrap.
      */
@@ -141,8 +131,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * console.log(result); // false
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
      * @returns `true` if all elements satisfy the condition, `false` otherwise.
@@ -181,8 +169,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * console.log(result); // true
      * ```
-     *
-     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -223,8 +209,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * console.log(result.toArray()); // [-2, -1]
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
      * @returns A new {@link SmartIterator} containing only the elements that satisfy the condition.
@@ -251,8 +235,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * console.log(result.toArray()); // [-2, 1]
      * ```
      *
-     * ---
-     *
      * @template S
      * The type of the elements that satisfy the condition.  
      * This allows the type-system to infer the correct type of the new iterator.
@@ -271,11 +253,9 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         return new SmartIterator<T, R>(function* ()
         {
             let index = 0;
-
             while (true)
             {
                 const result = iterator.next();
-
                 if (result.done) { return result.value; }
                 if (predicate(result.value, index)) { yield result.value; }
 
@@ -304,8 +284,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * console.log(result.toArray()); // [2, 1, 0, 1, 2]
      * ```
      *
-     * ---
-     *
      * @template V The type of the elements after the transformation.
      *
      * @param iteratee The transformation function to apply to each element of the iterator.
@@ -319,7 +297,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         return new SmartIterator<V, R>(function* ()
         {
             let index = 0;
-
             while (true)
             {
                 const result = iterator.next();
@@ -353,8 +330,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * console.log(result); // 15
      * ```
      *
-     * ---
-     *
      * @param reducer The reducer function to apply to each element of the iterator.
      *
      * @returns The final result of the reduction.
@@ -379,8 +354,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * console.log(result); // 25
      * ```
-     *
-     * ---
      *
      * @template A The type of the accumulator value which will also be the type of the final result of the reduction.
      *
@@ -434,8 +407,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * console.log(result.toArray()); // [-2, -1, 0, 1, 2, 3, 4, 5]
      * ```
      *
-     * ---
-     *
      * @template V The type of the elements after the transformation.
      *
      * @param iteratee The transformation function to apply to each element of the iterator.
@@ -449,7 +420,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         return new SmartIterator<V, R>(function* ()
         {
             let index = 0;
-
             while (true)
             {
                 const result = iterator.next();
@@ -488,8 +458,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * console.log(result.toArray()); // [1, 2]
      * ```
-     *
-     * ---
      *
      * @param count The number of elements to drop.
      *
@@ -543,8 +511,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * console.log(iterator.toArray()); // [1, 2]
      * ```
      *
-     * ---
-     *
      * @param limit The number of elements to take.
      *
      * @returns A new {@link SmartIterator} containing the taken elements.
@@ -591,8 +557,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * console.log(result); // 1
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
      * @returns The first element that satisfies the condition, `undefined` otherwise.
@@ -619,8 +583,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * console.log(result); // -2
      * ```
-     *
-     * ---
      *
      * @template S
      * The type of the element that satisfies the condition.  
@@ -666,8 +628,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * console.log(result.toArray()); // [[0, "A"], [1, "M"], [2, "N"], [3, "Z"]]
      * ```
      *
-     * ---
-     *
      * @returns A new {@link SmartIterator} containing the enumerated elements.
      */
     public enumerate(): SmartIterator<[number, T], R>
@@ -693,8 +653,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * console.log(result.toArray()); // [1, 2, 3, 4, 5]
      * ```
      *
-     * ---
-     *
      * @returns A new {@link SmartIterator} containing only the unique elements.
      */
     public unique(): SmartIterator<T, R>
@@ -704,14 +662,11 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
         return new SmartIterator<T, R>(function* ()
         {
             const values = new Set<T>();
-
             while (true)
             {
                 const result = iterator.next();
-
                 if (result.done) { return result.value; }
                 if (values.has(result.value)) { continue; }
-
                 values.add(result.value);
 
                 yield result.value;
@@ -731,8 +686,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * console.log(result); // 5
      * ```
-     *
-     * ---
      *
      * @returns The number of elements in the iterator.
      */
@@ -763,8 +716,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *     console.log(`${index}: ${value}`); // "0: A", "1: M", "2: N", "3: Z"
      * }
      * ```
-     *
-     * ---
      *
      * @param iteratee The function to apply to each element of the iterator.
      */
@@ -803,8 +754,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * console.log(result); // { done: true, value: undefined }
      * ```
      *
-     * ---
-     *
      * @param values The value to pass to the next element, if required.
      *
      * @returns The result of the iteration, containing the value of the operation.
@@ -836,8 +785,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *     console.log(value); // 1, 2, 3, 4, 5
      * }
      * ```
-     *
-     * ---
      *
      * @param value The final value of the iterator.
      *
@@ -882,8 +829,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * }
      * ```
      *
-     * ---
-     *
      * @param error The error to throw into the iterator.
      *
      * @returns The final result of the iterator.
@@ -897,7 +842,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
 
     /**
      * An utility method that aggregates the elements of the iterator using a given key function.  
-     * The elements will be grouped by the resulting keys in a new specialized iterator. See {@link AggregatedIterator}.
+     * The elements will be grouped by the resulting keys in a new specialized iterator.
+     * See {@link AggregatedIterator}.
      *
      * Since the iterator is lazy, the grouping process will
      * be executed once the resulting iterator is materialized.
@@ -912,8 +858,6 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * console.log(result.toObject()); // { odd: [1, 3, 5, 7, 9], even: [2, 4, 6, 8, 10] }
      * ```
-     *
-     * ---
      *
      * @template K The type of the keys used to group the elements.
      *

@@ -46,8 +46,6 @@ export default class JSONStorage
      * const jsonStorage = new JSONStorage();
      * ```
      *
-     * ---
-     *
      * @param preferPersistence
      * Whether to prefer the {@link localStorage} over the {@link sessionStorage} when calling an ambivalent method.  
      * If omitted, it defaults to `true` to prefer the persistent storage.
@@ -112,8 +110,6 @@ export default class JSONStorage
      * const value: TValue = jsonStorage.get<TValue>("key");
      * ```
      *
-     * ---
-     *
      * @template T The type of the value to retrieve.
      *
      * @param key The key of the value to retrieve.
@@ -128,8 +124,6 @@ export default class JSONStorage
      * ```ts
      * const value: TValue = jsonStorage.get<TValue>("key", defaultValue);
      * ```
-     *
-     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -149,8 +143,6 @@ export default class JSONStorage
      * ```ts
      * const value: TValue = jsonStorage.get<TValue>("key", obj?.value);
      * ```
-     *
-     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -178,8 +170,6 @@ export default class JSONStorage
      * const value: TValue = jsonStorage.recall<TValue>("key");
      * ```
      *
-     * ---
-     *
      * @template T The type of the value to retrieve.
      *
      * @param key The key of the value to retrieve.
@@ -194,8 +184,6 @@ export default class JSONStorage
      * ```ts
      * const value: TValue = jsonStorage.recall<TValue>("key", defaultValue);
      * ```
-     *
-     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -212,8 +200,6 @@ export default class JSONStorage
      * ```ts
      * const value: TValue = jsonStorage.recall<TValue>("key", obj?.value);
      * ```
-     *
-     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -236,8 +222,6 @@ export default class JSONStorage
      * const value: TValue = jsonStorage.retrieve<TValue>("key");
      * ```
      *
-     * ---
-     *
      * @template T The type of the value to retrieve.
      *
      * @param key The key of the value to retrieve.
@@ -253,8 +237,6 @@ export default class JSONStorage
      * ```ts
      * const value: TValue = jsonStorage.retrieve<TValue>("key", defaultValue);
      * ```
-     *
-     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -272,8 +254,6 @@ export default class JSONStorage
      * ```ts
      * const value: TValue = jsonStorage.retrieve<TValue>("key", obj?.value);
      * ```
-     *
-     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -295,8 +275,6 @@ export default class JSONStorage
      * const value: TValue = jsonStorage.read<TValue>("key");
      * ```
      *
-     * ---
-     *
      * @template T The type of the value to retrieve.
      *
      * @param key The key of the value to retrieve.
@@ -311,8 +289,6 @@ export default class JSONStorage
      * ```ts
      * const value: TValue = jsonStorage.read<TValue>("key", defaultValue);
      * ```
-     *
-     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -329,8 +305,6 @@ export default class JSONStorage
      * ```ts
      * const value: TValue = jsonStorage.read<TValue>("key", obj?.value);
      * ```
-     *
-     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -354,8 +328,6 @@ export default class JSONStorage
      *    // The key exists. Do something...
      * }
      * ```
-     *
-     * ---
      *
      * @param key The key of the value to check.
      * @param persistent
@@ -381,8 +353,6 @@ export default class JSONStorage
      * }
      * ```
      *
-     * ---
-     *
      * @param key The key of the value to check.
      *
      * @returns `true` if the key exists, `false` otherwise.
@@ -403,8 +373,6 @@ export default class JSONStorage
      * }
      * ```
      *
-     * ---
-     *
      * @param key The key of the value to check.
      *
      * @returns `true` if the key exists, `false` otherwise.
@@ -424,8 +392,6 @@ export default class JSONStorage
      * }
      * ```
      *
-     * ---
-     *
      * @param key The key of the value to check.
      *
      * @returns `true` if the key exists, `false` otherwise.
@@ -444,8 +410,6 @@ export default class JSONStorage
      * jsonStorage.set("key", value);
      * jsonStorage.set("key", obj?.value);
      * ```
-     *
-     * ---
      *
      * @template T The type of the value to set.
      *
@@ -472,8 +436,6 @@ export default class JSONStorage
      * jsonStorage.remember("key", obj?.value);
      * ```
      *
-     * ---
-     *
      * @template T The type of the value to set.
      *
      * @param key The key of the value to set.
@@ -494,8 +456,6 @@ export default class JSONStorage
      * jsonStorage.write("key", obj?.value);
      * ```
      *
-     * ---
-     *
      * @template T The type of the value to set.
      *
      * @param key The key of the value to set.
@@ -512,8 +472,6 @@ export default class JSONStorage
      * ```ts
      * jsonStorage.delete("key");
      * ```
-     *
-     * ---
      *
      * @param key The key of the value to remove.
      * @param persistent
@@ -534,8 +492,6 @@ export default class JSONStorage
      * jsonStorage.forget("key");
      * ```
      *
-     * ---
-     *
      * @param key The key of the value to remove.
      */
     public forget(key: string): void
@@ -549,8 +505,6 @@ export default class JSONStorage
      * ```ts
      * jsonStorage.erase("key");
      * ```
-     *
-     * ---
      *
      * @param key The key of the value to remove.
      */
@@ -566,8 +520,6 @@ export default class JSONStorage
      * ```ts
      * jsonStorage.clear("key");
      * ```
-     *
-     * ---
      *
      * @param key The key of the value to remove.
      */

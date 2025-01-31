@@ -39,8 +39,6 @@ import type { MaybeAsyncKeyedIteratee, MaybeAsyncKeyedReducer } from "./types.js
  * console.log(await results.toObject()); // { odd: 4, even: 4 }
  * ```
  *
- * ---
- *
  * @template K The type of the keys used to group the elements.
  * @template T The type of the elements to aggregate.
  */
@@ -58,8 +56,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * const iterator = new AggregatedAsyncIterator<string, number>([["A", 1], ["B", 2], ["A", 3], ["C", 4], ["B", 5]]);
      * ```
      *
-     * ---
-     *
      * @param iterable The iterable to aggregate.
      */
     public constructor(iterable: Iterable<[K, T]>);
@@ -71,8 +67,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * const elements = fetch([...]); // Promise<[["A", 1], ["B", 2], ["A", 3], ["C", 4], ["B", 5]]>
      * const iterator = new AggregatedAsyncIterator<string, number>(elements);
      * ```
-     *
-     * ---
      *
      * @param iterable The iterable to aggregate.
      */
@@ -96,8 +90,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * });
      * ```
      *
-     * ---
-     *
      * @param iterator The iterator to aggregate.
      */
     public constructor(iterator: Iterator<[K, T]>);
@@ -120,8 +112,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * });
      * ```
      *
-     * ---
-     *
      * @param iterator The iterator to aggregate.
      */
     public constructor(iterator: AsyncIterator<[K, T]>);
@@ -140,8 +130,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *     }
      * });
      * ```
-     *
-     * ---
      *
      * @param generatorFn The generator function to aggregate.
      */
@@ -162,8 +150,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * });
      * ```
      *
-     * ---
-     *
      * @param generatorFn The generator function to aggregate.
      */
     public constructor(generatorFn: AsyncGeneratorFunction<[K, T]>);
@@ -174,8 +160,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * ```ts
      * const iterator = new AggregatedAsyncIterator(asyncKeyedValues);
      * ```
-     *
-     * ---
      *
      * @param argument The iterable, iterator or generator function to aggregate.
      */
@@ -206,11 +190,10 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: false, even: true }
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
-     * @returns A new {@link ReducedIterator} containing the boolean results for each group.
+     * @returns
+     * A {@link Promise} resolving to a new {@link ReducedIterator} containing the boolean results for each group.
      */
     public async every(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, boolean>>
     {
@@ -252,11 +235,10 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: false, even: true }
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
-     * @returns A new {@link ReducedIterator} containing the boolean results for each group.
+     * @returns
+     * A {@link Promise} resolving to a new {@link ReducedIterator} containing the boolean results for each group.
      */
     public async some(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, boolean>>
     {
@@ -295,8 +277,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: [3, 5], even: [0, 2, 6, 8] }
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
      * @returns A new {@link AggregatedAsyncIterator} containing the elements that satisfy the condition.
@@ -321,8 +301,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: [-3, 5], even: [0, 6] }
      * ```
      *
-     * ---
-     *
      * @template S
      * The type of the elements that satisfy the condition.  
      * This allows the type-system to infer the correct type of the new iterator.
@@ -341,11 +319,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, T]>
         {
             const indexes = new Map<K, number>();
-
             for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
-
                 if (await predicate(key, element, index)) { yield [key, element]; }
 
                 indexes.set(key, index + 1);
@@ -374,8 +350,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: [3, 1, 3, 5], even: [0, 2, 6, 8] }
      * ```
      *
-     * ---
-     *
      * @template V The type of the elements after the transformation.
      *
      * @param iteratee The transformation function to apply to each element of the iterator.
@@ -389,11 +363,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, V]>
         {
             const indexes = new Map<K, number>();
-
             for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
-
                 yield [key, await iteratee(key, element, index)];
 
                 indexes.set(key, index + 1);
@@ -423,11 +395,10 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: 4, even: 16 }
      * ```
      *
-     * ---
-     *
      * @param reducer The reducer function to apply to each element of the iterator.
      *
-     * @returns A new {@link ReducedIterator} containing the reduced results for each group.
+     * @returns
+     * A {@link Promise} resolving to a new {@link ReducedIterator} containing the reduced results for each group.
      */
     public async reduce(reducer: MaybeAsyncKeyedReducer<K, T, T>): Promise<ReducedIterator<K, T>>;
 
@@ -453,14 +424,13 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: 4, even: 16 }
      * ```
      *
-     * ---
-     *
      * @template A The type of the accumulator value which will also be the final result of the reduction.
      *
      * @param reducer The reducer function to apply to each element of the iterator.
      * @param initialValue The initial value for the accumulator.
      *
-     * @returns A new {@link ReducedIterator} containing the reduced results for each group.
+     * @returns
+     * A {@link Promise} resolving to a new {@link ReducedIterator} containing the reduced results for each group.
      */
     public async reduce<A extends PropertyKey>(reducer: MaybeAsyncKeyedReducer<K, T, A>, initialValue: MaybePromise<A>)
         : Promise<ReducedIterator<K, A>>;
@@ -487,14 +457,13 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: { value: 4 }, even: { value: 16 } }
      * ```
      *
-     * ---
-     *
      * @template A The type of the accumulator value which will also be the final result of the reduction.
      *
      * @param reducer The reducer function to apply to each element of the iterator.
      * @param initialValue The function that provides the initial value for the accumulator.
      *
-     * @returns A new {@link ReducedIterator} containing the reduced results for each group.
+     * @returns
+     * A {@link Promise} resolving to a new {@link ReducedIterator} containing the reduced results for each group.
      */
     public async reduce<A>(reducer: MaybeAsyncKeyedReducer<K, T, A>, initialValue: (key: K) => MaybePromise<A>)
         : Promise<ReducedIterator<K, A>>;
@@ -548,13 +517,15 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * ```ts
      * const results = new SmartAsyncIterator<number>([[-3, -1], 0, 2, 3, 5, [6, 8]])
-     *     .groupBy(async ([value, _]) => value % 2 === 0 ? "even" : "odd")
+     *      .groupBy(async (values) =>
+     *      {
+     *          const value = values instanceof Array ? values[0] : values;
+     *          return value % 2 === 0 ? "even" : "odd";
+     *      })
      *     .flatMap(async (key, values) => values);
      *
      * console.log(await results.toObject()); // { odd: [-3, -1, 3, 5], even: [0, 2, 6, 8] }
      * ```
-     *
-     * ---
      *
      * @template V The type of the elements after the transformation.
      *
@@ -569,7 +540,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, V]>
         {
             const indexes = new Map<K, number>();
-
             for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
@@ -606,8 +576,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: [3, 5], even: [6, 8] }
      * ```
      *
-     * ---
-     *
      * @param count The number of elements to drop from the beginning of each group.
      *
      * @returns A new {@link AggregatedAsyncIterator} containing the remaining elements.
@@ -619,7 +587,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, T]>
         {
             const indexes = new Map<K, number>();
-
             for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
@@ -655,8 +622,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: [-3, -1], even: [0, 2] }
      * ```
      *
-     * ---
-     *
      * @param count The number of elements to take from the beginning of each group.
      *
      * @returns A new {@link AggregatedAsyncIterator} containing the taken elements.
@@ -668,7 +633,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, T]>
         {
             const indexes = new Map<K, number>();
-
             for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
@@ -701,11 +665,11 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: 3, even: 2 }
      * ```
      *
-     * ---
-     *
      * @param predicate The condition to check for each element of the iterator.
      *
-     * @returns A new {@link ReducedIterator} containing the first element that satisfies the condition for each group.
+     * @returns
+     * A {@link Promise} resolving to a new {@link ReducedIterator} containing
+     * the first element that satisfies the condition for each group.
      */
     public async find(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, T | undefined>>;
 
@@ -729,8 +693,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: -3, even: 0 }
      * ```
      *
-     * ---
-     *
      * @template S
      * The type of the elements that satisfy the condition.  
      * This allows the type-system to infer the correct type of the new iterator.
@@ -739,7 +701,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * @param predicate The type guard condition to check for each element of the iterator.
      *
-     * @returns A new {@link ReducedIterator} containing the first element that satisfies the condition for each group.
+     * @returns
+     * A {@link Promise} resolving to a new {@link ReducedIterator} containing
+     * the first element that satisfies the condition for each group.
      */
     public async find<S extends T>(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>)
         : Promise<ReducedIterator<K, S | undefined>>;
@@ -783,8 +747,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(results.toObject()); // { odd: [[0, -3], [1, -1], [2, 3]], even: [[0, 0], [1, 2]] }
      * ```
      *
-     * ---
-     *
      * @returns A new {@link AggregatedAsyncIterator} containing the enumerated elements.
      */
     public enumerate(): AggregatedAsyncIterator<K, [number, T]>
@@ -811,8 +773,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: [-3, -1, 3, 5], even: [0, 2, 6, 8] }
      * ```
      *
-     * ---
-     *
      * @returns A new {@link AggregatedAsyncIterator} containing only the unique elements.
      */
     public unique(): AggregatedAsyncIterator<K, T>
@@ -822,11 +782,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[K, T]>
         {
             const keys = new Map<K, Set<T>>();
-
             for await (const [key, element] of elements)
             {
                 const values = keys.get(key) ?? new Set<T>();
-
                 if (values.has(element)) { continue; }
 
                 values.add(element);
@@ -851,9 +809,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: 4, even: 4 }
      * ```
      *
-     * ---
-     *
-     * @returns A new {@link ReducedIterator} containing the number of elements for each group.
+     * @returns
+     * A {@link Promise} resolving to a new {@link ReducedIterator} containing the number of elements for each group.
      */
     public async count(): Promise<ReducedIterator<K, number>>
     {
@@ -889,9 +846,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * };
      * ```
      *
-     * ---
-     *
      * @param iteratee The function to execute for each element of the iterator.
+     *
+     * @returns A {@link Promise} that will resolve once the iteration is complete.
      */
     public async forEach(iteratee: MaybeAsyncKeyedIteratee<K, T>): Promise<void>
     {
@@ -927,8 +884,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { "+": [1, 0, 3, 6], "-": [-3, -2, -5, -8] }
      * ```
      *
-     * ---
-     *
      * @template J The type of the new key.
      *
      * @param iteratee The function to determine the new key for each element of the iterator.
@@ -943,11 +898,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new AggregatedAsyncIterator(async function* (): AsyncGenerator<[J, T]>
         {
             const indexes = new Map<K, number>();
-
             for await (const [key, element] of elements)
             {
                 const index = indexes.get(key) ?? 0;
-
                 yield [await iteratee(key, element, index), element];
 
                 indexes.set(key, index + 1);
@@ -974,8 +927,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await keys.toArray()); // ["number", "symbol", "string", "object", "boolean"]
      * ```
      *
-     * ---
-     *
      * @returns A new {@link SmartAsyncIterator} containing all the keys of the iterator.
      */
     public keys(): SmartAsyncIterator<K>
@@ -985,7 +936,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
         return new SmartAsyncIterator<K>(async function* ()
         {
             const keys = new Set<K>();
-
             for await (const [key] of elements)
             {
                 if (keys.has(key)) { continue; }
@@ -1016,8 +966,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await entries.toArray()); // [["odd", -3], ["even", 0], ["even", 2], ["odd", -1], ["odd", 3]]
      * ```
      *
-     * ---
-     *
      * @returns A new {@link SmartAsyncIterator} containing all the entries of the iterator.
      */
     public entries(): SmartAsyncIterator<[K, T]>
@@ -1044,8 +992,6 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await values.toArray()); // [-3, -1, 0, 2, 3, 5, 6, 8]
      * ```
      *
-     * ---
-     *
      * @returns A new {@link SmartAsyncIterator} containing all the values of the iterator.
      */
     public values(): SmartAsyncIterator<T>
@@ -1071,9 +1017,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await aggregator.toArray()); // [[-3, -1, 3, 5], [0, 2, 6, 8]]
      * ```
      *
-     * ---
-     *
-     * @returns An {@link Array} of arrays containing the elements of the iterator.
+     * @returns A {@link Promise} resolving to an {@link Array} containing all the values of the iterator.
      */
     public async toArray(): Promise<T[][]>
     {
@@ -1095,9 +1039,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await aggregator.toMap()); // Map(2) { "odd" => [-3, -1, 3, 5], "even" => [0, 2, 6, 8] }
      * ```
      *
-     * ---
-     *
-     * @returns A {@link Map} containing the elements of the iterator.
+     * @returns A {@link Promise} resolving to a {@link Map} containing all the entries of the iterator.
      */
     public async toMap(): Promise<Map<K, T[]>>
     {
@@ -1127,9 +1069,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await aggregator.toObject()); // { odd: [-3, -1, 3, 5], even: [0, 2, 6, 8] }
      * ```
      *
-     * ---
-     *
-     * @returns An {@link Object} containing the elements of the iterator.
+     * @returns A {@link Promise} resolving to an object containing all the entries of the iterator.
      */
     public async toObject(): Promise<Record<K, T[]>>
     {

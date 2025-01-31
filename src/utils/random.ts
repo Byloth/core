@@ -19,8 +19,6 @@ export default class Random
      * }
      * ```
      *
-     * ---
-     *
      * @param ratio
      * The probability of generating `true`.
      *
@@ -40,8 +38,6 @@ export default class Random
      * Random.Integer(5); // 0, 1, 2, 3, 4
      * ```
      *
-     * ---
-     *
      * @param max The maximum value (excluded).
      *
      * @returns A random integer value.
@@ -54,8 +50,6 @@ export default class Random
      * ```ts
      * Random.Integer(2, 7); // 2, 3, 4, 5, 6
      * ```
-     *
-     * ---
      *
      * @param min The minimum value (included).
      * @param max The maximum value (excluded).
@@ -77,8 +71,6 @@ export default class Random
      * Random.Decimal(); // 0.123456789
      * ```
      *
-     * ---
-     *
      * @returns A random decimal value.
      */
     public static Decimal(): number;
@@ -89,8 +81,6 @@ export default class Random
      * ```ts
      * Random.Decimal(5); // 2.3456789
      * ```
-     *
-     * ---
      *
      * @param max The maximum value (excluded).
      *
@@ -104,8 +94,6 @@ export default class Random
      * ```ts
      * Random.Decimal(2, 7); // 4.56789
      * ```
-     *
-     * ---
      *
      * @param min The minimum value (included).
      * @param max The maximum value (excluded).
