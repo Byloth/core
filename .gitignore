@@ -16,8 +16,6 @@ Desktop.ini
 
 # Generated & compiled files
 #
-/tsconfig.tsbuildinfo
-
 /dist/
 
 /*.tgz

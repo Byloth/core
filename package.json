@@ -31,8 +31,8 @@
     "dist",
     "src"
   ],
-  "main": "./dist/core.umd.cjs",
-  "module": "./dist/core.js",
+  "main": "dist/core.umd.cjs",
+  "module": "dist/core.js",
   "exports": {
     ".": {
       "import": {
@@ -45,7 +45,7 @@
       }
     }
   },
-  "types": "./src/index.ts",
+  "types": "src/index.ts",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
