@@ -153,9 +153,9 @@ describe("AggregatedAsyncIterator", () =>
 
         let resolved = false;
 
-        const reducer = async (key: string, acc: number, value: number) => acc + value;
-        const initializer = async (key: string) => key === "odd" ? 10 : 0;
-        aggregator.reduce<number>(reducer, initializer)
+        const _reducer = async (key: string, acc: number, value: number) => acc + value;
+        const _initializer = async (key: string) => key === "odd" ? 10 : 0;
+        aggregator.reduce<number>(_reducer, _initializer)
             .then((result) =>
             {
                 resolved = true;

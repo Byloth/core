@@ -389,7 +389,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * new one is and that consuming one of them will consume the other as well.
      *
      * ```ts
-     * const results = new SmartIterator<number[]>([-3, -1, 0, 2, 3, 5, 6, 8])
+     * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
      *     .reduce((key, accumulator, value) => accumulator.concat([value]), () => [])
      *     .flatMap((key, value) => value);
