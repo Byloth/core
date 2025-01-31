@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { delay, ValueException, type MaybePromise } from "../../../src/index.js";
+import { delay, ValueException } from "../../../src/index.js";
+import type { MaybePromise } from "../../../src/index.js";
+
 import { SmartAsyncIterator } from "../../../src/index.js";
 
 describe("SmartAsyncIterator", () =>

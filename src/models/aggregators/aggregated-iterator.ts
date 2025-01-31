@@ -452,7 +452,11 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      *
      * ```ts
      * const results = new SmartIterator<number[]>([[-3, -1], 0, 2, 3, 5, [6, 8]])
-     *     .groupBy(([value, _]) => value % 2 === 0 ? "even" : "odd")
+     *      .groupBy((values) =>
+     *      {
+     *          const value = values instanceof Array ? values[0] : values;
+     *          return value % 2 === 0 ? "even" : "odd";
+     *      })
      *     .flatMap((key, values) => values);
      *
      * console.log(results.toObject()); // { odd: [-3, -1, 3, 5], even: [0, 2, 6, 8] }

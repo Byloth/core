@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { ValueException } from "../../../src/index.js";
 import { SmartIterator } from "../../../src/index.js";

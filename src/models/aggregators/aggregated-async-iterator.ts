@@ -517,7 +517,11 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * ```ts
      * const results = new SmartAsyncIterator<number>([[-3, -1], 0, 2, 3, 5, [6, 8]])
-     *     .groupBy(async ([value, _]) => value % 2 === 0 ? "even" : "odd")
+     *      .groupBy(async (values) =>
+     *      {
+     *          const value = values instanceof Array ? values[0] : values;
+     *          return value % 2 === 0 ? "even" : "odd";
+     *      })
      *     .flatMap(async (key, values) => values);
      *
      * console.log(await results.toObject()); // { odd: [-3, -1, 3, 5], even: [0, 2, 6, 8] }
