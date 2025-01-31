@@ -2,7 +2,7 @@ export const VERSION = "2.0.0";
 
 export type { Constructor, Interval, Timeout } from "./core/types.js";
 
-export { isBrowser, isNode, isWebWorker } from "./helpers.js";
+export { isBrowser, isNode, isWorker } from "./helpers.js";
 
 export {
     AggregatedIterator,

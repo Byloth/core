@@ -16,4 +16,4 @@ export const isNode = ((typeof process !== "undefined") && !!(process.versions?.
  * An utility constant that indicates whether the current environment is a Web Worker.
  */
 // @ts-ignore
-export const isWebWorker = ((typeof self === "object") && (self.constructor?.name === "DedicatedWorkerGlobalScope"));
+export const isWorker = ((typeof self === "object") && (self.constructor?.name === "DedicatedWorkerGlobalScope"));
