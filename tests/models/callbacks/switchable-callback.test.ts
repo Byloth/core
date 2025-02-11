@@ -69,6 +69,29 @@ describe("SwitchableCallback", () =>
         expect(callback.isEnabled).toBe(true);
         expect(_callback).toHaveBeenCalledTimes(2);
     });
+    it("Should disable & re-enable the callback with the given key", () =>
+    {
+        const _default = vi.fn((point: Point) => { /* ... */ });
+        const _alternative = vi.fn((point: Point) => { /* ... */ });
+
+        callback.register("default", _default);
+        callback.register("alternative", _alternative);
+        callback(_newPoint());
+
+        expect(callback.isEnabled).toBe(true);
+
+        callback.disable();
+        callback(_newPoint());
+
+        expect(callback.isEnabled).toBe(false);
+
+        callback.enable("alternative");
+        callback(_newPoint());
+
+        expect(callback.isEnabled).toBe(true);
+        expect(_default).toHaveBeenCalledTimes(1);
+        expect(_alternative).toHaveBeenCalledTimes(1);
+    });
 
     it("Should throw `RuntimeException` if enabling an already enabled callback", () =>
     {
@@ -77,6 +100,16 @@ describe("SwitchableCallback", () =>
 
         expect(() => callback.enable()).toThrow(RuntimeException);
     });
+    it("Should throw `RuntimeException` if enabling a non-existent callback", () =>
+    {
+        const _callback = vi.fn((point: Point) => { /* ... */ });
+
+        callback.register("default", _callback);
+        callback.disable();
+
+        expect(() => callback.enable("alternative")).toThrow(KeyException);
+    });
+
     it("Should throw `RuntimeException` if disabling an already disabled callback", () =>
     {
         const _callback = vi.fn((point: Point) => { /* ... */ });

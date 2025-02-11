@@ -3,6 +3,8 @@ import { KeyException, NotImplementedException, RuntimeException } from "../exce
 import CallableObject from "./callable-object.js";
 import type { Callback } from "./types.js";
 
+const Disabler = () => { /* ... */ };
+
 /**
  * A class representing a callback that can be switched between multiple implementations.
  *
@@ -106,28 +108,47 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      *
      * Also note that:
      * - If any implementation has been registered yet, a {@link KeyException} will be thrown.  
+     * - If any key is given and it doesn't have any associated
+     * implementation yet, a {@link KeyException} will be thrown.
      * - If the callback is already enabled, a {@link RuntimeException} will be thrown.
      *
      * ```ts
      * window.addEventListener("pointerdown", () => { onPointerMove.enable(); });
      * window.addEventListener("pointermove", onPointerMove);
      * ```
+     * 
+     * @param key
+     * The key that is associated with the implementation to enable. Default is the currently selected implementation.
      */
-    public enable(): void
+    public enable(key?: string): void
     {
-        if (!(this._key))
+        if (key === undefined)
         {
-            throw new KeyException(
-                "The `SwitchableCallback` has no callback defined yet. " +
-                "Did you forget to call the `register` method?"
-            );
+            if (!(this._key))
+            {
+                throw new KeyException(
+                    "The `SwitchableCallback` has no callback defined yet. " +
+                    "Did you forget to call the `register` method?"
+                );
+            }
+
+            key = this._key;
         }
+        else if (!(key))
+        {
+            throw new KeyException("The key must be a non-empty string.");
+        }
+        else if (!(this._callbacks.has(key)))
+        {
+            throw new KeyException(`The key '${key}' doesn't yet have any associated callback.`);
+        }
+
         if (this._isEnabled)
         {
             throw new RuntimeException("The `SwitchableCallback` is already enabled.");
         }
 
-        this._callback = this._callbacks.get(this._key)!;
+        this._callback = this._callbacks.get(key)!;
         this._isEnabled = true;
     }
 
@@ -149,7 +170,7 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
         }
 
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        this._callback = (() => { }) as T;
+        this._callback = Disabler as T;
         this._isEnabled = false;
     }
 
