@@ -622,7 +622,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * console.log(await results.toObject()); // { odd: [-3, -1], even: [0, 2] }
      * ```
      *
-     * @param count The number of elements to take from the beginning of each group.
+     * @param limit The number of elements to take from the beginning of each group.
      *
      * @returns A new {@link AggregatedAsyncIterator} containing the taken elements.
      */

@@ -557,7 +557,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
      * console.log(results.toObject()); // { odd: [-3, -1], even: [0, 2] }
      * ```
      *
-     * @param count The number of elements to take from the beginning of each group.
+     * @param limit The number of elements to take from the beginning of each group.
      *
      * @returns A new {@link AggregatedIterator} containing the taken elements.
      */

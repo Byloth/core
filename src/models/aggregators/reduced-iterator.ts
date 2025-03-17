@@ -489,11 +489,11 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * console.log(reduced.toObject()); // { even: [0, 2, 6, 8] }
      * ```
      *
-     * @param count The number of elements to take.
+     * @param limit The number of elements to take.
      *
      * @returns A new {@link ReducedIterator} containing the taken elements.
      */
-    public take(count: number): ReducedIterator<K, T>
+    public take(limit: number): ReducedIterator<K, T>
     {
         const elements = this._elements.enumerate();
 
@@ -501,7 +501,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
         {
             for (const [index, [key, element]] of elements)
             {
-                if (index >= count) { break; }
+                if (index >= limit) { break; }
                 yield [key, element];
             }
         });

@@ -169,7 +169,6 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
             throw new RuntimeException("The `SwitchableCallback` is already disabled.");
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
         this._callback = Disabler as T;
         this._isEnabled = false;
     }
