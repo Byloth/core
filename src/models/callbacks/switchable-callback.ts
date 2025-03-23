@@ -11,6 +11,9 @@ const Disabler = () => { /* ... */ };
  * It can be used to implement different behaviors for the same event handler, allowing
  * it to respond to different states without incurring any overhead during execution.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const onPointerMove = new SwitchableCallback<(evt: PointerEvent) => void>();
  *
@@ -21,6 +24,8 @@ const Disabler = () => { /* ... */ };
  * window.addEventListener("pointermove", onPointerMove);
  * window.addEventListener("pointerup", () => { onPointerMove.switch("released"); });
  * ```
+ *
+ * ---
  *
  * @template T The type signature of the callback. Default is `(...args: any[]) => any`.
  */
@@ -151,7 +156,9 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      * window.addEventListener("pointerdown", () => { onPointerMove.enable(); });
      * window.addEventListener("pointermove", onPointerMove);
      * ```
-     * 
+     *
+     * ---
+     *
      * @param key
      * The key that is associated with the implementation to enable. Default is the currently selected implementation.
      */

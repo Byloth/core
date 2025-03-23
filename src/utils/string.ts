@@ -1,9 +1,14 @@
 /**
  * Capitalize the first letter of a string.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * capitalize('hello'); // 'Hello'
  * ```
+ *
+ * ---
  *
  * @param value The string to capitalize.
  *

@@ -2,6 +2,9 @@
  * A utility type that allows to define a class constructor of a specific type.  
  * Is the counterpart of the native `InstanceType` utility type.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * function factory<T extends object>(Factory: Constructor<T>): T { [...] }
  *

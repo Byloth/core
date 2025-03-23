@@ -4,9 +4,14 @@
  * It can be used to define the signature of a callback, a event handler or any other function.  
  * It's simply a shorthand for the `(...args: A) => R` function signature.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const callback: Callback<[PointerEvent]> = (evt: PointerEvent): void => { [...] };
  * ```
+ *
+ * ---
  *
  * @template A
  * The type of the arguments that the function accepts.  

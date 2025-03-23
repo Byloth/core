@@ -7,6 +7,9 @@ import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "./types
  * The state can be either `pending`, `fulfilled` or `rejected` and is accessible through
  * the {@link SmartPromise.isPending}, {@link SmartPromise.isFulfilled} & {@link SmartPromise.isRejected} properties.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const promise = new SmartPromise<string>((resolve, reject) =>
  * {
@@ -21,6 +24,8 @@ import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "./types
  * console.log(promise.isPending); // false
  * console.log(promise.isFulfilled); // true
  * ```
+ *
+ * ---
  *
  * @template T The type of value the promise will eventually resolve to. Default is `void`.
  */

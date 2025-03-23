@@ -22,6 +22,9 @@ import type { KeyedIteratee, KeyedTypeGuardPredicate, KeyedReducer } from "./typ
  * This is particularly useful when you need to group elements and
  * then perform specific operations on the groups themselves.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
  *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -29,6 +32,8 @@ import type { KeyedIteratee, KeyedTypeGuardPredicate, KeyedReducer } from "./typ
  *
  * console.log(results.toObject()); // { odd: 4, even: 4 }
  * ```
+ *
+ * ---
  *
  * @template K The type of the keys used to group the elements.
  * @template T The type of the elements to aggregate.

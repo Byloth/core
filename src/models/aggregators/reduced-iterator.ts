@@ -24,6 +24,9 @@ import type { KeyedIteratee, KeyedReducer, KeyedTypeGuardPredicate } from "./typ
  * This is particularly useful when you have group elements and
  * need perform specific operations on the reduced elements.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
  *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -31,6 +34,8 @@ import type { KeyedIteratee, KeyedReducer, KeyedTypeGuardPredicate } from "./typ
  *
  * console.log(results.toObject()); // { odd: 4, even: 4 }
  * ```
+ *
+ * ---
  *
  * @template K The type of the key used to group the elements.
  * @template T The type of the elements in the iterator.
@@ -508,7 +513,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results.toObject()); // { even: [0, 2, 6, 8] }
      * ```
-     * 
+     *
+     * ---
+     *
      * @param count The number of elements to drop.
      *
      * @returns A new {@link ReducedIterator} containing the remaining elements.
@@ -597,9 +604,12 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
      *     .reduce((key, accumulator, value) => accumulator + value)
      *     .find((key, value) => value > 0);
-     * 
+     *
      * console.log(results); // 16
-     * 
+     * ```
+     *
+     * ---
+     *
      * @param predicate The condition to check for each element of the iterator.
      *
      * @returns The first element that satisfies the condition, `undefined` otherwise.
@@ -628,8 +638,11 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *     .groupBy((value) => Number(value) % 2 === 0 ? "even" : "odd")
      *     .reduce((key, accumulator, value) => accumulator + value)
      *     .find<number>((key, value) => typeof value === "number");
-     * 
+     *
      * console.log(results); // 16
+     * ```
+     *
+     * ---
      *
      * @template S
      * The type of the elements that satisfy the condition.  
@@ -771,7 +784,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * const reduced = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
      *     .reduce((key, accumulator, value) => accumulator + value);
-     * 
+     *
      * reduced.forEach((key, value, index) =>
      * {
      *     console.log(`#${index} - ${key}: ${value}`); // "#0 - odd: 4", "#1 - even: 16"

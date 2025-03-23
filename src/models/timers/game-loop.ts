@@ -27,6 +27,9 @@ interface GameLoopEventMap
  * elapsed time since the start of the game loop.  
  * It's also possible to subscribe to the `start` & `stop` events to receive notifications when they occur.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const loop = new GameLoop((elapsedTime: number) =>
  * {

@@ -17,6 +17,9 @@ import type { GeneratorFunction, Iteratee, TypeGuardPredicate, Reducer, Iterator
  * This allows to chain multiple transformations without
  * the need to iterate over the elements multiple times.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const result = new SmartIterator<number>(["-5", "-4", "-3", "-2", "-1", "0", "1", "2", "3", "4", "5"])
  *     .map(Number)
@@ -27,6 +30,8 @@ import type { GeneratorFunction, Iteratee, TypeGuardPredicate, Reducer, Iterator
  *
  * console.log(result); // 31
  * ```
+ *
+ * ---
  *
  * @template T The type of elements in the iterator.
  * @template R The type of the final result of the iterator. Default is `void`.

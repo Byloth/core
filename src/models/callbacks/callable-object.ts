@@ -8,6 +8,9 @@ const SmartFunction = (Function as unknown) as new<A extends unknown[] = [], R =
 /**
  * An abstract class that can be used to implement callable objects.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * class ActivableCallback extends CallableObject<(evt: PointerEvent) => void>
  * {
@@ -24,6 +27,8 @@ const SmartFunction = (Function as unknown) as new<A extends unknown[] = [], R =
  * window.addEventListener("pointermove", callback);
  * window.addEventListener("pointerup", () => { callback.enabled = false; });
  * ```
+ *
+ * ---
  *
  * @template T
  * The type signature of the callback function.  

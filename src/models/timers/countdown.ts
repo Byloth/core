@@ -24,6 +24,9 @@ interface CountdownEventMap
  * It can be started, stopped, when running it ticks at a specific frame rate and it expires when the time's up.  
  * It's possible to subscribe to these events to receive notifications when they occur.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const countdown = new Countdown(10_000);
  *

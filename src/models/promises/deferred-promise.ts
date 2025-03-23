@@ -12,12 +12,17 @@ import SmartPromise from "./smart-promise.js";
  * This is a change in the approach to promises: instead of defining how the promise will be resolved (or rejected),  
  * you define how to handle the resolution (or rejection) when it occurs.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const promise = new DeferredPromise<string, string[]>((value: string) => value.split(" "));
  *
  * promise.then((result) => console.log(result)); // ["Hello,", "World!"]
  * promise.resolve("Hello, World!");
  * ```
+ *
+ * ---
  *
  * @template T The type of value the promise expects to initially be resolved with. Default is `void`.
  * @template F

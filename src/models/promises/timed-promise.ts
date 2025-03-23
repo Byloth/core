@@ -9,6 +9,9 @@ import type { MaybePromise, PromiseExecutor } from "./types.js";
  *
  * If the operation takes longer than the specified time, the promise is rejected with a {@link TimeoutException}.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const promise = new TimedPromise<string>((resolve, reject) =>
  * {
@@ -20,6 +23,8 @@ import type { MaybePromise, PromiseExecutor } from "./types.js";
  *     .then((result) => console.log(result))  // "Hello, World!"
  *     .catch((error) => console.error(error)); // TimeoutException: The operation has timed out.
  * ```
+ *
+ * ---
  *
  * @template T The type of value the promise will eventually resolve to. Default is `void`.
  */

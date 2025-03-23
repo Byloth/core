@@ -5,10 +5,15 @@ import { zip } from "./iterator.js";
  * Computes the average of a given list of values.  
  * The values can be weighted using an additional list of weights.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * average([1, 2, 3, 4, 5]); // 3
  * average([6, 8.5, 4], [3, 2, 1]); // 6.5
  * ```
+ *
+ * ---
  *
  * @template T The type of the values in the list. It must be or extend a `number` object.
  *
@@ -73,10 +78,15 @@ export function average<T extends number>(values: Iterable<T>, weights?: Iterabl
  * {@link http://www.cse.yorku.ca/~oz/hash.html#djb2|djb2} algorithm.  
  * However, the hash is garanteed to be a 32-bit signed integer.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * hash("Hello, world!"); // -1880044555
  * hash("How are you?"); // 1761539132
  * ```
+ *
+ * ---
  *
  * @param value The string to hash.
  *
@@ -99,9 +109,14 @@ export function hash(value: string): number
 /**
  * Sums all the values of a given list.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * sum([1, 2, 3, 4, 5]); // 15
  * ```
+ *
+ * ---
  *
  * @template T The type of the values in the list. It must be or extend a `number` object.
  *

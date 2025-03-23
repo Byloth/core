@@ -10,6 +10,9 @@ import type { JSONValue } from "./types.js";
  * It allows to handle either the volatile {@link sessionStorage} or the persistent
  * {@link localStorage} at the same time, depending on what's your required use case.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const jsonStorage = new JSONStorage();
  *

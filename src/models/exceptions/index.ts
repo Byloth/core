@@ -6,6 +6,9 @@ import Exception from "./core.js";
  *
  * It can also be used to catch all file-related exceptions at once.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * try { [...] }
  * catch (error)
@@ -46,6 +49,9 @@ export class FileException extends Exception
 /**
  * A class representing an exception that can be thrown when a file already exists.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * import { existsSync } from "node:fs";
  *
@@ -84,6 +90,9 @@ export class FileExistsException extends FileException
 /**
  * A class representing an exception that can be thrown when a file isn't found.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * import { existsSync } from "node:fs";
  *
@@ -123,6 +132,9 @@ export class FileNotFoundException extends FileException
  * A class representing an exception that can be thrown when a key is invalid or not found.  
  * It's commonly used when working with dictionaries, maps, objects, sets, etc...
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const map = new Map<string, number>();
  * if (!map.has("hash"))
@@ -161,6 +173,9 @@ export class KeyException extends Exception
  * A class representing an exception that can be thrown when a network operation fails.  
  * It's commonly used when it's unable to connect to a server or when a request times out.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * import axios, { isAxiosError } from "axios";
  *
@@ -207,6 +222,9 @@ export class NetworkException extends Exception
  * A class representing an exception that can be thrown when a permission is denied.  
  * It's commonly used when a user tries to access a restricted resource or perform a forbidden action.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const $user = useUserStore();
  * if (!$user.isAdmin)
@@ -245,6 +263,9 @@ export class PermissionException extends Exception
  * A class representing an exception that can be thrown when a reference is invalid or not found.  
  * It's commonly used when a variable is `null`, `undefined` or when an object doesn't exist.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const $el = document.getElementById("app");
  * if ($el === null)
@@ -283,6 +304,9 @@ export class ReferenceException extends Exception
  * A class representing an exception that can be thrown when a runtime error occurs.  
  * It's commonly used when an unexpected condition is encountered during the execution of a program.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * let status: "enabled" | "disabled" = "enabled";
  *
@@ -324,6 +348,9 @@ export class RuntimeException extends Exception
  * isn't properly configured or when a required variable isn't set.  
  * It can also be used when the environment on which the program is running is unsupported.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * if (!navigator.geolocation)
  * {
@@ -361,6 +388,9 @@ export class EnvironmentException extends RuntimeException
  * A class representing an exception that can be thrown when a timeout occurs.  
  * It's commonly used when a task takes too long to complete or when a request times out.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const timeoutId = setTimeout(() => { throw new TimeoutException("The request timed out."); }, 5_000);
  * const response = await fetch("https://api.example.com/data");
@@ -398,6 +428,9 @@ export class TimeoutException extends Exception
  * A class representing an exception that can be thrown when a type is invalid or not supported.  
  * It's commonly used when a function receives an unexpected type of argument.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * function greet(name: string): void
  * {
@@ -438,6 +471,9 @@ export class TypeException extends Exception
  * A class representing an exception that can be thrown when a value is invalid.  
  * It's commonly used when a function receives an unexpected value as an argument.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * function setVolume(value: number): void
  * {
@@ -478,6 +514,9 @@ export class ValueException extends Exception
  * A class representing an exception that can be thrown when a value is out of range.  
  * It's commonly used when a function receives an unexpected value as an argument.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * function setVolume(value: number): void
  * {

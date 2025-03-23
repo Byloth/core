@@ -5,6 +5,9 @@
  * It allows to chain exceptions together, tracking the initial cause of an error and
  * storing its stack trace while providing a clear and friendly message to the user.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * try { loadGameSaves(); }
  * catch (error)
@@ -109,6 +112,9 @@ export default class Exception extends Error
  *
  * It provides a clear and friendly message by default.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * function checkCase(value: "A" | "B" | "C"): 1 | 2 | 3
  * {
@@ -160,6 +166,9 @@ export class FatalErrorException extends Exception
  *
  * It provides a clear and friendly message by default.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * class Database
  * {

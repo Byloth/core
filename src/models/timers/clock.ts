@@ -22,6 +22,9 @@ interface ClockEventMap
  * It can be started, stopped and, when running, it ticks at a specific frame rate.  
  * It's possible to subscribe to these events to receive notifications when they occur.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const clock = new Clock();
  *

@@ -12,6 +12,9 @@ import type { Callback } from "./types.js";
  *
  * Using generics, it's also possible to define the type of the events and the callbacks that can be subscribed to them.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * interface EventsMap
  * {
@@ -29,6 +32,8 @@ import type { Callback } from "./types.js";
  *     unsubscribe = publisher.subscribe("player:move", ({ x, y }) => { [...] });
  * });
  * ```
+ *
+ * ---
  *
  * @template T
  * A map containing the names of the emittable events and the

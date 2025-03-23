@@ -30,6 +30,9 @@ import type { MaybeAsyncKeyedIteratee, MaybeAsyncKeyedReducer } from "./types.js
  * This is particularly useful when you need to group elements and
  * then perform specific operations on the groups themselves.
  *
+ * ---
+ *
+ * @example
  * ```ts
  * const elements = fetch([...]); // Promise<[-3, -1, 0, 2, 3, 5, 6, 8]>;
  * const results = new SmartAsyncIterator(elements)
@@ -38,6 +41,8 @@ import type { MaybeAsyncKeyedIteratee, MaybeAsyncKeyedReducer } from "./types.js
  *
  * console.log(await results.toObject()); // { odd: 4, even: 4 }
  * ```
+ *
+ * ---
  *
  * @template K The type of the keys used to group the elements.
  * @template T The type of the elements to aggregate.
