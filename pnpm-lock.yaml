@@ -17,6 +17,9 @@ importers:
       '@types/node':
         specifier: ^22.13.11
         version: 22.13.11
+      eslint:
+        specifier: ^9.23.0
+        version: 9.23.0
       husky:
         specifier: ^9.1.7
         version: 9.1.7

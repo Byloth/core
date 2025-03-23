@@ -60,6 +60,7 @@
     "@byloth/eslint-config-typescript": "^3.1.0",
     "@eslint/compat": "^1.2.7",
     "@types/node": "^22.13.11",
+    "eslint": "^9.23.0",
     "husky": "^9.1.7",
     "jsdom": "^26.0.0",
     "typescript": "^5.8.2",
