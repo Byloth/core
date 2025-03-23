@@ -303,6 +303,7 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
             throw new KeyException(`The key '${key}' doesn't yet have any associated callback.`);
         }
 
+        if (this._key === key) { return; }
         this._key = key;
 
         if (this._isEnabled)
