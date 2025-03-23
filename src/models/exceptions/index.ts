@@ -22,9 +22,14 @@ export class FileException extends Exception
     /**
      * Initializes a new instance of the {@link FileException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new FileException("An error occurred while trying to read the file.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -55,9 +60,14 @@ export class FileExistsException extends FileException
     /**
      * Initializes a new instance of the {@link FileExistsException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new FileExistsException("The file named 'data.json' already exists on the server.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -88,9 +98,14 @@ export class FileNotFoundException extends FileException
     /**
      * Initializes a new instance of the {@link FileNotFoundException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new FileNotFoundException("The file named 'data.json' wasn't found on the server.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -121,9 +136,14 @@ export class KeyException extends Exception
     /**
      * Initializes a new instance of the {@link KeyException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new KeyException("The 'id' key wasn't found in the dictionary.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -162,9 +182,14 @@ export class NetworkException extends Exception
     /**
      * Initializes a new instance of the {@link NetworkException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new NetworkException("Couldn't connect to the server. Please, try again later.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -195,9 +220,14 @@ export class PermissionException extends Exception
     /**
      * Initializes a new instance of the {@link PermissionException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new PermissionException("You don't have permission to access this resource.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -228,9 +258,14 @@ export class ReferenceException extends Exception
     /**
      * Initializes a new instance of the {@link ReferenceException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new ReferenceException("The 'canvas' element wasn't found in the document.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -263,9 +298,14 @@ export class RuntimeException extends Exception
     /**
      * Initializes a new instance of the {@link RuntimeException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new RuntimeException("The received input seems to be malformed or corrupted.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -296,9 +336,14 @@ export class EnvironmentException extends RuntimeException
     /**
      * Initializes a new instance of the {@link EnvironmentException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new EnvironmentException("The required environment variable 'API_KEY' isn't set.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -328,9 +373,14 @@ export class TimeoutException extends Exception
     /**
      * Initializes a new instance of the {@link TimeoutException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new TimeoutException("The task took too long to complete.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -363,9 +413,14 @@ export class TypeException extends Exception
     /**
      * Initializes a new instance of the {@link TypeException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new TypeException("The 'username' argument must be a valid string.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -398,9 +453,14 @@ export class ValueException extends Exception
     /**
      * Initializes a new instance of the {@link ValueException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new ValueException("The 'grade' argument cannot be negative.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -433,9 +493,14 @@ export class RangeException extends ValueException
     /**
      * Initializes a new instance of the {@link RangeException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new RangeException("The 'percentage' argument must be between 0 and 100.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.

@@ -42,9 +42,14 @@ export default class JSONStorage
      * Initializes a new instance of the {@link JSONStorage} class.  
      * It cannot be instantiated outside of a browser environment or an {@link EnvironmentException} is thrown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const jsonStorage = new JSONStorage();
      * ```
+     *
+     * ---
      *
      * @param preferPersistence
      * Whether to prefer the {@link localStorage} over the {@link sessionStorage} when calling an ambivalent method.  
@@ -106,9 +111,14 @@ export default class JSONStorage
     /**
      * Retrieves the value with the specified key from the default storage.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const value: TValue = jsonStorage.get<TValue>("key");
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -121,9 +131,14 @@ export default class JSONStorage
     /**
      * Retrieves the value with the specified key from the default storage.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const value: TValue = jsonStorage.get<TValue>("key", defaultValue);
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -140,9 +155,14 @@ export default class JSONStorage
     /**
      * Retrieves the value with the specified key from the default storage.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const value: TValue = jsonStorage.get<TValue>("key", obj?.value);
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -166,9 +186,14 @@ export default class JSONStorage
     /**
      * Retrieves the value with the specified key from the volatile {@link sessionStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const value: TValue = jsonStorage.recall<TValue>("key");
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -181,9 +206,14 @@ export default class JSONStorage
     /**
      * Retrieves the value with the specified key from the volatile {@link sessionStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const value: TValue = jsonStorage.recall<TValue>("key", defaultValue);
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -197,9 +227,14 @@ export default class JSONStorage
     /**
      * Retrieves the value with the specified key from the volatile {@link sessionStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const value: TValue = jsonStorage.recall<TValue>("key", obj?.value);
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -218,9 +253,14 @@ export default class JSONStorage
      * Retrieves the value with the specified key looking first in the volatile
      * {@link sessionStorage} and then, if not found, in the persistent {@link localStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const value: TValue = jsonStorage.retrieve<TValue>("key");
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -234,9 +274,14 @@ export default class JSONStorage
      * Retrieves the value with the specified key looking first in the volatile
      * {@link sessionStorage} and then, if not found, in the persistent {@link localStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const value: TValue = jsonStorage.retrieve<TValue>("key", defaultValue);
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -251,9 +296,14 @@ export default class JSONStorage
      * Retrieves the value with the specified key looking first in the volatile
      * {@link sessionStorage} and then, if not found, in the persistent {@link localStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const value: TValue = jsonStorage.retrieve<TValue>("key", obj?.value);
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -271,9 +321,14 @@ export default class JSONStorage
     /**
      * Retrieves the value with the specified key from the persistent {@link localStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const value: TValue = jsonStorage.read<TValue>("key");
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -286,9 +341,14 @@ export default class JSONStorage
     /**
      * Retrieves the value with the specified key from the persistent {@link localStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const value: TValue = jsonStorage.read<TValue>("key", defaultValue);
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -302,9 +362,14 @@ export default class JSONStorage
     /**
      * Retrieves the value with the specified key from the persistent {@link localStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const value: TValue = jsonStorage.read<TValue>("key", obj?.value);
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to retrieve.
      *
@@ -322,12 +387,17 @@ export default class JSONStorage
     /**
      * Checks whether the value with the specified key exists within the default storage.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * if (jsonStorage.has("key"))
      * {
      *    // The key exists. Do something...
      * }
      * ```
+     *
+     * ---
      *
      * @param key The key of the value to check.
      * @param persistent
@@ -346,12 +416,17 @@ export default class JSONStorage
     /**
      * Checks whether the value with the specified key exists within the volatile {@link sessionStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * if (jsonStorage.knows("key"))
      * {
      *    // The key exists. Do something...
      * }
      * ```
+     *
+     * ---
      *
      * @param key The key of the value to check.
      *
@@ -366,12 +441,17 @@ export default class JSONStorage
      * Checks whether the value with the specified key exists looking first in the
      * volatile {@link sessionStorage} and then, if not found, in the persistent {@link localStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * if (jsonStorage.find("key"))
      * {
      *    // The key exists. Do something...
      * }
      * ```
+     *
+     * ---
      *
      * @param key The key of the value to check.
      *
@@ -385,12 +465,17 @@ export default class JSONStorage
     /**
      * Checks whether the value with the specified key exists within the persistent {@link localStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * if (jsonStorage.exists("key"))
      * {
      *    // The key exists. Do something...
      * }
      * ```
+     *
+     * ---
      *
      * @param key The key of the value to check.
      *
@@ -405,11 +490,16 @@ export default class JSONStorage
      * Sets the value with the specified key in the default storage.  
      * If the value is `undefined` or omitted, the key is removed from the storage.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * jsonStorage.set("key");
      * jsonStorage.set("key", value);
      * jsonStorage.set("key", obj?.value);
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to set.
      *
@@ -430,11 +520,16 @@ export default class JSONStorage
      * Sets the value with the specified key in the volatile {@link sessionStorage}.  
      * If the value is `undefined` or omitted, the key is removed from the storage.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * jsonStorage.remember("key");
      * jsonStorage.remember("key", value);
      * jsonStorage.remember("key", obj?.value);
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to set.
      *
@@ -450,11 +545,16 @@ export default class JSONStorage
      * Sets the value with the specified key in the persistent {@link localStorage}.  
      * If the value is `undefined` or omitted, the key is removed from the storage.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * jsonStorage.write("key");
      * jsonStorage.write("key", value);
      * jsonStorage.write("key", obj?.value);
      * ```
+     *
+     * ---
      *
      * @template T The type of the value to set.
      *
@@ -469,9 +569,14 @@ export default class JSONStorage
     /**
      * Removes the value with the specified key from the default storage.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * jsonStorage.delete("key");
      * ```
+     *
+     * ---
      *
      * @param key The key of the value to remove.
      * @param persistent
@@ -488,9 +593,14 @@ export default class JSONStorage
     /**
      * Removes the value with the specified key from the volatile {@link sessionStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * jsonStorage.forget("key");
      * ```
+     *
+     * ---
      *
      * @param key The key of the value to remove.
      */
@@ -502,9 +612,14 @@ export default class JSONStorage
     /**
      * Removes the value with the specified key from the persistent {@link localStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * jsonStorage.erase("key");
      * ```
+     *
+     * ---
      *
      * @param key The key of the value to remove.
      */
@@ -517,9 +632,14 @@ export default class JSONStorage
      * Removes the value with the specified key from both the
      * volatile {@link sessionStorage} and the persistent {@link localStorage}.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * jsonStorage.clear("key");
      * ```
+     *
+     * ---
      *
      * @param key The key of the value to remove.
      */

@@ -58,9 +58,14 @@ export default class DeferredPromise<T = void, F = T, R = never> extends SmartPr
     /**
      * Initializes a new instance of the {@link DeferredPromise} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const promise = new DeferredPromise<string, string[]>((value: string) => value.split(" "));
      * ```
+     *
+     * ---
      *
      * @param onFulfilled The callback to execute once the promise is fulfilled.
      * @param onRejected The callback to execute once the promise is rejected.
@@ -88,6 +93,9 @@ export default class DeferredPromise<T = void, F = T, R = never> extends SmartPr
     /**
      * Watches another promise and resolves or rejects this promise when the other one is settled.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const promise = new Promise<string>((resolve) => setTimeout(() => resolve("Hello, World!"), 1_000));
      * const deferred = new DeferredPromise<string, string[]>((value: string) => value.split(" "));
@@ -95,6 +103,8 @@ export default class DeferredPromise<T = void, F = T, R = never> extends SmartPr
      * deferred.then((result) => console.log(result)); // ["Hello,", "World!"]
      * deferred.watch(promise);
      * ```
+     *
+     * ---
      *
      * @param otherPromise The promise to watch.
      *

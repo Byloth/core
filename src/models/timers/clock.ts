@@ -42,9 +42,14 @@ export default class Clock extends GameLoop
     /**
      * Initializes a new instance of the {@link Clock} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const clock = new Clock();
      * ```
+     *
+     * ---
      *
      * @param msIfNotBrowser
      * The interval in milliseconds at which the clock will tick if the environment is not a browser.  
@@ -62,10 +67,15 @@ export default class Clock extends GameLoop
      *
      * If the clock is already running, a {@link RuntimeException} will be thrown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * clock.onStart(() => { [...] }); // This callback will be executed.
      * clock.start();
      * ```
+     *
+     * ---
      *
      * @param elapsedTime The elapsed time to set as default when the clock starts. Default is `0`.
      */
@@ -85,6 +95,9 @@ export default class Clock extends GameLoop
      *
      * If the clock hasn't yet started, a {@link RuntimeException} will be thrown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * clock.onStop(() => { [...] }); // This callback will be executed.
      * clock.stop();
@@ -105,10 +118,15 @@ export default class Clock extends GameLoop
     /**
      * Subscribes to the `tick` event of the clock.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * clock.onTick((elapsedTime) => { [...] }); // This callback will be executed.
      * clock.start();
      * ```
+     *
+     * ---
      *
      * @param callback The callback that will be executed when the clock ticks.
      * @param tickStep

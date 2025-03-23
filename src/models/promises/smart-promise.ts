@@ -29,6 +29,9 @@ export default class SmartPromise<T = void> implements Promise<T>
     /**
      * Wraps a new {@link SmartPromise} object around an existing native {@link Promise} object.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const request = fetch("https://api.example.com/data");
      * const smartRequest = SmartPromise.FromPromise(request);
@@ -39,6 +42,8 @@ export default class SmartPromise<T = void> implements Promise<T>
      * const response = await request;
      * console.log(smartRequest.isFulfilled); // true
      * ```
+     *
+     * ---
      *
      * @param promise The promise to wrap.
      *
@@ -105,12 +110,17 @@ export default class SmartPromise<T = void> implements Promise<T>
     /**
      * Initializes a new instance of the {@link SmartPromise} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const promise = new SmartPromise<string>((resolve, reject) =>
      * {
      *     setTimeout(() => resolve("Hello, World!"), 1_000);
      * });
      * ```
+     *
+     * ---
      *
      * @param executor
      * The function responsible for eventually resolving or rejecting the promise.  
@@ -144,6 +154,9 @@ export default class SmartPromise<T = void> implements Promise<T>
     /**
      * Creates a new {@link Promise} identical to the one wrapped by this instance, with a different reference.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const promise = new SmartPromise<string>((resolve, reject) =>
      * {
@@ -152,6 +165,8 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * console.log(await promise.then()); // "Hello, World!"
      * ```
+     *
+     * ---
      *
      * @returns A new {@link Promise} identical to the original one.
      */
@@ -163,6 +178,9 @@ export default class SmartPromise<T = void> implements Promise<T>
      * The previous result of the promise is passed as the argument to the callback.  
      * The callback's return value is considered the new promise's result instead.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const promise = new SmartPromise<string>((resolve, reject) =>
      * {
@@ -171,6 +189,8 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * promise.then((result) => console.log(result)); // "Hello, World!"
      * ```
+     *
+     * ---
      *
      * @template F The type of value the new promise will eventually resolve to. Default is `T`.
      *
@@ -193,6 +213,9 @@ export default class SmartPromise<T = void> implements Promise<T>
      * The rejection callback's return value is considered the new promise's result.
      * - If the rejection callback throws an error, the new promise is rejected with that error.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
      * {
@@ -202,6 +225,8 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * promise.then(() => console.log("OK!"), () => console.log("KO!")); // "OK!" or "KO!"
      * ```
+     *
+     * ---
      *
      * @template F The type of value the new promise will eventually resolve to. Default is `T`.
      * @template R The type of value the new promise will eventually resolve to. Default is `never`.
@@ -223,6 +248,9 @@ export default class SmartPromise<T = void> implements Promise<T>
     /**
      * Creates a new {@link Promise} identical to the one wrapped by this instance, with a different reference.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
      * {
@@ -231,6 +259,8 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * promise.catch(); // Uncaught Error: An unknown error occurred.
      * ```
+     *
+     * ---
      *
      * @returns A new {@link Promise} identical to the original one.
      */
@@ -245,6 +275,9 @@ export default class SmartPromise<T = void> implements Promise<T>
      * The callback's return value is considered the new promise's result.
      * - If the callback throws an error, the new promise is rejected with that error.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
      * {
@@ -253,6 +286,8 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * promise.catch((reason) => console.error(reason)); // "Error: An unknown error occurred."
      * ```
+     *
+     * ---
      *
      * @template R The type of value the new promise will eventually resolve to. Default is `T`.
      *
@@ -269,6 +304,9 @@ export default class SmartPromise<T = void> implements Promise<T>
     /**
      * Attaches a callback that executes right after the promise is settled, regardless of the outcome.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
      * {
@@ -282,6 +320,8 @@ export default class SmartPromise<T = void> implements Promise<T>
      *     .catch(() => console.log("KO!")) // Logs "KO!" if the promise is rejected.
      *     .finally(() => console.log("Done!")); // Always logs "Done!".
      * ```
+     *
+     * ---
      *
      * @param onFinally The callback to execute when once promise is settled.
      *

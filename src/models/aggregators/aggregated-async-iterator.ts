@@ -52,9 +52,14 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     /**
      * Initializes a new instance of the {@link AggregatedAsyncIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new AggregatedAsyncIterator<string, number>([["A", 1], ["B", 2], ["A", 3], ["C", 4], ["B", 5]]);
      * ```
+     *
+     * ---
      *
      * @param iterable The iterable to aggregate.
      */
@@ -63,10 +68,15 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     /**
      * Initializes a new instance of the {@link AggregatedAsyncIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const elements = fetch([...]); // Promise<[["A", 1], ["B", 2], ["A", 3], ["C", 4], ["B", 5]]>
      * const iterator = new AggregatedAsyncIterator<string, number>(elements);
      * ```
+     *
+     * ---
      *
      * @param iterable The iterable to aggregate.
      */
@@ -75,6 +85,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     /**
      * Initializes a new instance of the {@link AggregatedAsyncIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * import { Random } from "@byloth/core";
      *
@@ -90,6 +103,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * });
      * ```
      *
+     * ---
+     *
      * @param iterator The iterator to aggregate.
      */
     public constructor(iterator: Iterator<[K, T]>);
@@ -97,6 +112,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     /**
      * Initializes a new instance of the {@link AggregatedAsyncIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * import { Random } from "@byloth/core";
      *
@@ -112,6 +130,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * });
      * ```
      *
+     * ---
+     *
      * @param iterator The iterator to aggregate.
      */
     public constructor(iterator: AsyncIterator<[K, T]>);
@@ -119,6 +139,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     /**
      * Initializes a new instance of the {@link AggregatedAsyncIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * import { range, Random } from "@byloth/core";
      *
@@ -131,6 +154,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * });
      * ```
      *
+     * ---
+     *
      * @param generatorFn The generator function to aggregate.
      */
     public constructor(generatorFn: GeneratorFunction<[K, T]>);
@@ -138,6 +163,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     /**
      * Initializes a new instance of the {@link AggregatedAsyncIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * import { range, Random } from "@byloth/core";
      *
@@ -150,6 +178,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * });
      * ```
      *
+     * ---
+     *
      * @param generatorFn The generator function to aggregate.
      */
     public constructor(generatorFn: AsyncGeneratorFunction<[K, T]>);
@@ -157,9 +187,14 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     /**
      * Initializes a new instance of the {@link AggregatedAsyncIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new AggregatedAsyncIterator(asyncKeyedValues);
      * ```
+     *
+     * ---
      *
      * @param argument The iterable, iterator or generator function to aggregate.
      */
@@ -182,6 +217,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * object that will contain all the boolean results for each group.  
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -189,6 +227,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: false, even: true }
      * ```
+     *
+     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -227,6 +267,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * object that will contain all the boolean results for each group.  
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-5, -4, -3, -2, -1, 0])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -234,6 +277,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: false, even: true }
      * ```
+     *
+     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -269,6 +314,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -276,6 +324,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: [3, 5], even: [0, 2, 6, 8] }
      * ```
+     *
+     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -293,6 +343,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, "-1", 0, "2", "3", 5, 6, "8"])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -300,6 +353,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: [-3, 5], even: [0, 6] }
      * ```
+     *
+     * ---
      *
      * @template S
      * The type of the elements that satisfy the condition.  
@@ -342,6 +397,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -349,6 +407,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: [3, 1, 3, 5], even: [0, 2, 6, 8] }
      * ```
+     *
+     * ---
      *
      * @template V The type of the elements after the transformation.
      *
@@ -387,6 +447,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * object that will contain all the reduced results for each group.  
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -394,6 +457,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: 4, even: 16 }
      * ```
+     *
+     * ---
      *
      * @param reducer The reducer function to apply to each element of the iterator.
      *
@@ -416,6 +481,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * object that will contain all the reduced results for each group.  
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -423,6 +491,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: 4, even: 16 }
      * ```
+     *
+     * ---
      *
      * @template A The type of the accumulator value which will also be the final result of the reduction.
      *
@@ -449,6 +519,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * object that will contain all the reduced results for each group.  
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -456,6 +529,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: { value: 4 }, even: { value: 16 } }
      * ```
+     *
+     * ---
      *
      * @template A The type of the accumulator value which will also be the final result of the reduction.
      *
@@ -515,6 +590,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([[-3, -1], 0, 2, 3, 5, [6, 8]])
      *      .groupBy(async (values) =>
@@ -526,6 +604,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: [-3, -1, 3, 5], even: [0, 2, 6, 8] }
      * ```
+     *
+     * ---
      *
      * @template V The type of the elements after the transformation.
      *
@@ -568,6 +648,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -575,6 +658,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: [3, 5], even: [6, 8] }
      * ```
+     *
+     * ---
      *
      * @param count The number of elements to drop from the beginning of each group.
      *
@@ -614,6 +699,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -621,6 +709,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: [-3, -1], even: [0, 2] }
      * ```
+     *
+     * ---
      *
      * @param limit The number of elements to take from the beginning of each group.
      *
@@ -657,6 +747,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * object that will contain the first element that satisfies the condition for each group.  
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -664,6 +757,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: 3, even: 2 }
      * ```
+     *
+     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -685,6 +780,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * object that will contain the first element that satisfies the condition for each group.  
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number | string>([-3, "-1", 0, "2", "3", 5, 6, "8"])
      *     .groupBy(async (value) => Number(value) % 2 === 0 ? "even" : "odd")
@@ -692,6 +790,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: -3, even: 0 }
      * ```
+     *
+     * ---
      *
      * @template S
      * The type of the elements that satisfy the condition.  
@@ -739,6 +839,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, 0, 2, -1, 3])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -746,6 +849,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(results.toObject()); // { odd: [[0, -3], [1, -1], [2, 3]], even: [[0, 0], [1, 2]] }
      * ```
+     *
+     * ---
      *
      * @returns A new {@link AggregatedAsyncIterator} containing the enumerated elements.
      */
@@ -765,6 +870,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 6, -3, -1, 0, 5, 6, 8, 0, 2])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -772,6 +880,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: [-3, -1, 3, 5], even: [0, 2, 6, 8] }
      * ```
+     *
+     * ---
      *
      * @returns A new {@link AggregatedAsyncIterator} containing only the unique elements.
      */
@@ -801,6 +911,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -808,6 +921,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { odd: 4, even: 4 }
      * ```
+     *
+     * ---
      *
      * @returns
      * A {@link Promise} resolving to a new {@link ReducedIterator} containing the number of elements for each group.
@@ -836,6 +951,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * This method will consume the entire iterator in the process.  
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const aggregator = new SmartAsyncIterator<number>([-3, 0, 2, -1, 3])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd");
@@ -845,6 +963,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *     console.log(`${index}: ${value}`); // "0: -3", "0: 0", "1: 2", "1: -1", "2: 3"
      * };
      * ```
+     *
+     * ---
      *
      * @param iteratee The function to execute for each element of the iterator.
      *
@@ -875,6 +995,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -883,6 +1006,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await results.toObject()); // { "+": [1, 0, 3, 6], "-": [-3, -2, -5, -8] }
      * ```
+     *
+     * ---
      *
      * @template J The type of the new key.
      *
@@ -919,6 +1044,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const keys = new SmartAsyncIterator([-3, Symbol(), "A", { }, null, [1 , 2, 3], false])
      *     .groupBy(async (value) => typeof value)
@@ -926,6 +1054,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await keys.toArray()); // ["number", "symbol", "string", "object", "boolean"]
      * ```
+     *
+     * ---
      *
      * @returns A new {@link SmartAsyncIterator} containing all the keys of the iterator.
      */
@@ -958,6 +1088,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const entries = new SmartAsyncIterator<number>([-3, 0, 2, -1, 3])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -965,6 +1098,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await entries.toArray()); // [["odd", -3], ["even", 0], ["even", 2], ["odd", -1], ["odd", 3]]
      * ```
+     *
+     * ---
      *
      * @returns A new {@link SmartAsyncIterator} containing all the entries of the iterator.
      */
@@ -984,6 +1119,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const values = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd")
@@ -991,6 +1129,8 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * console.log(await values.toArray()); // [-3, -1, 0, 2, 3, 5, 6, 8]
      * ```
+     *
+     * ---
      *
      * @returns A new {@link SmartAsyncIterator} containing all the values of the iterator.
      */
@@ -1010,12 +1150,17 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const aggregator = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd");
      *
      * console.log(await aggregator.toArray()); // [[-3, -1, 3, 5], [0, 2, 6, 8]]
      * ```
+     *
+     * ---
      *
      * @returns A {@link Promise} resolving to an {@link Array} containing all the values of the iterator.
      */
@@ -1032,12 +1177,17 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const aggregator = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd");
      *
      * console.log(await aggregator.toMap()); // Map(2) { "odd" => [-3, -1, 3, 5], "even" => [0, 2, 6, 8] }
      * ```
+     *
+     * ---
      *
      * @returns A {@link Promise} resolving to a {@link Map} containing all the entries of the iterator.
      */
@@ -1062,12 +1212,17 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const aggregator = new SmartAsyncIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy(async (value) => value % 2 === 0 ? "even" : "odd");
      *
      * console.log(await aggregator.toObject()); // { odd: [-3, -1, 3, 5], even: [0, 2, 6, 8] }
      * ```
+     *
+     * ---
      *
      * @returns A {@link Promise} resolving to an object containing all the entries of the iterator.
      */

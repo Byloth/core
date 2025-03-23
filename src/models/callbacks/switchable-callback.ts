@@ -78,28 +78,60 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
     /**
      * Initializes a new instance of the {@link SwitchableCallback} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const onPointerMove = new SwitchableCallback<(evt: PointerEvent) => void>();
      * ```
      */
-    public constructor()
-    {
-        const _default = () =>
-        {
-            throw new NotImplementedException(
-                "The `SwitchableCallback` has no callback defined yet. " +
-                "Did you forget to call the `register` method?"
-            );
-        };
+    public constructor();
 
+    /**
+     * Initializes a new instance of the {@link SwitchableCallback}
+     * class with the specified callback enabled by default.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const onPointerMove = new SwitchableCallback<(evt: PointerEvent) => void>((evt) => { [...] });
+     * ```
+     *
+     * ---
+     *
+     * @param callback The callback that will be executed when the object is invoked as a function by default.
+     * @param key The key that is associated by default to the given callback. Default is `default`.
+     */
+    public constructor(callback: T, key?: string);
+    public constructor(callback?: T, key = "default")
+    {
         super();
 
-        this._callback = ((_default) as unknown) as T;
         this._callbacks = new Map<string, T>();
-
         this._isEnabled = true;
-        this._key = "";
 
+        if (callback)
+        {
+            this._callbacks.set(key, callback);
+        }
+        else
+        {
+            key = "";
+
+            callback = ((() =>
+            {
+                throw new NotImplementedException(
+                    "The `SwitchableCallback` has no callback defined yet. " +
+                    "Did you forget to call the `register` method?"
+                );
+
+            }) as unknown) as T;
+        }
+
+        this._key = key;
+
+        this._callback = callback;
         this._invoke = (...args: Parameters<T>): ReturnType<T> => this._callback(...args);
     }
 
@@ -112,6 +144,9 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      * implementation yet, a {@link KeyException} will be thrown.
      * - If the callback is already enabled, a {@link RuntimeException} will be thrown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * window.addEventListener("pointerdown", () => { onPointerMove.enable(); });
      * window.addEventListener("pointermove", onPointerMove);
@@ -157,6 +192,9 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      *
      * If the callback is already disabled, a {@link RuntimeException} will be thrown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * window.addEventListener("pointermove", onPointerMove);
      * window.addEventListener("pointerup", () => { onPointerMove.disable(); });
@@ -180,10 +218,15 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      * - If the callback has no other implementation registered yet, this one will be selected as default.
      * - If the key has already been used for another implementation, a {@link KeyException} will be thrown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * onPointerMove.register("pressed", () => { [...] });
      * onPointerMove.register("released", () => { [...] });
      * ```
+     *
+     * ---
      *
      * @param key The key that will be associated with the implementation.
      * @param callback The implementation to register.
@@ -210,9 +253,14 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      * - If the key is the currently selected implementation, a {@link KeyException} will be thrown.
      * - If the key has no associated implementation yet, a {@link KeyException} will be thrown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * onPointerMove.unregister("released");
      * ```
+     *
+     * ---
      *
      * @param key The key that is associated with the implementation to unregister.
      */
@@ -235,11 +283,16 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      *
      * If the key has no associated implementation yet, a {@link KeyException} will be thrown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * window.addEventListener("pointerdown", () => { onPointerMove.switch("pressed"); });
      * window.addEventListener("pointermove", onPointerMove);
      * window.addEventListener("pointerup", () => { onPointerMove.switch("released"); });
      * ```
+     *
+     * ---
      *
      * @param key The key that is associated with the implementation to switch to.
      */

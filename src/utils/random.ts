@@ -12,12 +12,17 @@ export default class Random
     /**
      * Generates a random boolean value.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * if (Random.Boolean())
      * {
      *    // Do something...
      * }
      * ```
+     *
+     * ---
      *
      * @param ratio
      * The probability of generating `true`.
@@ -34,9 +39,14 @@ export default class Random
     /**
      * Generates a random integer value between `0` (included) and `max` (excluded).
      *
+     * ---
+     *
+     * @example
      * ```ts
      * Random.Integer(5); // 0, 1, 2, 3, 4
      * ```
+     *
+     * ---
      *
      * @param max The maximum value (excluded).
      *
@@ -47,9 +57,14 @@ export default class Random
     /**
      * Generates a random integer value between `min` (included) and `max` (excluded).
      *
+     * ---
+     *
+     * @example
      * ```ts
      * Random.Integer(2, 7); // 2, 3, 4, 5, 6
      * ```
+     *
+     * ---
      *
      * @param min The minimum value (included).
      * @param max The maximum value (excluded).
@@ -67,9 +82,14 @@ export default class Random
     /**
      * Generates a random decimal value between `0` (included) and `1` (excluded).
      *
+     * ---
+     *
+     * @example
      * ```ts
      * Random.Decimal(); // 0.123456789
      * ```
+     *
+     * ---
      *
      * @returns A random decimal value.
      */
@@ -78,9 +98,14 @@ export default class Random
     /**
      * Generates a random decimal value between `0` (included) and `max` (excluded).
      *
+     * ---
+     *
+     * @example
      * ```ts
      * Random.Decimal(5); // 2.3456789
      * ```
+     *
+     * ---
      *
      * @param max The maximum value (excluded).
      *
@@ -91,9 +116,14 @@ export default class Random
     /**
      * Generates a random decimal value between `min` (included) and `max` (excluded).
      *
+     * ---
+     *
+     * @example
      * ```ts
      * Random.Decimal(2, 7); // 4.56789
      * ```
+     *
+     * ---
      *
      * @param min The minimum value (included).
      * @param max The maximum value (excluded).

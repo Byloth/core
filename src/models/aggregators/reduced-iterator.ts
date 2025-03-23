@@ -45,9 +45,14 @@ export default class ReducedIterator<K extends PropertyKey, T>
     /**
      * Initializes a new instance of the {@link ReducedIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new ReducedIterator<string, number>([["A", 1], ["B", 2], ["C", 4]]);
      * ```
+     *
+     * ---
      *
      * @param iterable A reduced iterable object.
      */
@@ -56,6 +61,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
     /**
      * Initializes a new instance of the {@link ReducedIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new ReducedIterator<string, number>({
      *     _index: 0,
@@ -69,6 +77,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * });
      * ```
      *
+     * ---
+     *
      * @param iterator An reduced iterator object.
      */
     public constructor(iterator: Iterator<[K, T]>);
@@ -76,6 +86,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
     /**
      * Initializes a new instance of the {@link ReducedIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * import { range, Random } from "@byloth/core";
      *
@@ -88,6 +101,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * });
      * ```
      *
+     * ---
+     *
      * @param generatorFn A generator function that produces the reduced elements.
      */
     public constructor(generatorFn: GeneratorFunction<[K, T]>);
@@ -95,9 +110,14 @@ export default class ReducedIterator<K extends PropertyKey, T>
     /**
      * Initializes a new instance of the {@link ReducedIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new ReducedIterator(reducedValues);
      * ```
+     *
+     * ---
      *
      * @param argument An iterable, iterator or generator function that produces the reduced elements.
      */
@@ -120,6 +140,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * If the iterator is infinite and every element satisfies the condition, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -128,6 +151,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results); // true
      * ```
+     *
+     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -156,6 +181,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * If the iterator is infinite and no element satisfies the condition, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -164,6 +192,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results); // true
      * ```
+     *
+     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -192,6 +222,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -200,6 +233,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results.toObject()); // { odd: 4, even: 16 }
      * ```
+     *
+     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -220,6 +255,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartIterator<number | string>([-3, -1, "0", "2", 3, 5, "6", "8"])
      *     .groupBy((value) => Number(value) % 2 === 0 ? "even" : "odd")
@@ -228,6 +266,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results.toObject()); // { odd: 4 }
      * ```
+     *
+     * ---
      *
      * @template S
      * The type of the elements that satisfy the condition.  
@@ -266,6 +306,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -274,6 +317,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results.toObject()); // { odd: 8, even: 32 }
      * ```
+     *
+     * ---
      *
      * @template V The type of the elements after the transformation.
      *
@@ -308,6 +353,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * - If an empty iterator is provided, a {@link ValueException} will be thrown.
      * - If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const result = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -316,6 +364,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(result); // 20
      * ```
+     *
+     * ---
      *
      * @param reducer The reducer function to apply to the elements of the iterator.
      *
@@ -335,6 +385,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const result = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -343,6 +396,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(result); // { value: 20 }
      * ```
+     *
+     * ---
      *
      * @template A The type of the accumulator value which will also be the type of the final result of the reduction.
      *
@@ -388,6 +443,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -396,6 +454,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results.toObject()); // { odd: [-3, -1, 3, 5], even: [0, 2, 6, 8] }
      * ```
+     *
+     * ---
      *
      * @template V The type of the elements after the transformation.
      *
@@ -437,6 +497,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * Only the dropped elements will be consumed in the process.  
      * The rest of the iterator will be consumed once the new iterator is.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -478,6 +541,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * Only the taken elements will be consumed from the original reduced iterator.  
      * The rest of the original reduced iterator will be available for further consumption.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const reduced = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -488,6 +554,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * console.log(results.toObject()); // { odd: [-3, -1, 3, 5] }
      * console.log(reduced.toObject()); // { even: [0, 2, 6, 8] }
      * ```
+     *
+     * ---
      *
      * @param limit The number of elements to take.
      *
@@ -521,6 +589,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * - If no element satisfies the condition, `undefined` will be returned once the entire iterator is consumed.
      * - If the iterator is infinite and no element satisfies the condition, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartIterator<number>([-3, -3, -1, 0, 1, 2, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -549,6 +620,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * - If no element satisfies the condition, `undefined` will be returned once the entire iterator is consumed.
      * - If the iterator is infinite and no element satisfies the condition, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartIterator<number | string>(["-3", -3, "-1", 0, 1, 2, "5", 6, 8])
      *     .groupBy((value) => Number(value) % 2 === 0 ? "even" : "odd")
@@ -589,6 +663,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new ReducedIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -597,6 +674,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results.toObject()); // [[0, 4], [1, 16]]
      * ```
+     *
+     * ---
      *
      * @returns A new {@link ReducedIterator} object containing the enumerated elements.
      */
@@ -616,6 +695,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new ReducedIterator<number>([-3, -1, 0, 2, 3, 6, -3, -1, 1, 5, 6, 8, 7, 2])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -650,6 +732,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -658,6 +743,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results); // 2
      * ```
+     *
+     * ---
      *
      * @returns The number of elements in the iterator.
      */
@@ -677,6 +764,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * This method will consume the entire iterator in the process.  
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const reduced = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -687,6 +777,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *     console.log(`#${index} - ${key}: ${value}`); // "#0 - odd: 4", "#1 - even: 16"
      * });
      * ```
+     *
+     * ---
      *
      * @param iteratee The function to apply to each element of the reduced iterator.
      */
@@ -709,6 +801,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const results = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, -6, -8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -717,6 +812,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(results.toObject()); // { positive: 4, negative: -12 }
      * ```
+     *
+     * ---
      *
      * @template J The type of the new keys used to group the elements.
      *
@@ -748,6 +845,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const keys = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -756,6 +856,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(keys.toArray()); // ["odd", "even"]
      * ```
+     *
+     * ---
      *
      * @returns A new {@link SmartIterator} containing all the keys of the iterator.
      */
@@ -784,6 +886,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const entries = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -792,6 +897,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(entries.toArray()); // [["odd", 4], ["even", 16]]
      * ```
+     *
+     * ---
      *
      * @returns A new {@link SmartIterator} containing all the entries of the iterator.
      */
@@ -811,6 +918,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const values = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -819,6 +929,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(values.toArray()); // [4, 16]
      * ```
+     *
+     * ---
      *
      * @returns A new {@link SmartIterator} containing all the values of the iterator.
      */
@@ -841,6 +953,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const reduced = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -848,6 +963,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(reduced.toArray()); // [4, 16]
      * ```
+     *
+     * ---
      *
      * @returns The {@link Array} containing all elements of the iterator.
      */
@@ -862,6 +979,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const reduced = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -869,6 +989,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(reduced.toMap()); // Map(2) { "odd" => 4, "even" => 16 }
      * ```
+     *
+     * ---
      *
      * @returns The {@link Map} containing all elements of the iterator.
      */
@@ -883,6 +1005,9 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const reduced = new SmartIterator<number>([-3, -1, 0, 2, 3, 5, 6, 8])
      *     .groupBy((value) => value % 2 === 0 ? "even" : "odd")
@@ -890,6 +1015,8 @@ export default class ReducedIterator<K extends PropertyKey, T>
      *
      * console.log(reduced.toObject()); // { odd: 4, even: 16 }
      * ```
+     *
+     * ---
      *
      * @returns The {@link Object} containing all elements of the iterator.
      */

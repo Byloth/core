@@ -75,9 +75,14 @@ export default class Countdown extends GameLoop
     /**
      * Initializes a new instance of the {@link Countdown} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const countdown = new Countdown(10_000);
      * ```
+     *
+     * ---
      *
      * @param duration
      * The total duration of the countdown in milliseconds.
@@ -140,10 +145,15 @@ export default class Countdown extends GameLoop
      *
      * If the countdown is already running, a {@link RuntimeException} will be thrown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * countdown.onStart(() => { [...] }); // This callback will be executed.
      * countdown.start();
      * ```
+     *
+     * ---
      *
      * @param remainingTime
      * The remaining time to set as default when the countdown starts.  
@@ -169,10 +179,15 @@ export default class Countdown extends GameLoop
      *
      * If the countdown hasn't yet started, a {@link RuntimeException} will be thrown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * countdown.onStop(() => { [...] }); // This callback will be executed.
      * countdown.stop();
      * ```
+     *
+     * ---
      *
      * @param reason
      * The reason why the countdown has stopped.
@@ -194,10 +209,15 @@ export default class Countdown extends GameLoop
     /**
      * Subscribes to the `expire` event of the countdown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * countdown.onExpire(() => { [...] }); // This callback will be executed once the countdown has expired.
      * countdown.start();
      * ```
+     *
+     * ---
      *
      * @param callback The callback that will be executed when the countdown expires.
      *
@@ -211,10 +231,15 @@ export default class Countdown extends GameLoop
     /**
      * Subscribes to the `tick` event of the countdown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * countdown.onTick((remainingTime) => { [...] }); // This callback will be executed.
      * countdown.start();
      * ```
+     *
+     * ---
      *
      * @param callback The callback that will be executed when the countdown ticks.
      * @param tickStep

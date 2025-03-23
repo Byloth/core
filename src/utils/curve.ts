@@ -13,12 +13,17 @@ export default class Curve
      * Generates a given number of values following a linear curve.  
      * The values are equally spaced and normalized between 0 and 1.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * for (const value of Curve.Linear(5))
      * {
      *     console.log(value); // 0, 0.25, 0.5, 0.75, 1
      * }
      * ```
+     *
+     * ---
      *
      * @param values The number of values to generate.
      *
@@ -38,12 +43,17 @@ export default class Curve
      * Generates a given number of values following an exponential curve.  
      * The values are equally spaced and normalized between 0 and 1.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * for (const value of Curve.Exponential(6))
      * {
      *     console.log(value); // 0, 0.04, 0.16, 0.36, 0.64, 1
      * }
      * ```
+     *
+     * ---
      *
      * @param values The number of values to generate.
      * @param base

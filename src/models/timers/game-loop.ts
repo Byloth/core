@@ -116,9 +116,14 @@ export default class GameLoop
     /**
      * Initializes a new instance of the {@link GameLoop} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const loop = new GameLoop((elapsedTime: number) => { [...] });
      * ```
+     *
+     * ---
      *
      * @param callback The function that will be executed at each iteration of the game loop.
      * @param msIfNotBrowser
@@ -164,10 +169,15 @@ export default class GameLoop
      *
      * If the game loop is already running, a {@link RuntimeException} will be thrown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * loop.onStart(() => { [...] }); // This callback will be executed.
      * loop.start();
      * ```
+     *
+     * ---
      *
      * @param elapsedTime The elapsed time to set as default when the game loop starts. Default is `0`.
      */
@@ -187,6 +197,9 @@ export default class GameLoop
      *
      * If the game loop hasn't yet started, a {@link RuntimeException} will be thrown.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * loop.onStop(() => { [...] }); // This callback will be executed.
      * loop.stop();
@@ -210,9 +223,14 @@ export default class GameLoop
     /**
      * Subscribes to the `start` event of the game loop.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * loop.onStart(() => { console.log("The game loop has started."); });
      * ```
+     *
+     * ---
      *
      * @param callback The function that will be executed when the game loop starts.
      *
@@ -226,9 +244,14 @@ export default class GameLoop
     /**
      * Subscribes to the `stop` event of the game loop.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * loop.onStop(() => { console.log("The game loop has stopped."); });
      * ```
+     *
+     * ---
      *
      * @param callback The function that will be executed when the game loop stops.
      *

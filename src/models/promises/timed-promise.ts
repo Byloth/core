@@ -28,6 +28,9 @@ export default class TimedPromise<T = void> extends SmartPromise<T>
     /**
      * Initializes a new instance of the {@link TimedPromise} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const promise = new TimedPromise<string>((resolve, reject) =>
      * {
@@ -35,6 +38,8 @@ export default class TimedPromise<T = void> extends SmartPromise<T>
      *
      * }, 5_000);
      * ```
+     *
+     * ---
      *
      * @param executor
      * The function responsible for eventually resolving or rejecting the promise.  

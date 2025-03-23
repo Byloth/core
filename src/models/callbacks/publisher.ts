@@ -49,6 +49,9 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
     /**
      * Initializes a new instance of the {@link Publisher} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const publisher = new Publisher();
      * ```
@@ -61,6 +64,9 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
     /**
      * Unsubscribes all the subscribers from all the events.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * publisher.subscribe("player:spawn", (evt) => { [...] });
      * publisher.subscribe("player:move", (coords) => { [...] });
@@ -83,6 +89,9 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
     /**
      * Publishes an event to all the subscribers.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * publisher.subscribe("player:move", (coords) => { [...] });
      * publisher.subscribe("player:move", ({ x, y }) => { [...] });
@@ -90,6 +99,8 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
      *
      * publisher.publish("player:move", { x: 10, y: 20 });
      * ```
+     *
+     * ---
      *
      * @template K The key of the map containing the callback signature to publish.
      *
@@ -110,6 +121,9 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
     /**
      * Subscribes a new subscriber to an event.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * let unsubscribe: () => void;
      * publisher.subscribe("player:death", unsubscribe);
@@ -118,6 +132,8 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
      *     unsubscribe = publisher.subscribe("player:move", ({ x, y }) => { [...] });
      * });
      * ```
+     *
+     * ---
      *
      * @template K The key of the map containing the callback signature to subscribe.
      *
@@ -149,12 +165,17 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
     /**
      * Unsubscribes a subscriber from an event.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const onPlayerMove = ({ x, y }: Point) => { [...] };
      *
      * publisher.subscribe("player:spawn", (evt) => publisher.subscribe("player:move", onPlayerMove));
      * publisher.subscribe("player:death", () => publisher.unsubscribe("player:move", onPlayerMove));
      * ```
+     *
+     * ---
      *
      * @template K The key of the map containing the callback signature to unsubscribe.
      *

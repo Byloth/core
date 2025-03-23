@@ -26,6 +26,9 @@ export default class Exception extends Error
     /**
      * A static method to convert a generic caught error, ensuring it's an instance of the {@link Exception} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * try { [...] }
      * catch (error)
@@ -35,6 +38,8 @@ export default class Exception extends Error
      *     [...]
      * }
      * ```
+     *
+     * ---
      *
      * @param error The caught error to convert.
      *
@@ -62,9 +67,14 @@ export default class Exception extends Error
     /**
      * Initializes a new instance of the {@link Exception} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new Exception("An error occurred while processing the request.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -117,9 +127,14 @@ export class FatalErrorException extends Exception
     /**
      * Initializes a new instance of the {@link FatalErrorException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new FatalErrorException("This error should never happen. Please, contact the support team.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.
@@ -160,9 +175,14 @@ export class NotImplementedException extends FatalErrorException
     /**
      * Initializes a new instance of the {@link NotImplementedException} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * throw new NotImplementedException("This method hasn't been implemented yet. Check back later.");
      * ```
+     *
+     * ---
      *
      * @param message The message that describes the error.
      * @param cause The previous caught error that caused this one, if any.

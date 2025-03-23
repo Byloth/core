@@ -42,9 +42,14 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     /**
      * Initializes a new instance of the {@link SmartIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<string>(["A", "B", "C"]);
      * ```
+     *
+     * ---
      *
      * @param iterable The iterable object to wrap.
      */
@@ -53,6 +58,9 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     /**
      * Initializes a new instance of the {@link SmartIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number, void, number>({
      *     _sum: 0, _count: 0,
@@ -67,6 +75,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * })
      * ```
      *
+     * ---
+     *
      * @param iterator The iterator object to wrap.
      */
     public constructor(iterator: Iterator<T, R, N>);
@@ -74,12 +84,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     /**
      * Initializes a new instance of the {@link SmartIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>(function* ()
      * {
      *     for (let i = 2; i < 65_536; i *= 2) { yield (i - 1); }
      * });
      * ```
+     *
+     * ---
      *
      * @param generatorFn The generator function to wrap.
      */
@@ -88,9 +103,14 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     /**
      * Initializes a new instance of the {@link SmartIterator} class.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator(values);
      * ```
+     *
+     * ---
      *
      * @param argument The iterable, iterator or generator function to wrap.
      */
@@ -124,12 +144,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * If the iterator is infinite and every element satisfies the condition, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>([-2, -1, 0, 1, 2]);
      * const result = iterator.every((value) => value < 0);
      *
      * console.log(result); // false
      * ```
+     *
+     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -163,12 +188,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * If the iterator is infinite and no element satisfies the condition, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>([-2, -1, 0, 1, 2]);
      * const result = iterator.some((value) => value < 0);
      *
      * console.log(result); // true
      * ```
+     *
+     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -202,12 +232,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>([-2, -1, 0, 1, 2]);
      * const result = iterator.filter((value) => value < 0);
      *
      * console.log(result.toArray()); // [-2, -1]
      * ```
+     *
+     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -228,12 +263,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number | string>([-2, "-1", "0", 1, "2"]);
      * const result = iterator.filter<number>((value) => typeof value === "number");
      *
      * console.log(result.toArray()); // [-2, 1]
      * ```
+     *
+     * ---
      *
      * @template S
      * The type of the elements that satisfy the condition.  
@@ -277,12 +317,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>([-2, -1, 0, 1, 2]);
      * const result = iterator.map((value) => Math.abs(value));
      *
      * console.log(result.toArray()); // [2, 1, 0, 1, 2]
      * ```
+     *
+     * ---
      *
      * @template V The type of the elements after the transformation.
      *
@@ -323,12 +368,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * - If an empty iterator is provided, a {@link ValueException} will be thrown.
      * - If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>([1, 2, 3, 4, 5]);
      * const result = iterator.reduce((acc, value) => acc + value);
      *
      * console.log(result); // 15
      * ```
+     *
+     * ---
      *
      * @param reducer The reducer function to apply to each element of the iterator.
      *
@@ -348,12 +398,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>([1, 2, 3, 4, 5]);
      * const result = iterator.reduce((acc, value) => acc + value, 10);
      *
      * console.log(result); // 25
      * ```
+     *
+     * ---
      *
      * @template A The type of the accumulator value which will also be the type of the final result of the reduction.
      *
@@ -400,12 +455,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number[]>([[-2, -1], 0, 1, 2, [3, 4, 5]]);
      * const result = iterator.flatMap((value) => value);
      *
      * console.log(result.toArray()); // [-2, -1, 0, 1, 2, 3, 4, 5]
      * ```
+     *
+     * ---
      *
      * @template V The type of the elements after the transformation.
      *
@@ -452,12 +512,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * Only the dropped elements will be consumed in the process.  
      * The rest of the iterator will be consumed only once the new one is.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>([-2, -1, 0, 1, 2]);
      * const result = iterator.drop(3);
      *
      * console.log(result.toArray()); // [1, 2]
      * ```
+     *
+     * ---
      *
      * @param count The number of elements to drop.
      *
@@ -503,6 +568,9 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * Only the taken elements will be consumed from the original iterator.  
      * The rest of the original iterator will be available for further consumption.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>([-2, -1, 0, 1, 2]);
      * const result = iterator.take(3);
@@ -510,6 +578,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * console.log(result.toArray()); // [-2, -1, 0]
      * console.log(iterator.toArray()); // [1, 2]
      * ```
+     *
+     * ---
      *
      * @param limit The number of elements to take.
      *
@@ -550,12 +620,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * - If no element satisfies the condition, `undefined` will be returned once the entire iterator is consumed.
      * - If the iterator is infinite and no element satisfies the condition, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>([-2, -1, 0, 1, 2]);
      * const result = iterator.find((value) => value > 0);
      *
      * console.log(result); // 1
      * ```
+     *
+     * ---
      *
      * @param predicate The condition to check for each element of the iterator.
      *
@@ -577,12 +652,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * - If no element satisfies the condition, `undefined` will be returned once the entire iterator is consumed.
      * - If the iterator is infinite and no element satisfies the condition, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number | string>([-2, "-1", "0", 1, "2"]);
      * const result = iterator.find<number>((value) => typeof value === "number");
      *
      * console.log(result); // -2
      * ```
+     *
+     * ---
      *
      * @template S
      * The type of the element that satisfies the condition.  
@@ -621,12 +701,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<string>(["A", "M", "N", "Z"]);
      * const result = iterator.enumerate();
      *
      * console.log(result.toArray()); // [[0, "A"], [1, "M"], [2, "N"], [3, "Z"]]
      * ```
+     *
+     * ---
      *
      * @returns A new {@link SmartIterator} containing the enumerated elements.
      */
@@ -646,12 +731,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * This means that the original iterator won't be consumed until the
      * new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>([1, 1, 2, 3, 2, 3, 4, 5, 5, 4]);
      * const result = iterator.unique();
      *
      * console.log(result.toArray()); // [1, 2, 3, 4, 5]
      * ```
+     *
+     * ---
      *
      * @returns A new {@link SmartIterator} containing only the unique elements.
      */
@@ -680,12 +770,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>([1, 2, 3, 4, 5]);
      * const result = iterator.count();
      *
      * console.log(result); // 5
      * ```
+     *
+     * ---
      *
      * @returns The number of elements in the iterator.
      */
@@ -709,6 +804,9 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * This method will consume the entire iterator in the process.  
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>(["A", "M", "N", "Z"]);
      * iterator.forEach((value, index) =>
@@ -716,6 +814,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *     console.log(`${index}: ${value}`); // "0: A", "1: M", "2: N", "3: Z"
      * }
      * ```
+     *
+     * ---
      *
      * @param iteratee The function to apply to each element of the iterator.
      */
@@ -740,6 +840,9 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * Once the iterator is done, the method will return an object with the `done` property set to `true`.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>([1, 2, 3, 4, 5]);
      *
@@ -753,6 +856,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * console.log(result); // { done: true, value: undefined }
      * ```
+     *
+     * ---
      *
      * @param values The value to pass to the next element, if required.
      *
@@ -768,6 +873,9 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * free the resources and perform any cleanup operation.  
      * It may also be used to signal the end or to compute a specific final result of the iteration process.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>({
      *     _index: 0,
@@ -786,6 +894,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * }
      * ```
      *
+     * ---
+     *
      * @param value The final value of the iterator.
      *
      * @returns The result of the iterator.
@@ -802,6 +912,9 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * free the resources and perform any cleanup operation.  
      * It may also be used to signal that an error occurred during the iteration process or to handle it.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>({
      *     _index: 0,
@@ -829,6 +942,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * }
      * ```
      *
+     * ---
+     *
      * @param error The error to throw into the iterator.
      *
      * @returns The final result of the iterator.
@@ -852,12 +967,17 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * This means that the original iterator won't be consumed until the
      * the new one is and that consuming one of them will consume the other as well.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator<number>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
      * const result = iterator.groupBy<string>((value) => value % 2 === 0 ? "even" : "odd");
      *
      * console.log(result.toObject()); // { odd: [1, 3, 5, 7, 9], even: [2, 4, 6, 8, 10] }
      * ```
+     *
+     * ---
      *
      * @template K The type of the keys used to group the elements.
      *
@@ -881,6 +1001,9 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * If the iterator is infinite, the method will never return.
      *
+     * ---
+     *
+     * @example
      * ```ts
      * const iterator = new SmartIterator(function* ()
      * {
@@ -890,6 +1013,8 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * console.log(result); // [0, 1, 2, 3, 4]
      * ```
+     *
+     * ---
      *
      * @returns The {@link Array} containing all elements of the iterator.
      */
