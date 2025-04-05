@@ -54,6 +54,8 @@ export default abstract class CallableObject<T extends Callback<any[], any> = ()
      * The method that will be called when the object is invoked.  
      * It must be implemented by the derived classes.
      *
+     * ---
+     *
      * @param args The arguments that have been passed to the object.
      *
      * @returns The return value of the method.

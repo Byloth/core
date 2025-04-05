@@ -122,6 +122,8 @@ export default class Countdown extends GameLoop
      * The internal method actually responsible for stopping the
      * countdown and resolving or rejecting the {@link Countdown._deferrer} promise.
      *
+     * ---
+     *
      * @param reason
      * The reason why the countdown has stopped.
      *

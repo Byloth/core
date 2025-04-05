@@ -1,7 +1,7 @@
 import { SmartIterator, ValueException } from "../models/index.js";
 
 /**
- * A utility class that provides a set of methods to generate sequences of numbers following specific curves.  
+ * An utility class that provides a set of methods to generate sequences of numbers following specific curves.  
  * It can be used to generate sequences of values that can be
  * used in animations, transitions and other different scenarios.
  *

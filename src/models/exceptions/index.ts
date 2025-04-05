@@ -220,7 +220,7 @@ export class NetworkException extends Exception
 
 /**
  * A class representing an exception that can be thrown when a permission is denied.  
- * It's commonly used when a user tries to access a restricted resource or perform a forbidden action.
+ * It's commonly used when an user tries to access a restricted resource or perform a forbidden action.
  *
  * ---
  *

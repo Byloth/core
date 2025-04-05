@@ -142,6 +142,8 @@ export default class Random
     /**
      * Picks a random valid index from a given array of elements.
      *
+     * ---
+     *
      * @template T The type of the elements in the array.
      *
      * @param elements
@@ -160,6 +162,8 @@ export default class Random
 
     /**
      * Picks a random element from a given array of elements.
+     *
+     * ---
      *
      * @template T The type of the elements in the array.
      *
