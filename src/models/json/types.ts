@@ -6,7 +6,7 @@ export type JSONArray = JSONValue[];
 /**
  * A type that represents a JSON object.
  */
-export interface JSONObject { [key: string]: JSONValue }
+export type JSONObject<T extends object = object> = { [K in keyof T]: JSONValue };
 
 /**
  * A type that represents all the possible values of a JSON value.
