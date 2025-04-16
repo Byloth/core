@@ -16,6 +16,7 @@ Desktop.ini
 
 # Generated & compiled files
 #
+/coverage/
 /dist/
 
 /*.tgz
