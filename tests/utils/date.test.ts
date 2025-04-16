@@ -37,21 +37,21 @@ describe("dateDifference", () =>
     it("Should calculate the difference in days by default", () =>
     {
         const start = new Date("2025-01-01");
-        const end = new Date("2025-01-31");
+        const end = "2025-01-31";
 
         expect(dateDifference(start, end)).toBe(30);
     });
     it("Should calculate the difference in specified `TimeUnit`", () =>
     {
-        const start = new Date("2025-01-01");
-        const end = new Date("2025-01-31");
+        const start = "2025-01-01";
+        const end = new Date("2025-01-31").getTime();
 
         expect(dateDifference(start, end, TimeUnit.Minute)).toBe(43200);
     });
 
     it("Should return negative difference if start date is after end date", () =>
     {
-        const start = new Date("2025-01-31");
+        const start = new Date("2025-01-31").getTime();
         const end = new Date("2025-01-01");
 
         expect(dateDifference(start, end)).toBe(-30);
@@ -63,7 +63,7 @@ describe("dateRange", () =>
     it("Should return an instance of `SmartIterator`", () =>
     {
         const start = new Date("2025-01-01");
-        const end = new Date("2025-01-05");
+        const end = "2025-01-05";
 
         const iterator = dateRange(start, end);
 
@@ -72,8 +72,8 @@ describe("dateRange", () =>
 
     it("Should generate dates in the specified range", () =>
     {
-        const start = new Date("2025-01-01");
-        const end = new Date("2025-01-05");
+        const start = "2025-01-01";
+        const end = new Date("2025-01-05").getTime();
         const iterator = dateRange(start, end);
         const dates = Array.from(iterator);
 
@@ -85,8 +85,8 @@ describe("dateRange", () =>
 
     it("Should throw `RangeException` if start date isn't less than end date", () =>
     {
-        const start = new Date("2025-01-05");
-        const end = new Date("2025-01-01");
+        const start = new Date("2025-01-05").getTime();
+        const end = "2025-01-01";
 
         expect(() => dateRange(start, end)).toThrow(RangeException);
     });
@@ -103,13 +103,13 @@ describe("dateRound", () =>
 
     it("Should throw `RangeException` if unit is less than or equal to a millisecond", () =>
     {
-        const date = new Date("2025-01-01T12:34:56.789Z");
+        const date = "2025-01-01T12:34:56.789Z";
 
         expect(() => dateRound(date, TimeUnit.Millisecond)).toThrow(RangeException);
     });
     it("Should throw `RangeException` if unit is greater than a day", () =>
     {
-        const date = new Date("2025-01-01T12:34:56.789Z");
+        const date = new Date("2025-01-01T12:34:56.789Z").getTime();
 
         expect(() => dateRound(date, TimeUnit.Week)).toThrow(RangeException);
     });
@@ -119,14 +119,14 @@ describe("getWeek", () =>
 {
     it("Should get the first day of the week for the specified date", () =>
     {
-        const date = new Date("2025-01-01");
+        const date = "2025-01-01";
 
         expect(getWeek(date, WeekDay.Monday).toISOString()
             .slice(0, 10)).toBe("2024-12-30");
     });
     it("Should get the first day of the week for the specified date with default first day", () =>
     {
-        const date = new Date("2025-01-01");
+        const date = new Date("2025-01-01").getTime();
 
         expect(getWeek(date).toISOString()
             .slice(0, 10)).toBe("2024-12-29");

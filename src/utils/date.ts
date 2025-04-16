@@ -133,7 +133,7 @@ export enum WeekDay
  *
  * @returns The difference between the two dates in the specified time unit.
  */
-export function dateDifference(start: string | Date, end: string | Date, unit = TimeUnit.Day): number
+export function dateDifference(start: number | string | Date, end: number | string | Date, unit = TimeUnit.Day): number
 {
     let _round: (value: number) => number;
 
@@ -175,15 +175,19 @@ export function dateDifference(start: string | Date, end: string | Date, unit = 
  *
  * @returns A {@link SmartIterator} object that generates the dates in the range.
  */
-export function dateRange(start: string | Date, end: string | Date, step = TimeUnit.Day): SmartIterator<Date>
+export function dateRange(start: number | string | Date, end: number | string | Date, step = TimeUnit.Day)
+    : SmartIterator<Date>
 {
+    start = new Date(start);
+    end = new Date(end);
+
     if (start >= end) { throw new RangeException("The end date must be greater than the start date."); }
 
     return new SmartIterator<Date>(function* ()
     {
-        const endTime = new Date(end).getTime();
+        const endTime = end.getTime();
 
-        let unixTime: number = new Date(start).getTime();
+        let unixTime: number = start.getTime();
         while (unixTime < endTime)
         {
             yield new Date(unixTime);
@@ -217,7 +221,7 @@ export function dateRange(start: string | Date, end: string | Date, step = TimeU
  *
  * @returns The rounded date.
  */
-export function dateRound(date: string | Date, unit = TimeUnit.Day): Date
+export function dateRound(date: number | string | Date, unit = TimeUnit.Day): Date
 {
     if (unit <= TimeUnit.Millisecond)
     {
@@ -258,7 +262,7 @@ export function dateRound(date: string | Date, unit = TimeUnit.Day): Date
  *
  * @returns The first day of the week of the specified date.
  */
-export function getWeek(date: string | Date, firstDay = WeekDay.Sunday): Date
+export function getWeek(date: number | string | Date, firstDay = WeekDay.Sunday): Date
 {
     date = new Date(date);
 
