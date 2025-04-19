@@ -1,4 +1,4 @@
-export const VERSION = "2.0.1";
+export const VERSION = "2.0.2";
 
 export type { Constructor, Interval, Timeout, ValueOf } from "./core/types.js";
 
@@ -47,6 +47,7 @@ export type {
     AsyncKeyedReducer,
     AsyncReducer,
     Callback,
+    CallbackMap,
     FulfilledHandler,
     GeneratorFunction,
     Iteratee,

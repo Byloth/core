@@ -1,6 +1,6 @@
 import { ReferenceException } from "../exceptions/index.js";
 
-import type { Callback } from "./types.js";
+import type { Callback, CallbackMap } from "./types.js";
 
 /**
  * A class implementing the
@@ -38,10 +38,9 @@ import type { Callback } from "./types.js";
  * @template T
  * A map containing the names of the emittable events and the
  * related callback signatures that can be subscribed to them.  
- * Default is `Record<string, () => void>`.
+ * Default is `Record<string, (...args: unknown[]) => unknown>`.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> } = Record<string, Callback>>
+export default class Publisher<T extends CallbackMap<T> = CallbackMap>
 {
     /**
      * A map containing all the subscribers for each event.
@@ -49,7 +48,7 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
      * The keys are the names of the events they are subscribed to.  
      * The values are the arrays of the subscribers themselves.
      */
-    protected _subscribers: Map<keyof T, Callback<unknown[], unknown>[]>;
+    protected _subscribers: Map<string, Callback<unknown[], unknown>[]>;
 
     /**
      * Initializes a new instance of the {@link Publisher} class.
@@ -114,7 +113,7 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
      *
      * @returns An array containing the return values of all the subscribers.
      */
-    public publish<K extends keyof T>(event: K, ...args: Parameters<T[K]>): ReturnType<T[K]>[]
+    public publish<K extends keyof T>(event: K & string, ...args: Parameters<T[K]>): ReturnType<T[K]>[]
     {
         const subscribers = this._subscribers.get(event);
         if (!(subscribers)) { return []; }
@@ -147,7 +146,7 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
      *
      * @returns A function that can be used to unsubscribe the subscriber.
      */
-    public subscribe<K extends keyof T>(event: K, subscriber: T[K]): () => void
+    public subscribe<K extends keyof T>(event: K & string, subscriber: T[K]): () => void
     {
         if (!(this._subscribers.has(event))) { this._subscribers.set(event, []); }
 
@@ -187,7 +186,7 @@ export default class Publisher<T extends { [K in keyof T]: Callback<any[], any> 
      * @param event The name of the event to unsubscribe from.
      * @param subscriber The subscriber to remove from the event.
      */
-    public unsubscribe<K extends keyof T>(event: K, subscriber: T[K]): void
+    public unsubscribe<K extends keyof T>(event: K & string, subscriber: T[K]): void
     {
         const subscribers = this._subscribers.get(event);
         if (!(subscribers)) { return; }
