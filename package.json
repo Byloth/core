@@ -32,16 +32,18 @@
     "src"
   ],
   "main": "dist/core.umd.cjs",
-  "module": "dist/core.js",
+  "module": "dist/core.cjs",
+  "unpkg": "dist/core.global.js",
+  "jsdelivr": "dist/core.global.js",
   "exports": {
     ".": {
       "import": {
         "types": "./src/index.ts",
-        "default": "./dist/core.js"
+        "default": "./dist/core.esm.js"
       },
       "require": {
         "types": "./src/index.ts",
-        "default": "./dist/core.umd.cjs"
+        "default": "./dist/core.cjs"
       }
     }
   },

@@ -12,11 +12,9 @@ Desktop.ini
 
 # Generated & compiled files
 #
-/types/
+/coverage/
 
 /*.tgz
-
-/tsconfig.tsbuildinfo
 
 # Environmental files
 #
@@ -34,7 +32,7 @@ Desktop.ini
 # Config files
 #
 /.editorconfig
-/.eslintrc.js
+/eslint.config.mjs
 
 /tsconfig.json
 /vite.config.js
