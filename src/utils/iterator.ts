@@ -43,7 +43,7 @@ export function chain<T>(...iterables: readonly Iterable<T>[]): SmartIterator<T>
  * An utility function that counts the number of elements in an iterable.
  *
  * Also note that:
- * - If the iterable isn't an `Array`, it will be consumed entirely in the process.
+ * - If the iterable isn't an {@link Array}, it will be consumed entirely in the process.
  * - If the iterable is an infinite generator, the function will never return.
  *
  * ---
@@ -213,8 +213,8 @@ export function range(start: number, end?: number, step = 1): SmartIterator<numb
  * algorithm to shuffle the elements.
  *
  * Also note that:
- * - If the iterable is an `Array`, it won't be modified since the shuffling isn't done in-place.
- * - If the iterable isn't an `Array`, it will be consumed entirely in the process.
+ * - If the iterable is an {@link Array}, it won't be modified since the shuffling isn't done in-place.
+ * - If the iterable isn't an {@link Array}, it will be consumed entirely in the process.
  * - If the iterable is an infinite generator, the function will never return.
  *
  * ---

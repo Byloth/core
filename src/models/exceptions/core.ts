@@ -1,5 +1,5 @@
 /**
- * A class representing an exception, subclass of the native `Error` class.  
+ * A class representing an exception, subclass of the native {@link Error} class.  
  * It's the base class for any other further exception.
  *
  * It allows to chain exceptions together, tracking the initial cause of an error and

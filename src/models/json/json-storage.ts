@@ -4,7 +4,7 @@ import { EnvironmentException } from "../exceptions/index.js";
 import type { JSONValue } from "./types.js";
 
 /**
- * A wrapper around the `Storage` API to better store and easily retrieve
+ * A wrapper around the {@link Storage} API to better store and easily retrieve
  * typed JSON values using the classical key-value pair storage system.
  *
  * It allows to handle either the volatile {@link sessionStorage} or the persistent

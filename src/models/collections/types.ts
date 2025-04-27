@@ -1,15 +1,25 @@
 export interface MapViewEventsMap<K, V>
 {
-    "key:set": (key: K, value: V) => void;
-    "key:delete": (key: K) => void;
+    "entry:add": (key: K, value: V) => void;
+    "entry:remove": (key: K) => void;
 
-    "map:clear": () => void;
+    "collection:clear": () => void;
+}
+export interface ReadonlyMapView<K, V> extends ReadonlyMap<K, V>
+{
+    subscribe<T extends keyof MapViewEventsMap<K, V>>(event: T, callback: MapViewEventsMap<K, V>[T]): () => void;
+    unsubscribe<T extends keyof MapViewEventsMap<K, V>>(event: T, callback: MapViewEventsMap<K, V>[T]): void;
 }
 
 export interface SetViewEventsMap<T>
 {
-    "element:add": (value: T) => void;
-    "element:delete": (value: T) => void;
+    "entry:add": (value: T) => void;
+    "entry:remove": (value: T) => void;
 
-    "set:clear": () => void;
+    "collection:clear": () => void;
+}
+export interface ReadonlySetView<T> extends ReadonlySet<T>
+{
+    subscribe<K extends keyof SetViewEventsMap<T>>(event: K, callback: SetViewEventsMap<T>[K]): () => void;
+    unsubscribe<K extends keyof SetViewEventsMap<T>>(event: K, callback: SetViewEventsMap<T>[K]): void;
 }

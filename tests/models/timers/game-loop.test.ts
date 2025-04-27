@@ -1,11 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { Mock } from "vitest";
 
 import { FatalErrorException, RuntimeException } from "../../../src/index.js";
 import { GameLoop } from "../../../src/index.js";
 
 describe("GameLoop", () =>
 {
-    let callback: FrameRequestCallback;
+    let callback: Mock;
     let gameLoop: GameLoop;
 
     beforeEach(() =>

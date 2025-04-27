@@ -9,6 +9,7 @@ export type {
 
 } from "./aggregators/types.js";
 
+export type { MapViewEventsMap, ReadonlyMapView, SetViewEventsMap, ReadonlySetView } from "./collections/types.js";
 export type {
     GeneratorFunction,
     AsyncGeneratorFunction,
@@ -26,13 +27,7 @@ export type {
 
 } from "./iterators/types.js";
 
-export type {
-    JSONArray,
-    JSONObject,
-    JSONValue
-
-} from "./json/types.js";
-
+export type { JSONArray, JSONObject, JSONValue } from "./json/types.js";
 export type {
     MaybePromise,
     FulfilledHandler,

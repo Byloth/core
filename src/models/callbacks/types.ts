@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type Publisher from "./publisher.js";
+
 /**
  * A type that represents a generic function.
  *
@@ -24,7 +27,7 @@ export type Callback<A extends unknown[] = [], R = void> = (...args: A) => R;
 /**
  * An utility type that is required to represents a map of callbacks.
  *
- * It is used for type inheritance on the `Publisher` class signature.  
+ * It is used for type inheritance on the {@link Publisher} class signature.  
  * Whenever you'll need to extend that class, you may need to use this type too.
  *
  * ---

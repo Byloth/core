@@ -123,7 +123,7 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
     }
 
     /**
-     * Subscribes a new subscriber to an event.
+     * Subscribes to an event and adds a subscriber to be executed when the event is published.
      *
      * ---
      *
@@ -142,9 +142,9 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      * @template K The key of the map containing the callback signature to subscribe.
      *
      * @param event The name of the event to subscribe to.
-     * @param subscriber The subscriber to add to the event.
+     * @param subscriber The subscriber to execute when the event is published.
      *
-     * @returns A function that can be used to unsubscribe the subscriber.
+     * @returns A function that can be used to unsubscribe the subscriber from the event.
      */
     public subscribe<K extends keyof T>(event: K & string, subscriber: T[K]): () => void
     {
@@ -167,7 +167,7 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
     }
 
     /**
-     * Unsubscribes a subscriber from an event.
+     * Unsubscribes from an event and removes a subscriber from being executed when the event is published.
      *
      * ---
      *

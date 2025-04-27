@@ -1,4 +1,4 @@
-export const VERSION = "2.0.2";
+export const VERSION = "2.1.0";
 
 export type { Constructor, Interval, Timeout, ValueOf } from "./core/types.js";
 
@@ -20,6 +20,7 @@ export {
     GameLoop,
     JSONStorage,
     KeyException,
+    MapView,
     NotImplementedException,
     NetworkException,
     PermissionException,
@@ -28,6 +29,7 @@ export {
     ReducedIterator,
     ReferenceException,
     RuntimeException,
+    SetView,
     SmartIterator,
     SmartAsyncIterator,
     SmartPromise,
@@ -58,6 +60,7 @@ export type {
     KeyedIteratee,
     KeyedReducer,
     KeyedTypeGuardPredicate,
+    MapViewEventsMap,
     MaybeAsyncKeyedIteratee,
     MaybeAsyncKeyedReducer,
     MaybeAsyncGeneratorFunction,
@@ -68,8 +71,11 @@ export type {
     PromiseExecutor,
     PromiseRejecter,
     PromiseResolver,
+    ReadonlyMapView,
+    ReadonlySetView,
     Reducer,
     RejectedHandler,
+    SetViewEventsMap,
     TypeGuardPredicate
 
 } from "./models/types.js";
