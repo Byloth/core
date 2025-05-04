@@ -50,3 +50,110 @@ export type Callback<A extends unknown[] = [], R = void> = (...args: A) => R;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type CallbackMap<T = Record<string, Callback<unknown[], unknown>>> = { [K in keyof T]: Callback<any[], any> };
+
+/**
+ * An utility type that represents a {@link Publisher} object that can be published to.
+ * See also {@link Subscribable}.
+ *
+ * It can be used to prevent the user from modifying the publisher while
+ * still allowing them to subscribe to events and publish them.
+ *
+ * ---
+ *
+ * @template T
+ * A map containing the names of the emittable events and the
+ * related callback signatures that can be subscribed to them.  
+ * Default is `Record<string, (...args: unknown[]) => unknown>`.
+ */
+export interface Publishable<T extends CallbackMap<T> = CallbackMap>
+{
+    /**
+     * Publishes an event to all the subscribers.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * publisher.subscribe("player:move", (coords) => { [...] });
+     * publisher.subscribe("player:move", ({ x, y }) => { [...] });
+     * publisher.subscribe("player:move", (evt) => { [...] });
+     *
+     * publisher.publish("player:move", { x: 10, y: 20 });
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the map containing the callback signature to publish.
+     *
+     * @param event The name of the event to publish.
+     * @param args The arguments to pass to the subscribers.
+     *
+     * @returns An array containing the return values of all the subscribers.
+     */
+    publish<K extends keyof T>(event: K & string, ...args: Parameters<T[K]>): ReturnType<T[K]>[];
+}
+
+/**
+ * An utility type that represents a {@link Publisher} object that can be subscribed to.
+ * See also {@link Publishable}.
+ * 
+ * It can be used to prevent the user from modifying the publisher while
+ * still allowing them to subscribe to events and publish them.
+ *
+ * ---
+ *
+ * @template T
+ * A map containing the names of the emittable events and the
+ * related callback signatures that can be subscribed to them.  
+ * Default is `Record<string, (...args: unknown[]) => unknown>`.
+ */
+export interface Subscribable<T extends CallbackMap<T> = CallbackMap>
+{
+    /**
+     * Subscribes to an event and adds a subscriber to be executed when the event is published.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * let unsubscribe: () => void;
+     * publisher.subscribe("player:death", unsubscribe);
+     * publisher.subscribe("player:spawn", (evt) =>
+     * {
+     *     unsubscribe = publisher.subscribe("player:move", ({ x, y }) => { [...] });
+     * });
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the map containing the callback signature to subscribe.
+     *
+     * @param event The name of the event to subscribe to.
+     * @param subscriber The subscriber to execute when the event is published.
+     *
+     * @returns A function that can be used to unsubscribe the subscriber from the event.
+     */
+    subscribe<K extends keyof T>(event: K & string, subscriber: T[K]): () => void;
+
+    /**
+     * Unsubscribes from an event and removes a subscriber from being executed when the event is published.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const onPlayerMove = ({ x, y }: Point) => { [...] };
+     *
+     * publisher.subscribe("player:spawn", (evt) => publisher.subscribe("player:move", onPlayerMove));
+     * publisher.subscribe("player:death", () => publisher.unsubscribe("player:move", onPlayerMove));
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the map containing the callback signature to unsubscribe.
+     *
+     * @param event The name of the event to unsubscribe from.
+     * @param subscriber The subscriber to remove from the event.
+     */
+    unsubscribe<K extends keyof T>(event: K & string, subscriber: T[K]): void;
+}

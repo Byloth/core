@@ -71,11 +71,13 @@ export type {
     PromiseExecutor,
     PromiseRejecter,
     PromiseResolver,
+    Publishable,
     ReadonlyMapView,
     ReadonlySetView,
     Reducer,
     RejectedHandler,
     SetViewEventsMap,
+    Subscribable,
     TypeGuardPredicate
 
 } from "./models/types.js";

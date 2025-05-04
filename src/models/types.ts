@@ -38,4 +38,4 @@ export type {
 
 } from "./promises/types.js";
 
-export type { Callback, CallbackMap } from "./callbacks/types.js";
+export type { Callback, CallbackMap, Publishable, Subscribable } from "./callbacks/types.js";

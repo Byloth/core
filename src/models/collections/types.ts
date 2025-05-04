@@ -36,7 +36,61 @@ export interface MapViewEventsMap<K, V>
  */
 export interface ReadonlyMapView<K, V> extends ReadonlyMap<K, V>
 {
+    /**
+     * Subscribes to an event and adds a callback to be executed when the event is published.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const map = new MapView<string, number>();
+     * const unsubscribe = map.subscribe("entry:add", (key: string, value: number) =>
+     * {
+     *     if (key === "answer") { unsubscribe(); }
+     *     console.log(`Added ${key}: ${value}`);
+     * });
+     *
+     * map.set("key1", 2); // Added key1: 2
+     * map.set("answer", 42); // Added answer: 42
+     * map.set("key2", 4);
+     * map.set("key3", 8);
+     * ```
+     *
+     * ---
+     *
+     * @template T The key of the map containing the callback signature to subscribe.
+     *
+     * @param event The name of the event to subscribe to.
+     * @param callback The callback to execute when the event is published.
+     *
+     * @returns A function that can be used to unsubscribe the callback from the event.
+     */
     subscribe<T extends keyof MapViewEventsMap<K, V>>(event: T, callback: MapViewEventsMap<K, V>[T]): () => void;
+
+    /**
+     * Unsubscribes from an event and removes a callback from being executed when the event is published.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const callback = (key: string, value: number) => console.log(`Added ${key}: ${value}`);
+     * const map = new MapView<string, number>();
+     *
+     * map.subscribe("entry:add", callback);
+     * map.set("key1", 2); // Added key1: 2
+     *
+     * map.unsubscribe("entry:add", callback);
+     * map.set("key2", 4);
+     * ```
+     *
+     * ---
+     *
+     * @template T The key of the map containing the callback signature to unsubscribe.
+     *
+     * @param event The name of the event to unsubscribe from.
+     * @param callback The callback to remove from the event.
+     */
     unsubscribe<T extends keyof MapViewEventsMap<K, V>>(event: T, callback: MapViewEventsMap<K, V>[T]): void;
 }
 
@@ -71,6 +125,60 @@ export interface SetViewEventsMap<T>
  */
 export interface ReadonlySetView<T> extends ReadonlySet<T>
 {
+    /**
+     * Subscribes to an event and adds a callback to be executed when the event is published.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const set = new SetView<number>();
+     * const unsubscribe = set.subscribe("entry:add", (value: number) =>
+     * {
+     *     if (value === 42) { unsubscribe(); }
+     *     console.log(`Added ${value}`);
+     * });
+     *
+     * set.add(2); // Added 2
+     * set.add(42); // Added 42
+     * set.add(4);
+     * set.add(8);
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the map containing the callback signature to subscribe.
+     *
+     * @param event The name of the event to subscribe to.
+     * @param callback The callback to execute when the event is published.
+     *
+     * @returns A function that can be used to unsubscribe the callback from the event.
+     */
     subscribe<K extends keyof SetViewEventsMap<T>>(event: K, callback: SetViewEventsMap<T>[K]): () => void;
+
+    /**
+     * Unsubscribes from an event and removes a callback from being executed when the event is published.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const callback = (value: number) => console.log(`Added ${value}`);
+     * const set = new SetView<number>();
+     *
+     * set.subscribe("entry:add", callback);
+     * set.add(2); // Added 2
+     *
+     * set.unsubscribe("entry:add", callback);
+     * set.add(4);
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the map containing the callback signature to unsubscribe.
+     *
+     * @param event The name of the event to unsubscribe from.
+     * @param callback The callback to remove from the event.
+     */
     unsubscribe<K extends keyof SetViewEventsMap<T>>(event: K, callback: SetViewEventsMap<T>[K]): void;
 }
