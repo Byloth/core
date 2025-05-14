@@ -10,9 +10,14 @@
  *
  * const instance: MyObject = factory(MyObject);
  * ```
+ *
+ * ---
+ *
+ * @template T The type of the instance to create. Default is `object`.
+ * @template P The type of the constructor parameters. Default is `any[]`.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Constructor<T extends object, P extends unknown[] = any[]> = new (...args: P) => T;
+export type Constructor<T extends object = object, P extends unknown[] = any[]> = new (...args: P) => T;
 
 /**
  * A type that represents the return value of {@link setInterval} function,
