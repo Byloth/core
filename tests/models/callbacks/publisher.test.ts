@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ReferenceException } from "../../../src/index.js";
-import { Publisher } from "../../../src/index.js";
+import { Publisher, ReferenceException } from "../../../src/index.js";
 
-interface EventsMap {
+interface EventsMap
+{
     "player:spawn": (evt: { x: number, y: number }) => void;
     "player:move": (coords: { x: number, y: number }) => void;
     "player:death": () => void;
@@ -12,7 +12,6 @@ interface EventsMap {
 describe("Publisher", () =>
 {
     let publisher: Publisher<EventsMap>;
-
     beforeEach(() => { publisher = new Publisher<EventsMap>(); });
 
     it("Should subscribe and publish events", () =>
