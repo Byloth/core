@@ -38,7 +38,7 @@ describe("MapView", () =>
         expect(mapView.size).toBe(2);
         expect(mapView.has("key1")).toBe(false);
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith("key1");
+        expect(callback).toHaveBeenCalledWith("key1", 0);
     });
     it("Should not publish 'entry:remove' event if entry doesn't exist", () =>
     {

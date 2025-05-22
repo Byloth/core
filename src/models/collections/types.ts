@@ -17,7 +17,7 @@ import type SetView from "./set-view.js";
 export interface MapViewEventsMap<K, V>
 {
     "entry:add": (key: K, value: V) => void;
-    "entry:remove": (key: K) => void;
+    "entry:remove": (key: K, value: V) => void;
 
     "collection:clear": () => void;
 }

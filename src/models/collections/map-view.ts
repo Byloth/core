@@ -112,10 +112,14 @@ export default class MapView<K, V> extends Map<K, V>
      */
     public override delete(key: K): boolean
     {
-        const result = super.delete(key);
-        if (result) { this._publisher.publish("entry:remove", key); }
+        const value = this.get(key);
+        if (value === undefined) { return false; }
 
-        return result;
+        super.delete(key);
+
+        this._publisher.publish("entry:remove", key, value);
+
+        return true;
     }
 
     /**
