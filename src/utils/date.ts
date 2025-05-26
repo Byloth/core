@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-literal-enum-member */
 
 import { RangeException, SmartIterator } from "../models/index.js";
 
@@ -15,8 +16,6 @@ import { RangeException, SmartIterator } from "../models/index.js";
  */
 export enum TimeUnit
 {
-    /* eslint-disable @typescript-eslint/prefer-literal-enum-member */
-
     /**
      * A millisecond: the base time unit.
      */

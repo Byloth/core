@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type MapView from "./map-view.js";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type SetView from "./set-view.js";
 

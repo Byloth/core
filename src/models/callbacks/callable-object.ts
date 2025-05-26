@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { Callback } from "./types.js";
 
 const SmartFunction = (Function as unknown) as new<A extends unknown[] = [], R = void>(...args: string[])
@@ -34,6 +32,7 @@ const SmartFunction = (Function as unknown) as new<A extends unknown[] = [], R =
  * The type signature of the callback function.  
  * It must be a function. Default is `(...args: any[]) => any`.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default abstract class CallableObject<T extends Callback<any[], any> = () => void>
     extends SmartFunction<Parameters<T>, ReturnType<T>>
 {
