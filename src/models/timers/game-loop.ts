@@ -5,7 +5,7 @@ import Publisher from "../callbacks/publisher.js";
 import { FatalErrorException, RuntimeException } from "../exceptions/index.js";
 import type { Callback } from "../types.js";
 
-interface GameLoopEventMap
+interface GameLoopEventsMap
 {
     start: () => void;
     stop: () => void;
@@ -98,7 +98,7 @@ export default class GameLoop
     /**
      * The {@link Publisher} object that will be used to publish the events of the game loop.
      */
-    protected _publisher: Publisher<GameLoopEventMap>;
+    protected _publisher: Publisher<GameLoopEventsMap>;
 
     /**
      * The internal method actually responsible for starting the game loop.

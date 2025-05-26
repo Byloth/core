@@ -6,7 +6,7 @@ import type { Callback } from "../types.js";
 
 import GameLoop from "./game-loop.js";
 
-interface ClockEventMap
+interface ClockEventsMap
 {
     start: () => void;
     stop: () => void;
@@ -40,7 +40,7 @@ export default class Clock extends GameLoop
     /**
      * The {@link Publisher} object that will be used to publish the events of the clock.
      */
-    protected override _publisher: Publisher<ClockEventMap>;
+    protected override _publisher: Publisher<ClockEventsMap>;
 
     /**
      * Initializes a new instance of the {@link Clock} class.
