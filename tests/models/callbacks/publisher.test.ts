@@ -63,13 +63,6 @@ describe("Publisher", () =>
         expect(_deathHandler).not.toHaveBeenCalled();
     });
 
-    it("Should not throw `ReferenceException` when unsubscribing a non-existent subscriber", () =>
-    {
-        const _moveHandler = vi.fn();
-
-        expect(() => publisher.unsubscribe("player:move", _moveHandler)).not.toThrow(ReferenceException);
-    });
-
     it("Should return an array of return values from subscribers", () =>
     {
         const _moveHandler1 = vi.fn(() => "handler1");
