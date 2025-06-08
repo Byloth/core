@@ -148,10 +148,10 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      */
     public subscribe<K extends keyof T>(event: K & string, subscriber: T[K]): () => void
     {
-        if (!(this._subscribers.has(event))) { this._subscribers.set(event, []); }
-
-        const subscribers = this._subscribers.get(event)!;
+        const subscribers = this._subscribers.get(event) ?? [];
         subscribers.push(subscriber);
+
+        this._subscribers.set(event, subscribers);
 
         return () =>
         {
