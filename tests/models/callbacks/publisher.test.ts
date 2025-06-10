@@ -93,4 +93,26 @@ describe("Publisher", () =>
         const results = publisher.publish("player:move", { x: 30, y: 40 });
         expect(results).toEqual(["handler1", "handler2"]);
     });
+
+    it("Should listen to all events with wildcard", () =>
+    {
+        const _spawnHandler = vi.fn();
+        const _moveHandler = vi.fn();
+        const _wildcardHandler = vi.fn();
+
+        publisher.subscribe("player:spawn", _spawnHandler);
+        publisher.subscribe("player:move", _moveHandler);
+        publisher.subscribe("*", _wildcardHandler);
+
+        publisher.publish("player:spawn", { x: 10, y: 20 });
+
+        publisher.publish("player:move", { x: 30, y: 40 });
+        publisher.publish("player:move", { x: 50, y: 60 });
+
+        publisher.publish("player:death");
+
+        expect(_spawnHandler).toBeCalledTimes(1);
+        expect(_moveHandler).toBeCalledTimes(2);
+        expect(_wildcardHandler).toBeCalledTimes(4);
+    });
 });

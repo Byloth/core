@@ -157,3 +157,16 @@ export interface Subscribable<T extends CallbackMap<T> = CallbackMap>
      */
     unsubscribe<K extends keyof T>(event: K & string, subscriber: T[K]): void;
 }
+
+/**
+ * An utility type that may be used to wrap a {@link CallbackMap} and extend it with a wildcard event. 
+ * The resulting type will be the same as the original map, but with an additional `"*"` key. 
+ *
+ * It's natively used by the {@link Publisher} class to allow subscribers to listen to all events.
+ *
+ * ---
+ *
+ * @template T A `CallbackMap` compatible interface that defines the map of callbacks.
+ * 
+ */
+export type WithWildcard<T extends CallbackMap<T>> = T & { "*"?: (type: string, ...args: unknown[]) => void };

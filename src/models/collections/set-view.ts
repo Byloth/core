@@ -1,4 +1,5 @@
 import Publisher from "../callbacks/publisher.js";
+import type { WithWildcard } from "../callbacks/types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type MapView from "./map-view.js";
@@ -166,7 +167,9 @@ export default class SetView<T> extends Set<T>
      *
      * @returns A function that can be used to unsubscribe the callback from the event.
      */
-    public subscribe<K extends keyof SetViewEventsMap<T>>(event: K, callback: SetViewEventsMap<T>[K]): () => void
+    public subscribe<K extends keyof WithWildcard<SetViewEventsMap<T>>>(
+        event: K & string, callback: WithWildcard<SetViewEventsMap<T>>[K]
+    ): () => void
     {
         return this._publisher.subscribe(event, callback);
     }
@@ -195,7 +198,9 @@ export default class SetView<T> extends Set<T>
      * @param event The name of the event to unsubscribe from.
      * @param callback The callback to remove from the event.
      */
-    public unsubscribe<K extends keyof SetViewEventsMap<T>>(event: K, callback: SetViewEventsMap<T>[K]): void
+    public unsubscribe<K extends keyof WithWildcard<SetViewEventsMap<T>>>(
+        event: K & string, callback: WithWildcard<SetViewEventsMap<T>>[K]
+    ): void
     {
         this._publisher.unsubscribe(event, callback);
     }
