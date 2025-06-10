@@ -63,11 +63,23 @@ describe("Publisher", () =>
         expect(_deathHandler).not.toHaveBeenCalled();
     });
 
-    it("Should not throw `ReferenceException` when unsubscribing a non-existent subscriber", () =>
+    it("Should not throw `ReferenceException` when unsubscribing from an event that does not exist", () =>
     {
         const _moveHandler = vi.fn();
+        const _spawnHandler = vi.fn();
 
-        expect(() => publisher.unsubscribe("player:move", _moveHandler)).not.toThrow(ReferenceException);
+        publisher.subscribe("player:move", _moveHandler);
+        expect(() => publisher.unsubscribe("player:spawn", _spawnHandler)).toThrow(ReferenceException);
+    });
+    it("Should throw `ReferenceException` when unsubscribing a subscriber that was not subscribed", () =>
+    {
+        const _moveHandler = vi.fn();
+        const _spawnHandler1 = vi.fn();
+        const _spawnHandler2 = vi.fn();
+
+        publisher.subscribe("player:move", _moveHandler);
+        publisher.subscribe("player:spawn", _spawnHandler1);
+        expect(() => publisher.unsubscribe("player:move", _spawnHandler2)).toThrow(ReferenceException);
     });
 
     it("Should return an array of return values from subscribers", () =>

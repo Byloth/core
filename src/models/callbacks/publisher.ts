@@ -148,10 +148,10 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      */
     public subscribe<K extends keyof T>(event: K & string, subscriber: T[K]): () => void
     {
-        if (!(this._subscribers.has(event))) { this._subscribers.set(event, []); }
-
-        const subscribers = this._subscribers.get(event)!;
+        const subscribers = this._subscribers.get(event) ?? [];
         subscribers.push(subscriber);
+
+        this._subscribers.set(event, subscribers);
 
         return () =>
         {
@@ -189,7 +189,11 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
     public unsubscribe<K extends keyof T>(event: K & string, subscriber: T[K]): void
     {
         const subscribers = this._subscribers.get(event);
-        if (!(subscribers)) { return; }
+        if (!(subscribers))
+        {
+            throw new ReferenceException("Unable to unsubscribe the required subscriber. " +
+                "The subscription was already unsubscribed or was never subscribed.");
+        }
 
         const index = subscribers.indexOf(subscriber);
         if (index < 0)
@@ -199,6 +203,7 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
         }
 
         subscribers.splice(index, 1);
+        if (subscribers.length === 0) { this._subscribers.delete(event); }
     }
 
     public readonly [Symbol.toStringTag]: string = "Publisher";
