@@ -50,7 +50,7 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap, W extends
      * The keys are the names of the events they are subscribed to.  
      * The values are the arrays of the subscribers themselves.
      */
-    protected _subscribers: Map<string, Callback<unknown[], unknown>[]>;
+    protected readonly _subscribers: Map<string, Callback<unknown[], unknown>[]>;
 
     /**
      * Initializes a new instance of the {@link Publisher} class.
@@ -89,7 +89,57 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap, W extends
      */
     public clear(): void
     {
+        // @ts-expect-error It's an internal event, not part of the public API.
+        this.publish("__internals__:clear");
+
         this._subscribers.clear();
+    }
+
+    /**
+     * Creates a new scoped instance of the {@link Publisher} class,
+     * which can be used to publish and subscribe events within a specific context.
+     *
+     * It can receive all events published to the parent publisher while also allowing
+     * the scoped publisher to handle its own events independently.  
+     * In fact, events published to the scoped publisher won't be propagated back to the parent publisher.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const publisher = new Publisher();
+     * const context = publisher.createScope();
+     *
+     * publisher.subscribe("player:death", () => { console.log(`Player has died.`); });
+     * context.subscribe("player:spawn", () => { console.log(`Player has spawned.`); });
+     *
+     * publisher.publish("player:spawn"); // Player has spawned.
+     * context.publish("player:death"); // * no output *
+     * ```
+     *
+     * ---
+     *
+     * @template U
+     * A map containing the names of the emittable events and the
+     * related callback signatures that can be subscribed to them.
+     * Default is `T`.
+     *
+     * @template X An utility type that extends the `U` map with a wildcard event.
+     */
+    public createScope<U extends T = T, X extends WithWildcard<U> = WithWildcard<U>>(): Publisher<U, X>
+    {
+        const scope = new Publisher<U, X>();
+
+        const propagator = (event: (keyof T) & string, ...args: Parameters<T[keyof T]>): void =>
+        {
+            scope.publish(event, ...args);
+        };
+
+        // @ts-expect-error It's an internal event, not part of the public API.
+        this.subscribe("__internals__:clear", () => scope.clear());
+        this.subscribe("*", propagator as W["*"]);
+
+        return scope;
     }
 
     /**
@@ -126,11 +176,14 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap, W extends
         }
         else { results = []; }
 
-        subscribers = this._subscribers.get("*");
-        if (subscribers)
+        if (!(event.startsWith("__")))
         {
-            subscribers.slice()
-                .forEach((subscriber) => subscriber(event, ...args));
+            subscribers = this._subscribers.get("*");
+            if (subscribers)
+            {
+                subscribers.slice()
+                    .forEach((subscriber) => subscriber(event, ...args));
+            }
         }
 
         return results;

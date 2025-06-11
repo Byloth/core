@@ -115,4 +115,51 @@ describe("Publisher", () =>
         expect(_moveHandler).toBeCalledTimes(2);
         expect(_wildcardHandler).toBeCalledTimes(4);
     });
+
+    it("Shouldn't call wildcard subscribers for internal events", () =>
+    {
+        const _internalHandler = vi.fn();
+        const _wildcardHandler = vi.fn();
+
+        // @ts-expect-error It's an internal event, not part of the public API.
+        publisher.subscribe("__wildcard__:test", _internalHandler);
+        publisher.subscribe("*", _wildcardHandler);
+
+        // @ts-expect-error It's an internal event, not part of the public API.
+        publisher.publish("__wildcard__:test");
+
+        expect(_internalHandler).toHaveBeenCalled();
+        expect(_wildcardHandler).not.toHaveBeenCalled();
+    });
+
+    it("Should propagate events to a scoped publisher", () =>
+    {
+        const _moveHandler = vi.fn();
+        const _spawnHandler = vi.fn();
+
+        const scope = publisher.createScope();
+
+        scope.subscribe("player:move", _moveHandler);
+        scope.subscribe("player:spawn", _spawnHandler);
+
+        publisher.publish("player:move", { x: 1, y: 2 });
+        publisher.publish("player:spawn", { x: 3, y: 4 });
+
+        expect(_moveHandler).toHaveBeenCalledWith({ x: 1, y: 2 });
+        expect(_spawnHandler).toHaveBeenCalledWith({ x: 3, y: 4 });
+    });
+
+    it("Should clear scoped publisher when parent is cleared", () =>
+    {
+        const _moveHandler = vi.fn();
+
+        const scope = publisher.createScope();
+        scope.subscribe("player:move", _moveHandler);
+
+        publisher.clear();
+
+        scope.publish("player:move", { x: 10, y: 20 });
+
+        expect(_moveHandler).not.toHaveBeenCalled();
+    });
 });
