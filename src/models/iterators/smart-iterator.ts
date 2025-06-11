@@ -42,7 +42,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
     /**
      * The native {@link Iterator} object that is being wrapped by this instance.
      */
-    protected _iterator: Iterator<T, R, N>;
+    protected readonly _iterator: Iterator<T, R, N>;
 
     /**
      * Initializes a new instance of the {@link SmartIterator} class.

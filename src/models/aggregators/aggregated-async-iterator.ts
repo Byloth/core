@@ -52,7 +52,7 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
     /**
      * The internal {@link SmartAsyncIterator} object that holds the elements to aggregate.
      */
-    protected _elements: SmartAsyncIterator<[K, T]>;
+    protected readonly _elements: SmartAsyncIterator<[K, T]>;
 
     /**
      * Initializes a new instance of the {@link AggregatedAsyncIterator} class.

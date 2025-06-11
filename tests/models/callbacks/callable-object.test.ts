@@ -4,7 +4,7 @@ import { CallableObject } from "../../../src/index.js";
 
 class Multiply extends CallableObject<(arg: number) => number>
 {
-    public multiplier;
+    public readonly multiplier;
 
     public constructor(multiplier = 2)
     {

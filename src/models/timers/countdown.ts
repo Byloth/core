@@ -43,7 +43,7 @@ export default class Countdown extends GameLoop
     /**
      * The {@link Publisher} object that will be used to publish the events of the countdown.
      */
-    protected override _publisher: Publisher<CountdownEventsMap>;
+    declare protected readonly _publisher: Publisher<CountdownEventsMap>;
 
     /**
      * The total duration of the countdown in milliseconds.
@@ -114,7 +114,6 @@ export default class Countdown extends GameLoop
 
         super(callback, msIfNotBrowser);
 
-        this._publisher = new Publisher();
         this._duration = duration;
     }
 

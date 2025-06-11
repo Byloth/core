@@ -40,7 +40,7 @@ export default class DeferredPromise<T = void, F = T, R = never> extends SmartPr
      * This protected property is the only one that can be modified directly by the derived classes.  
      * If you're looking for the public and readonly property, use the {@link DeferredPromise.resolve} getter instead.
      */
-    protected _resolve: PromiseResolver<T>;
+    protected readonly _resolve: PromiseResolver<T>;
 
     /**
      * The exposed function that allows to reject the promise.
@@ -53,12 +53,17 @@ export default class DeferredPromise<T = void, F = T, R = never> extends SmartPr
      * This protected property is the only one that can be modified directly by the derived classes.  
      * If you're looking for the public and readonly property, use the {@link DeferredPromise.reject} getter instead.
      */
-    protected _reject: PromiseRejecter;
+    protected readonly _reject: PromiseRejecter;
 
     /**
      * The exposed function that allows to reject the promise.
      */
     public get reject(): PromiseRejecter { return this._reject; }
+
+    /**
+     * The native {@link Promise} object wrapped by this instance.
+     */
+    declare protected readonly _promise: Promise<F | R>;
 
     /**
      * Initializes a new instance of the {@link DeferredPromise} class.

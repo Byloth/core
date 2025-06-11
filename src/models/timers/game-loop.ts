@@ -3,15 +3,11 @@ import { isBrowser } from "../../helpers.js";
 
 import Publisher from "../callbacks/publisher.js";
 import { FatalErrorException, RuntimeException } from "../exceptions/index.js";
-import type { Callback } from "../types.js";
 
 interface GameLoopEventsMap
 {
     start: () => void;
     stop: () => void;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: Callback<any[], any>;
 }
 
 /**
@@ -98,7 +94,7 @@ export default class GameLoop
     /**
      * The {@link Publisher} object that will be used to publish the events of the game loop.
      */
-    protected _publisher: Publisher<GameLoopEventsMap>;
+    protected readonly _publisher: Publisher<GameLoopEventsMap>;
 
     /**
      * The internal method actually responsible for starting the game loop.
@@ -106,7 +102,7 @@ export default class GameLoop
      * Depending on the current environment, it could use the
      * {@link requestAnimationFrame} or the {@link setInterval} function.
      */
-    protected _start: () => void;
+    protected readonly _start: () => void;
 
     /**
      * The internal method actually responsible for stopping the game loop.
@@ -114,7 +110,7 @@ export default class GameLoop
      * Depending on the current environment, it could use the
      * {@link cancelAnimationFrame} or the {@link clearInterval} function.
      */
-    protected _stop: () => void;
+    protected readonly _stop: () => void;
 
     /**
      * Initializes a new instance of the {@link GameLoop} class.

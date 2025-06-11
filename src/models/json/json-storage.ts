@@ -29,17 +29,17 @@ export default class JSONStorage
      * If `true`, the persistent storage is preferred. If `false`, the volatile storage is preferred.  
      * Default is `true`.
      */
-    protected _preferPersistence: boolean;
+    protected readonly _preferPersistence: boolean;
 
     /**
      * A reference to the volatile {@link sessionStorage} storage.
      */
-    protected _volatile: Storage;
+    protected readonly _volatile: Storage;
 
     /**
      * A reference to the persistent {@link localStorage} storage.
      */
-    protected _persistent: Storage;
+    protected readonly _persistent: Storage;
 
     /**
      * Initializes a new instance of the {@link JSONStorage} class.  

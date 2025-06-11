@@ -110,7 +110,7 @@ export default class SmartPromise<T = void> implements Promise<T>
     /**
      * The native {@link Promise} object wrapped by this instance.
      */
-    protected _promise: Promise<T>;
+    protected readonly _promise: Promise<T>;
 
     /**
      * Initializes a new instance of the {@link SmartPromise} class.

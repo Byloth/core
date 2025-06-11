@@ -2,7 +2,6 @@ import { TimeUnit } from "../../utils/date.js";
 
 import Publisher from "../callbacks/publisher.js";
 import { FatalErrorException, RangeException, RuntimeException } from "../exceptions/index.js";
-import type { Callback } from "../types.js";
 
 import GameLoop from "./game-loop.js";
 
@@ -11,9 +10,6 @@ interface ClockEventsMap
     start: () => void;
     stop: () => void;
     tick: (elapsedTime: number) => void;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: Callback<any[], any>;
 }
 
 /**
@@ -40,7 +36,7 @@ export default class Clock extends GameLoop
     /**
      * The {@link Publisher} object that will be used to publish the events of the clock.
      */
-    protected override _publisher: Publisher<ClockEventsMap>;
+    declare protected readonly _publisher: Publisher<ClockEventsMap>;
 
     /**
      * Initializes a new instance of the {@link Clock} class.
@@ -61,8 +57,6 @@ export default class Clock extends GameLoop
     public constructor(msIfNotBrowser: number = TimeUnit.Second)
     {
         super((elapsedTime) => this._publisher.publish("tick", elapsedTime), msIfNotBrowser);
-
-        this._publisher = new Publisher();
     }
 
     /**

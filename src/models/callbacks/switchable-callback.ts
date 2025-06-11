@@ -43,7 +43,7 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      * The keys are the names of the implementations they were registered with.  
      * The values are the implementations themselves.
      */
-    protected _callbacks: Map<string, T>;
+    protected readonly _callbacks: Map<string, T>;
 
     /**
      * A flag indicating whether the callback is enabled or not.

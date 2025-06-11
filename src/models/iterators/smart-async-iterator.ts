@@ -51,7 +51,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     /**
      * The native {@link AsyncIterator} object that is being wrapped by this instance.
      */
-    protected _iterator: AsyncIterator<T, R, N>;
+    protected readonly _iterator: AsyncIterator<T, R, N>;
 
     /**
      * Initializes a new instance of the {@link SmartAsyncIterator} class.

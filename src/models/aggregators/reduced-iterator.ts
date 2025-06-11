@@ -45,7 +45,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
     /**
      * The internal {@link SmartIterator} object that holds the reduced elements.
      */
-    protected _elements: SmartIterator<[K, T]>;
+    protected readonly _elements: SmartIterator<[K, T]>;
 
     /**
      * Initializes a new instance of the {@link ReducedIterator} class.
