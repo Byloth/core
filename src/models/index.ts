@@ -29,5 +29,5 @@ export {
 
 export { SmartIterator, SmartAsyncIterator } from "./iterators/index.js";
 export { JSONStorage } from "./json/index.js";
-export { DeferredPromise, SmartPromise, TimedPromise } from "./promises/index.js";
+export { DeferredPromise, PromiseQueue, SmartPromise, TimedPromise } from "./promises/index.js";
 export { Clock, Countdown, GameLoop } from "./timers/index.js";

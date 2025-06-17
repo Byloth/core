@@ -125,6 +125,10 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap, W extends
      * Default is `T`.
      *
      * @template X An utility type that extends the `U` map with a wildcard event.
+     *
+     * @return
+     * A new instance of the {@link Publisher} class that can be
+     * used to publish and subscribe events within a specific context.
      */
     public createScope<U extends T = T, X extends WithWildcard<U> = WithWildcard<U>>(): Publisher<U, X>
     {

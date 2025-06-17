@@ -74,7 +74,7 @@ export type Timeout = ReturnType<typeof setTimeout>;
  *     public greet() { console.log("Hello, world!"); }
  * }
  *
- * type MyObjectProperties = ValueOf<MyObject>;  // number | (() => void)
+ * type MyObjectProperties = ValueOf<MyObject>; // number | (() => void)
  * ```
  *
  * ---

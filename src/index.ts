@@ -1,4 +1,4 @@
-export const VERSION = "2.1.4";
+export const VERSION = "2.1.5";
 
 export type { Constructor, Interval, Timeout, ValueOf } from "./core/types.js";
 
@@ -24,6 +24,7 @@ export {
     NotImplementedException,
     NetworkException,
     PermissionException,
+    PromiseQueue,
     Publisher,
     RangeException,
     ReducedIterator,
