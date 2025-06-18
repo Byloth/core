@@ -24,9 +24,9 @@ interface ClockEventsMap
  * ```ts
  * const clock = new Clock();
  *
- * clock.onStart(() => { console.log("The clock has started."); });
- * clock.onTick((elapsedTime) => { console.log(`The clock has ticked at ${elapsedTime}ms.`); });
- * clock.onStop(() => { console.log("The clock has stopped."); });
+ * clock.onStart(() => console.log("The clock has started."));
+ * clock.onTick((elapsedTime) => console.log(`The clock has ticked at ${elapsedTime}ms.`));
+ * clock.onStop(() => console.log("The clock has stopped."));
  *
  * clock.start();
  * ```

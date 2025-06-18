@@ -51,8 +51,8 @@ export interface ReadonlyMapView<K, V> extends ReadonlyMap<K, V>
      *     console.log(`Added ${key}: ${value}`);
      * });
      *
-     * map.set("key1", 2); // Added key1: 2
-     * map.set("answer", 42); // Added answer: 42
+     * map.set("key1", 2); // "Added key1: 2"
+     * map.set("answer", 42); // "Added answer: 42"
      * map.set("key2", 4);
      * map.set("key3", 8);
      * ```
@@ -79,7 +79,7 @@ export interface ReadonlyMapView<K, V> extends ReadonlyMap<K, V>
      * const map = new MapView<string, number>();
      *
      * map.subscribe("entry:add", callback);
-     * map.set("key1", 2); // Added key1: 2
+     * map.set("key1", 2); // "Added key1: 2"
      *
      * map.unsubscribe("entry:add", callback);
      * map.set("key2", 4);
@@ -140,8 +140,8 @@ export interface ReadonlySetView<T> extends ReadonlySet<T>
      *     console.log(`Added ${value}`);
      * });
      *
-     * set.add(2); // Added 2
-     * set.add(42); // Added 42
+     * set.add(2); // "Added 2"
+     * set.add(42); // "Added 42"
      * set.add(4);
      * set.add(8);
      * ```
@@ -168,7 +168,7 @@ export interface ReadonlySetView<T> extends ReadonlySet<T>
      * const set = new SetView<number>();
      *
      * set.subscribe("entry:add", callback);
-     * set.add(2); // Added 2
+     * set.add(2); // "Added 2"
      *
      * set.unsubscribe("entry:add", callback);
      * set.add(4);

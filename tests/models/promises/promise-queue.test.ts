@@ -61,7 +61,7 @@ describe("PromiseQueue", () =>
 
             results.push(3);
         });
-        queue.enqueue(() => { results.push(4); });
+        queue.enqueue(() => results.push(4));
 
         await vi.advanceTimersByTimeAsync(150);
         expect(results).toEqual([1, 2]);

@@ -1,5 +1,5 @@
 import Publisher from "../callbacks/publisher.js";
-import type { WithWildcard } from "../callbacks/types.js";
+import type { Subscribable } from "../types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type MapView from "./map-view.js";
@@ -18,14 +18,14 @@ import type { SetViewEventsMap } from "./types.js";
  * const set = new SetView<number>();
  *
  * set.subscribe("entry:add", (value: number) => console.log(`Added ${value}`));
- * set.add(42); // Added 42
+ * set.add(42); // "Added 42"
  * ```
  *
  * ---
  *
  * @template T The type of the values in the set.
  */
-export default class SetView<T> extends Set<T>
+export default class SetView<T> extends Set<T> implements Subscribable<SetViewEventsMap<T>>
 {
     /**
      * The internal {@link Publisher} instance used to publish events.
@@ -152,8 +152,8 @@ export default class SetView<T> extends Set<T>
      *     console.log(`Added ${value}`);
      * });
      *
-     * set.add(2); // Added 2
-     * set.add(42); // Added 42
+     * set.add(2); // "Added 2"
+     * set.add(42); // "Added 42"
      * set.add(4);
      * set.add(8);
      * ```
@@ -163,15 +163,14 @@ export default class SetView<T> extends Set<T>
      * @template K The key of the map containing the callback signature to subscribe.
      *
      * @param event The name of the event to subscribe to.
-     * @param callback The callback to execute when the event is published.
+     * @param subscriber The callback to execute when the event is published.
      *
      * @returns A function that can be used to unsubscribe the callback from the event.
      */
-    public subscribe<K extends keyof WithWildcard<SetViewEventsMap<T>>>(
-        event: K & string, callback: WithWildcard<SetViewEventsMap<T>>[K]
-    ): () => void
+    public subscribe<K extends keyof SetViewEventsMap<T>>(event: K & string, subscriber: SetViewEventsMap<T>[K])
+        : () => void
     {
-        return this._publisher.subscribe(event, callback);
+        return this._publisher.subscribe(event, subscriber);
     }
 
     /**
@@ -185,7 +184,7 @@ export default class SetView<T> extends Set<T>
      * const set = new SetView<number>();
      *
      * set.subscribe("entry:add", callback);
-     * set.add(2); // Added 2
+     * set.add(2); // "Added 2"
      *
      * set.unsubscribe("entry:add", callback);
      * set.add(4);
@@ -196,13 +195,11 @@ export default class SetView<T> extends Set<T>
      * @template K The key of the map containing the callback signature to unsubscribe.
      *
      * @param event The name of the event to unsubscribe from.
-     * @param callback The callback to remove from the event.
+     * @param subscriber The callback to remove from the event.
      */
-    public unsubscribe<K extends keyof WithWildcard<SetViewEventsMap<T>>>(
-        event: K & string, callback: WithWildcard<SetViewEventsMap<T>>[K]
-    ): void
+    public unsubscribe<K extends keyof SetViewEventsMap<T>>(event: K & string, subscriber: SetViewEventsMap<T>[K]): void
     {
-        this._publisher.unsubscribe(event, callback);
+        this._publisher.unsubscribe(event, subscriber);
     }
 
     public override readonly [Symbol.toStringTag]: string = "SetView";

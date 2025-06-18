@@ -32,8 +32,8 @@ interface GameLoopEventsMap
  *     console.log(`The game loop has been running for ${elapsedTime}ms.`);
  * });
  *
- * loop.onStart(() => { console.log("The game loop has started."); });
- * loop.onStop(() => { console.log("The game loop has stopped."); });
+ * loop.onStart(() => console.log("The game loop has started."));
+ * loop.onStop(() => console.log("The game loop has stopped."));
  *
  * loop.start();
  * ```
@@ -226,7 +226,7 @@ export default class GameLoop
      *
      * @example
      * ```ts
-     * loop.onStart(() => { console.log("The game loop has started."); });
+     * loop.onStart(() => console.log("The game loop has started."));
      * ```
      *
      * ---
@@ -247,7 +247,7 @@ export default class GameLoop
      *
      * @example
      * ```ts
-     * loop.onStop(() => { console.log("The game loop has stopped."); });
+     * loop.onStop(() => console.log("The game loop has stopped."));
      * ```
      *
      * ---

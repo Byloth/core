@@ -16,7 +16,7 @@ describe("TimedPromise", () =>
 
         }, 500);
 
-        promise.then((result) => { expect(result).toBe("Hello, world!"); });
+        promise.then((result) => expect(result).toBe("Hello, world!"));
 
         await vi.advanceTimersByTimeAsync(500);
     });
@@ -45,7 +45,7 @@ describe("TimedPromise", () =>
 
         }, 500);
 
-        promise.catch((error) => { expect(error).toBe(reason); });
+        promise.catch((error) => expect(error).toBe(reason));
 
         await vi.advanceTimersByTimeAsync(500);
     });
@@ -57,7 +57,7 @@ describe("TimedPromise", () =>
             resolve("Immediate resolve");
         });
 
-        promise.then((result) => { expect(result).toBe("Immediate resolve"); });
+        promise.then((result) => expect(result).toBe("Immediate resolve"));
     });
     it("Should reject immediately if no timeout is provided", async () =>
     {

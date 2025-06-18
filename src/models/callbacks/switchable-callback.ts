@@ -20,9 +20,9 @@ const Disabler = () => { /* ... */ };
  * onPointerMove.register("released", () => { [...] });
  * onPointerMove.register("pressed", () => { [...] });
  *
- * window.addEventListener("pointerdown", () => { onPointerMove.switch("pressed"); });
+ * window.addEventListener("pointerdown", () => onPointerMove.switch("pressed"));
  * window.addEventListener("pointermove", onPointerMove);
- * window.addEventListener("pointerup", () => { onPointerMove.switch("released"); });
+ * window.addEventListener("pointerup", () => onPointerMove.switch("released"));
  * ```
  *
  * ---
@@ -153,7 +153,7 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      *
      * @example
      * ```ts
-     * window.addEventListener("pointerdown", () => { onPointerMove.enable(); });
+     * window.addEventListener("pointerdown", () => onPointerMove.enable());
      * window.addEventListener("pointermove", onPointerMove);
      * ```
      *
@@ -204,7 +204,7 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      * @example
      * ```ts
      * window.addEventListener("pointermove", onPointerMove);
-     * window.addEventListener("pointerup", () => { onPointerMove.disable(); });
+     * window.addEventListener("pointerup", () => onPointerMove.disable());
      * ```
      */
     public disable(): void
@@ -294,9 +294,9 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
      *
      * @example
      * ```ts
-     * window.addEventListener("pointerdown", () => { onPointerMove.switch("pressed"); });
+     * window.addEventListener("pointerdown", () => onPointerMove.switch("pressed"));
      * window.addEventListener("pointermove", onPointerMove);
-     * window.addEventListener("pointerup", () => { onPointerMove.switch("released"); });
+     * window.addEventListener("pointerup", () => onPointerMove.switch("released"));
      * ```
      *
      * ---

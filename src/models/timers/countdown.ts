@@ -30,10 +30,10 @@ interface CountdownEventsMap
  * ```ts
  * const countdown = new Countdown(10_000);
  *
- * countdown.onStart(() => { console.log("The countdown has started."); });
- * countdown.onTick((remainingTime) => { console.log(`The countdown has ${remainingTime}ms remaining.`); });
- * countdown.onStop((reason) => { console.log(`The countdown has stopped because of ${reason}.`); });
- * countdown.onExpire(() => { console.log("The countdown has expired."); });
+ * countdown.onStart(() => console.log("The countdown has started."));
+ * countdown.onTick((remainingTime) => console.log(`The countdown has ${remainingTime}ms remaining.`));
+ * countdown.onStop((reason) => console.log(`The countdown has stopped because of ${reason}.`));
+ * countdown.onExpire(() => console.log("The countdown has expired."));
  *
  * countdown.start();
  * ```

@@ -893,7 +893,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      *
      * for (const value of iterator)
      * {
-     *     if (value > 5) { break; } // Closing the iterator...
+     *     if (value > 5) { break; } // "Closing the iterator..."
      *
      *     console.log(value); // 1, 2, 3, 4, 5
      * }

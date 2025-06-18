@@ -130,7 +130,7 @@ describe("AggregatedIterator", () =>
     it("Should iterate over all elements", () =>
     {
         const results: [string, number, number][] = [];
-        const _iteratee = vi.fn((key: string, value: number, index: number) => { results.push([key, value, index]); });
+        const _iteratee = vi.fn((key: string, value: number, index: number) => results.push([key, value, index]));
 
         const iterator = new SmartIterator([-3, 0, 2, -1, 3])
             .groupBy((value) => value % 2 === 0 ? "even" : "odd");

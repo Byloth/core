@@ -9,7 +9,7 @@ describe("DeferredPromise", () =>
         const deferred = new DeferredPromise<string, string[]>((value: string) => value.split(" "));
 
         deferred.resolve("Hello, world!");
-        deferred.then((result) => { expect(result).toEqual(["Hello,", "world!"]); });
+        deferred.then((result) => expect(result).toEqual(["Hello,", "world!"]));
     });
 
     it("Should reject with the correct reason", async () =>
@@ -18,7 +18,7 @@ describe("DeferredPromise", () =>
         const reason = new Error("Something went wrong");
 
         deferred.reject(reason);
-        deferred.catch((error) => { expect(error).toBe(reason); });
+        deferred.catch((error) => expect(error).toBe(reason));
     });
 
     it("Should watch another promise and resolve when the other promise resolves", async () =>
@@ -29,7 +29,7 @@ describe("DeferredPromise", () =>
         const deferred = new DeferredPromise<string, string[]>((value: string) => value.split(" "));
 
         deferred.watch(otherPromise);
-        deferred.then((result) => { expect(result).toEqual(["Hello,", "world!"]); });
+        deferred.then((result) => expect(result).toEqual(["Hello,", "world!"]));
 
         await vi.advanceTimersByTimeAsync(100);
 
@@ -45,7 +45,7 @@ describe("DeferredPromise", () =>
         const deferred = new DeferredPromise<string, string[]>((value: string) => value.split(" "));
 
         deferred.watch(otherPromise);
-        deferred.catch((error) => { expect(error).toBe(reason); });
+        deferred.catch((error) => expect(error).toBe(reason));
 
         await vi.advanceTimersByTimeAsync(100);
 

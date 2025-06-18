@@ -52,6 +52,51 @@ export type Callback<A extends unknown[] = [], R = void> = (...args: A) => R;
 export type CallbackMap<T = Record<string, Callback<unknown[], unknown>>> = { [K in keyof T]: Callback<any[], any> };
 
 /**
+ * An utility type that represents a map of internal events that may
+ * be used by the {@link Publisher} class or its child classes.
+ *
+ * Internal events follow the pattern `__${string}__:${string}` and
+ * are used for internal communication within the publisher system.  
+ * These events are not part of the public API but can be subscribed to for advanced use cases.
+ *
+ * ---
+ *
+ * @example
+ * ```ts
+ * const publisher = new Publisher<EventsMap>();
+ *
+ * publisher.subscribe("__internals__:clear", () => console.log("Publisher cleared"));
+ * publisher.clear(); // "Publisher cleared"
+ * ```
+ */
+export type InternalsEventsMap = Record<`__${string}__:${string}`, (...args: unknown[]) => unknown>;
+
+/**
+ * An utility interface that defines a wildcard event for listening to all events.
+ *
+ * The wildcard event uses the `"*"` key and provides a callback that receives
+ * the event type as the first parameter, followed by all the event arguments.
+ *
+ * It's natively used by the {@link Publisher} class to allow subscribers to listen to all events.
+ *
+ * ---
+ *
+ * @example
+ * ```ts
+ * const publisher = new Publisher<EventsMap>();
+ *
+ * publisher.subscribe("*", (type: string, ...args: unknown[]) =>
+ * {
+ *     console.log(`Event \`${type}\` was fired with args:`, args));
+ * });
+ * 
+ * publisher.publish("player:move", { x: 10, y: 20 }); // "Event `player:move` was fired with args: [{ x: 10, y: 20 }]"
+ * publisher.publish("player:death"); // "Event `player:death` was fired with args: []"
+ * ```
+ */
+export interface WildcardEventsMap { "*": (type: string, ...args: unknown[]) => void; }
+
+/**
  * An utility type that represents a {@link Publisher} object that can be published to.
  * See also {@link Subscribable}.
  *
@@ -74,11 +119,11 @@ export interface Publishable<T extends CallbackMap<T> = CallbackMap>
      *
      * @example
      * ```ts
-     * publisher.subscribe("player:move", (coords) => { [...] });
-     * publisher.subscribe("player:move", ({ x, y }) => { [...] });
-     * publisher.subscribe("player:move", (evt) => { [...] });
+     * publishable.subscribe("player:move", (coords) => { [...] });
+     * publishable.subscribe("player:move", ({ x, y }) => { [...] });
+     * publishable.subscribe("player:move", (evt) => { [...] });
      *
-     * publisher.publish("player:move", { x: 10, y: 20 });
+     * publishable.publish("player:move", { x: 10, y: 20 });
      * ```
      *
      * ---
@@ -117,10 +162,10 @@ export interface Subscribable<T extends CallbackMap<T> = CallbackMap>
      * @example
      * ```ts
      * let unsubscribe: () => void;
-     * publisher.subscribe("player:death", unsubscribe);
-     * publisher.subscribe("player:spawn", (evt) =>
+     * subscribable.subscribe("player:death", unsubscribe);
+     * subscribable.subscribe("player:spawn", (evt) =>
      * {
-     *     unsubscribe = publisher.subscribe("player:move", ({ x, y }) => { [...] });
+     *     unsubscribe = subscribable.subscribe("player:move", ({ x, y }) => { [...] });
      * });
      * ```
      *
@@ -157,16 +202,3 @@ export interface Subscribable<T extends CallbackMap<T> = CallbackMap>
      */
     unsubscribe<K extends keyof T>(event: K & string, subscriber: T[K]): void;
 }
-
-/**
- * An utility type that may be used to wrap a {@link CallbackMap} and extend it with a wildcard event. 
- * The resulting type will be the same as the original map, but with an additional `"*"` key. 
- *
- * It's natively used by the {@link Publisher} class to allow subscribers to listen to all events.
- *
- * ---
- *
- * @template T A `CallbackMap` compatible interface that defines the map of callbacks.
- * 
- */
-export type WithWildcard<T extends CallbackMap<T>> = T & { "*"?: (type: string, ...args: unknown[]) => void };

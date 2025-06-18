@@ -121,11 +121,9 @@ describe("Publisher", () =>
         const _internalHandler = vi.fn();
         const _wildcardHandler = vi.fn();
 
-        // @ts-expect-error It's an internal event, not part of the public API.
         publisher.subscribe("__wildcard__:test", _internalHandler);
         publisher.subscribe("*", _wildcardHandler);
 
-        // @ts-expect-error It's an internal event, not part of the public API.
         publisher.publish("__wildcard__:test");
 
         expect(_internalHandler).toHaveBeenCalled();

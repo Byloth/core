@@ -176,7 +176,7 @@ describe("SmartIterator", () =>
     it("Should iterate over all values", () =>
     {
         const results: number[] = [];
-        const _iteratee = vi.fn((x: number) => { results.push(x); });
+        const _iteratee = vi.fn((x: number) => results.push(x));
 
         const iterator = new SmartIterator([1, 2, 3]);
         iterator.forEach(_iteratee);

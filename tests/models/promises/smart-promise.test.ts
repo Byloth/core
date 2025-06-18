@@ -26,7 +26,7 @@ describe("SmartPromise", () =>
             setTimeout(() => resolve("Hello, world!"), 100);
         });
 
-        promise.then((value) => { expect(value).toBe("Hello, world!"); });
+        promise.then((value) => expect(value).toBe("Hello, world!"));
 
         await vi.advanceTimersByTimeAsync(100);
 
@@ -41,7 +41,7 @@ describe("SmartPromise", () =>
             setTimeout(() => reject(new Error("An error occurred")), 100);
         });
 
-        promise.catch((error) => { expect(error).toEqual(new Error("An error occurred")); });
+        promise.catch((error) => expect(error).toEqual(new Error("An error occurred")));
 
         await vi.advanceTimersByTimeAsync(100);
 
@@ -62,7 +62,7 @@ describe("SmartPromise", () =>
         expect(promise.isFulfilled).toBe(false);
         expect(promise.isRejected).toBe(false);
 
-        promise.then((value) => { expect(value).toBe("Hello, world!"); });
+        promise.then((value) => expect(value).toBe("Hello, world!"));
 
         await vi.advanceTimersByTimeAsync(100);
 
@@ -79,7 +79,7 @@ describe("SmartPromise", () =>
         });
 
         promise.then((value) => `${value}!!`)
-            .then((value) => { expect(value).toBe("Hello, world!!!"); });
+            .then((value) => expect(value).toBe("Hello, world!!!"));
 
         await vi.advanceTimersByTimeAsync(100);
 
@@ -95,7 +95,7 @@ describe("SmartPromise", () =>
         });
 
         promise.catch((error) => "Recovered from error")
-            .then((value) => { expect(value).toBe("Recovered from error"); });
+            .then((value) => expect(value).toBe("Recovered from error"));
 
         await vi.advanceTimersByTimeAsync(100);
 

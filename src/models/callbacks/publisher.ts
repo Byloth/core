@@ -1,6 +1,9 @@
 import { ReferenceException } from "../exceptions/index.js";
 
-import type { Callback, CallbackMap, WithWildcard } from "./types.js";
+import type { Callback, CallbackMap, InternalsEventsMap, WildcardEventsMap } from "./types.js";
+
+type I = InternalsEventsMap;
+type W = WildcardEventsMap;
 
 /**
  * A class implementing the
@@ -39,10 +42,8 @@ import type { Callback, CallbackMap, WithWildcard } from "./types.js";
  * A map containing the names of the emittable events and the
  * related callback signatures that can be subscribed to them.  
  * Default is `Record<string, (...args: unknown[]) => unknown>`.
- *
- * @template E An utility type that extends the `T` map with a wildcard event.
  */
-export default class Publisher<T extends CallbackMap<T> = CallbackMap, W extends WithWildcard<T> = WithWildcard<T>>
+export default class Publisher<T extends CallbackMap<T> = CallbackMap>
 {
     /**
      * A map containing all the subscribers for each event.
@@ -89,7 +90,6 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap, W extends
      */
     public clear(): void
     {
-        // @ts-expect-error It's an internal event, not part of the public API.
         this.publish("__internals__:clear");
 
         this._subscribers.clear();
@@ -110,10 +110,10 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap, W extends
      * const publisher = new Publisher();
      * const context = publisher.createScope();
      *
-     * publisher.subscribe("player:death", () => { console.log(`Player has died.`); });
-     * context.subscribe("player:spawn", () => { console.log(`Player has spawned.`); });
+     * publisher.subscribe("player:death", () => console.log(`Player has died.`));
+     * context.subscribe("player:spawn", () => console.log(`Player has spawned.`));
      *
-     * publisher.publish("player:spawn"); // Player has spawned.
+     * publisher.publish("player:spawn"); // "Player has spawned."
      * context.publish("player:death"); // * no output *
      * ```
      *
@@ -124,24 +124,19 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap, W extends
      * related callback signatures that can be subscribed to them.
      * Default is `T`.
      *
-     * @template X An utility type that extends the `U` map with a wildcard event.
-     *
      * @return
      * A new instance of the {@link Publisher} class that can be
      * used to publish and subscribe events within a specific context.
      */
-    public createScope<U extends T = T, X extends WithWildcard<U> = WithWildcard<U>>(): Publisher<U, X>
+    public createScope<U extends T = T>(): Publisher<U>
     {
-        const scope = new Publisher<U, X>();
+        const scope = new Publisher<U>();
 
-        const propagator = (event: (keyof T) & string, ...args: Parameters<T[keyof T]>): void =>
-        {
-            scope.publish(event, ...args);
-        };
-
-        // @ts-expect-error It's an internal event, not part of the public API.
         this.subscribe("__internals__:clear", () => scope.clear());
-        this.subscribe("*", propagator as W["*"]);
+        this.subscribe("*", (event, ...args): void =>
+        {
+            scope.publish(event as keyof U & string, ...args as Parameters<U[keyof U]>);
+        });
 
         return scope;
     }
@@ -169,14 +164,40 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap, W extends
      *
      * @returns An array containing the return values of all the subscribers.
      */
-    public publish<K extends keyof T>(event: K & string, ...args: Parameters<T[K]>): ReturnType<T[K]>[]
+    public publish<K extends keyof T>(event: K & string, ...args: Parameters<T[K]>): ReturnType<T[K]>[];
+
+    /**
+     * Publishes an internal event to all the subscribers.
+     *
+     * Internal events follow the pattern `__${string}__:${string}` and are used for internal
+     * communication within the publisher system. These events won't trigger wildcard listeners.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * publisher.subscribe("__internals__:clear", () => console.log("Clearing..."));
+     * publisher.publish("__internals__:clear"); // "Clearing..."
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the internal events map containing the callback signature to publish.
+     *
+     * @param event The name of the internal event to publish.
+     * @param args The arguments to pass to the subscribers.
+     *
+     * @returns An array containing the return values of all the subscribers.
+     */
+    public publish<K extends keyof I>(event: K & string, ...args: Parameters<I[K]>): ReturnType<I[K]>[];
+    public publish(event: string, ...args: unknown[]): unknown[]
     {
-        let results: ReturnType<T[K]>[];
+        let results: unknown[];
         let subscribers = this._subscribers.get(event);
         if (subscribers)
         {
             results = subscribers.slice()
-                .map((subscriber) => subscriber(...args)) as ReturnType<T[K]>[];
+                .map((subscriber) => subscriber(...args));
         }
         else { results = []; }
 
@@ -217,7 +238,61 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap, W extends
      *
      * @returns A function that can be used to unsubscribe the subscriber from the event.
      */
-    public subscribe<K extends keyof W>(event: K & string, subscriber: W[K]): () => void
+    public subscribe<K extends keyof T>(event: K & string, subscriber: T[K]): () => void;
+
+    /**
+     * Subscribes to an internal event and adds a subscriber to be executed when the event is published.
+     *
+     * Internal events follow the pattern `__${string}__:${string}` and
+     * are used for internal communication within the publisher system.  
+     * Please note to use this method only if you know what you are doing.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * publisher.subscribe("__internals__:clear", () => console.log("All subscribers have been cleared."));
+     * publisher.clear(); // "All subscribers have been cleared."
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the internal events map containing the callback signature to subscribe.
+     *
+     * @param event The name of the internal event to subscribe to.
+     * @param subscriber The subscriber to execute when the internal event is published.
+     *
+     * @returns A function that can be used to unsubscribe the subscriber from the event.
+     */
+    public subscribe<K extends keyof I>(event: K & string, subscriber: I[K]): () => void;
+
+    /**
+     * Subscribes to the wildcard event to listen to all published events.
+     *
+     * The wildcard subscriber will be called for every event published, receiving
+     * the event type as the first parameter followed by all event arguments.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * publisher.subscribe("*", (type, ...args) =>
+     * {
+     *     console.log(`Event \`${type}\` was fired with args:`, args);
+     * });
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the wildcard events map (always "*").
+     *
+     * @param event The wildcard event name ("*").
+     * @param subscriber The subscriber to execute for all published events.
+     *
+     * @returns A function that can be used to unsubscribe the subscriber from the wildcard event.
+     */
+    public subscribe<K extends keyof W>(event: K & string, subscriber: W[K]): () => void;
+    public subscribe(event: string, subscriber: Callback<unknown[], unknown>): () => void
     {
         const subscribers = this._subscribers.get(event) ?? [];
         subscribers.push(subscriber);
@@ -257,7 +332,57 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap, W extends
      * @param event The name of the event to unsubscribe from.
      * @param subscriber The subscriber to remove from the event.
      */
-    public unsubscribe<K extends keyof W>(event: K & string, subscriber: W[K]): void
+    public unsubscribe<K extends keyof T>(event: K & string, subscriber: T[K]): void;
+
+    /**
+     * Unsubscribes from an internal event and removes a subscriber from being executed when the event is published.
+     *
+     * Internal events follow the pattern `__${string}__:${string}` and
+     * are used for internal communication within the publisher system.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const onClear = () => console.log("Publisher cleared");
+     * 
+     * publisher.subscribe("__internals__:clear", onClear);
+     * publisher.unsubscribe("__internals__:clear", onClear);
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the internal events map containing the callback signature to unsubscribe.
+     *
+     * @param event The name of the internal event to unsubscribe from.
+     * @param subscriber The subscriber to remove from the internal event.
+     */
+    public unsubscribe<K extends keyof I>(event: K & string, subscriber: I[K]): void;
+
+    /**
+     * Unsubscribes from the wildcard event and removes a subscriber from being executed for all events.
+     *
+     * This removes a previously registered wildcard listener that was capturing all published events.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const wildcardHandler = (type: string, ...args: unknown[]) => console.log(type, args);
+     * 
+     * publisher.subscribe("*", wildcardHandler);
+     * publisher.unsubscribe("*", wildcardHandler);
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the wildcard events map (always "*").
+     *
+     * @param event The wildcard event name ("*").
+     * @param subscriber The wildcard subscriber to remove.
+     */
+    public unsubscribe<K extends keyof W>(event: K & string, subscriber: W[K]): void;
+    public unsubscribe(event: string, subscriber: Callback<unknown[], unknown>): void
     {
         const subscribers = this._subscribers.get(event);
         if (!(subscribers))

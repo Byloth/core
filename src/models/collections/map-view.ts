@@ -1,5 +1,5 @@
 import Publisher from "../callbacks/publisher.js";
-import type { WithWildcard } from "../callbacks/types.js";
+import type { Subscribable } from "../types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type SetView from "./set-view.js";
@@ -18,7 +18,7 @@ import type { MapViewEventsMap } from "./types.js";
  * const map = new MapView<string, number>();
  *
  * map.subscribe("entry:add", (key: string, value: number) => console.log(`Added ${key}: ${value}`));
- * map.set("answer", 42); // Added answer: 42
+ * map.set("answer", 42); // "Added answer: 42"
  * ```
  *
  * ---
@@ -26,7 +26,7 @@ import type { MapViewEventsMap } from "./types.js";
  * @template K The type of the keys in the map.
  * @template V The type of the values in the map.
  */
-export default class MapView<K, V> extends Map<K, V>
+export default class MapView<K, V> extends Map<K, V> implements Subscribable<MapViewEventsMap<K, V>>
 {
     /**
      * The internal {@link Publisher} instance used to publish events.
@@ -158,8 +158,8 @@ export default class MapView<K, V> extends Map<K, V>
      *     console.log(`Added ${key}: ${value}`);
      * });
      *
-     * map.set("key1", 2); // Added key1: 2
-     * map.set("answer", 42); // Added answer: 42
+     * map.set("key1", 2); // "Added key1: 2"
+     * map.set("answer", 42); // "Added answer: 42"
      * map.set("key2", 4);
      * map.set("key3", 8);
      * ```
@@ -169,15 +169,14 @@ export default class MapView<K, V> extends Map<K, V>
      * @template T The key of the map containing the callback signature to subscribe.
      *
      * @param event The name of the event to subscribe to.
-     * @param callback The callback to execute when the event is published.
+     * @param subscriber The callback to execute when the event is published.
      *
      * @returns A function that can be used to unsubscribe the callback from the event.
      */
-    public subscribe<T extends keyof WithWildcard<MapViewEventsMap<K, V>>>(
-        event: T & string, callback: WithWildcard<MapViewEventsMap<K, V>>[T]
-    ): () => void
+    public subscribe<T extends keyof MapViewEventsMap<K, V>>(event: T, subscriber: MapViewEventsMap<K, V>[T])
+        : () => void
     {
-        return this._publisher.subscribe(event, callback);
+        return this._publisher.subscribe(event, subscriber);
     }
 
     /**
@@ -191,7 +190,7 @@ export default class MapView<K, V> extends Map<K, V>
      * const map = new MapView<string, number>();
      *
      * map.subscribe("entry:add", callback);
-     * map.set("key1", 2); // Added key1: 2
+     * map.set("key1", 2); // "Added key1: 2"
      *
      * map.unsubscribe("entry:add", callback);
      * map.set("key2", 4);
@@ -202,12 +201,12 @@ export default class MapView<K, V> extends Map<K, V>
      * @template T The key of the map containing the callback signature to unsubscribe.
      *
      * @param event The name of the event to unsubscribe from.
-     * @param callback The callback to remove from the event.
+     * @param subscriber The callback to remove from the event.
      */
-    public unsubscribe<T extends keyof WithWildcard<MapViewEventsMap<K, V>>>(
-        event: T & string, callback: WithWildcard<MapViewEventsMap<K, V>>[T]): void
+    public unsubscribe<T extends keyof MapViewEventsMap<K, V>>(event: T & string, subscriber: MapViewEventsMap<K, V>[T])
+        : void
     {
-        this._publisher.unsubscribe(event, callback);
+        this._publisher.unsubscribe(event, subscriber);
     }
 
     public override readonly [Symbol.toStringTag]: string = "MapView";
