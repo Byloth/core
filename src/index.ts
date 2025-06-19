@@ -1,4 +1,4 @@
-export const VERSION = "2.1.5";
+export const VERSION = "2.1.6";
 
 export type { Constructor, Interval, Timeout, ValueOf } from "./core/types.js";
 
@@ -53,6 +53,7 @@ export type {
     CallbackMap,
     FulfilledHandler,
     GeneratorFunction,
+    InternalsEventsMap,
     Iteratee,
     IteratorLike,
     JSONArray,
@@ -79,7 +80,8 @@ export type {
     RejectedHandler,
     SetViewEventsMap,
     Subscribable,
-    TypeGuardPredicate
+    TypeGuardPredicate,
+    WildcardEventsMap
 
 } from "./models/types.js";
 
