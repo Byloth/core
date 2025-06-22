@@ -241,32 +241,6 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
     public subscribe<K extends keyof T>(event: K & string, subscriber: T[K]): () => void;
 
     /**
-     * Subscribes to an internal event and adds a subscriber to be executed when the event is published.
-     *
-     * Internal events follow the pattern `__${string}__:${string}` and
-     * are used for internal communication within the publisher system.  
-     * Please note to use this method only if you know what you are doing.
-     *
-     * ---
-     *
-     * @example
-     * ```ts
-     * publisher.subscribe("__internals__:clear", () => console.log("All subscribers have been cleared."));
-     * publisher.clear(); // "All subscribers have been cleared."
-     * ```
-     *
-     * ---
-     *
-     * @template K The key of the internal events map containing the callback signature to subscribe.
-     *
-     * @param event The name of the internal event to subscribe to.
-     * @param subscriber The subscriber to execute when the internal event is published.
-     *
-     * @returns A function that can be used to unsubscribe the subscriber from the event.
-     */
-    public subscribe<K extends keyof I>(event: K & string, subscriber: I[K]): () => void;
-
-    /**
      * Subscribes to the wildcard event to listen to all published events.
      *
      * The wildcard subscriber will be called for every event published, receiving
@@ -292,6 +266,32 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      * @returns A function that can be used to unsubscribe the subscriber from the wildcard event.
      */
     public subscribe<K extends keyof W>(event: K & string, subscriber: W[K]): () => void;
+
+    /**
+     * Subscribes to an internal event and adds a subscriber to be executed when the event is published.
+     *
+     * Internal events follow the pattern `__${string}__:${string}` and
+     * are used for internal communication within the publisher system.  
+     * Please note to use this method only if you know what you are doing.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * publisher.subscribe("__internals__:clear", () => console.log("All subscribers have been cleared."));
+     * publisher.clear(); // "All subscribers have been cleared."
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the internal events map containing the callback signature to subscribe.
+     *
+     * @param event The name of the internal event to subscribe to.
+     * @param subscriber The subscriber to execute when the internal event is published.
+     *
+     * @returns A function that can be used to unsubscribe the subscriber from the event.
+     */
+    public subscribe<K extends keyof I>(event: K & string, subscriber: I[K]): () => void;
     public subscribe(event: string, subscriber: Callback<unknown[], unknown>): () => void
     {
         const subscribers = this._subscribers.get(event) ?? [];
@@ -335,6 +335,30 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
     public unsubscribe<K extends keyof T>(event: K & string, subscriber: T[K]): void;
 
     /**
+     * Unsubscribes from the wildcard event and removes a subscriber from being executed for all events.
+     *
+     * This removes a previously registered wildcard listener that was capturing all published events.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const wildcardHandler = (type: string, ...args: unknown[]) => console.log(type, args);
+     * 
+     * publisher.subscribe("*", wildcardHandler);
+     * publisher.unsubscribe("*", wildcardHandler);
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the wildcard events map (always "*").
+     *
+     * @param event The wildcard event name ("*").
+     * @param subscriber The wildcard subscriber to remove.
+     */
+    public unsubscribe<K extends keyof W>(event: K & string, subscriber: W[K]): void;
+
+    /**
      * Unsubscribes from an internal event and removes a subscriber from being executed when the event is published.
      *
      * Internal events follow the pattern `__${string}__:${string}` and
@@ -358,30 +382,6 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      * @param subscriber The subscriber to remove from the internal event.
      */
     public unsubscribe<K extends keyof I>(event: K & string, subscriber: I[K]): void;
-
-    /**
-     * Unsubscribes from the wildcard event and removes a subscriber from being executed for all events.
-     *
-     * This removes a previously registered wildcard listener that was capturing all published events.
-     *
-     * ---
-     *
-     * @example
-     * ```ts
-     * const wildcardHandler = (type: string, ...args: unknown[]) => console.log(type, args);
-     * 
-     * publisher.subscribe("*", wildcardHandler);
-     * publisher.unsubscribe("*", wildcardHandler);
-     * ```
-     *
-     * ---
-     *
-     * @template K The key of the wildcard events map (always "*").
-     *
-     * @param event The wildcard event name ("*").
-     * @param subscriber The wildcard subscriber to remove.
-     */
-    public unsubscribe<K extends keyof W>(event: K & string, subscriber: W[K]): void;
     public unsubscribe(event: string, subscriber: Callback<unknown[], unknown>): void
     {
         const subscribers = this._subscribers.get(event);
