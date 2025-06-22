@@ -120,23 +120,22 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      * ---
      *
      * @template U
-     * A map containing the names of the emittable events and the
-     * related callback signatures that can be subscribed to them.
-     * Default is `T`.
+     * A map containing the additional names of the emittable events and
+     * the related callback signatures that can be subscribed to them.
+     * Default is `{ }`.
      *
      * @return
      * A new instance of the {@link Publisher} class that can be
      * used to publish and subscribe events within a specific context.
      */
-    public createScope<U extends T = T>(): Publisher<U>
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    public createScope<U extends CallbackMap<U> = { }>(): Publisher<U & T>
     {
-        const scope = new Publisher<U>();
+        const scope = new Publisher();
 
         this.subscribe("__internals__:clear", () => scope.clear());
-        this.subscribe("*", (event, ...args): void =>
-        {
-            scope.publish(event as keyof U & string, ...args as Parameters<U[keyof U]>);
-        });
+        this.subscribe("*", (event, ...args): void => { scope.publish(event, ...args); });
 
         return scope;
     }
