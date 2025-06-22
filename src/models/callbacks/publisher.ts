@@ -2,7 +2,8 @@ import { ReferenceException } from "../exceptions/index.js";
 
 import type { Callback, CallbackMap, InternalsEventsMap, WildcardEventsMap } from "./types.js";
 
-type I = WildcardEventsMap & InternalsEventsMap;
+type P = InternalsEventsMap;
+type S = WildcardEventsMap & InternalsEventsMap;
 
 /**
  * A class implementing the
@@ -190,7 +191,7 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      *
      * @returns An array containing the return values of all the subscribers.
      */
-    public publish<K extends keyof I>(event: K & string, ...args: Parameters<I[K]>): ReturnType<I[K]>[];
+    public publish<K extends keyof P>(event: K & string, ...args: Parameters<P[K]>): ReturnType<P[K]>[];
     public publish(event: string, ...args: unknown[]): unknown[]
     {
         let results: unknown[];
@@ -266,7 +267,7 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      *
      * @returns A function that can be used to unsubscribe the subscriber from the wildcard event.
      */
-    public subscribe<K extends keyof I>(event: K & string, subscriber: I[K]): () => void;
+    public subscribe<K extends keyof S>(event: K & string, subscriber: S[K]): () => void;
     public subscribe(event: string, subscriber: Callback<unknown[], unknown>): () => void
     {
         const subscribers = this._subscribers.get(event) ?? [];
@@ -331,7 +332,7 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      * @param event The wildcard event name ("*").
      * @param subscriber The wildcard subscriber to remove.
      */
-    public unsubscribe<K extends keyof I>(event: K & string, subscriber: I[K]): void;
+    public unsubscribe<K extends keyof S>(event: K & string, subscriber: S[K]): void;
     public unsubscribe(event: string, subscriber: Callback<unknown[], unknown>): void
     {
         const subscribers = this._subscribers.get(event);
