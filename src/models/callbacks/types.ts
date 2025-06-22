@@ -69,7 +69,7 @@ export type CallbackMap<T = Record<string, Callback<unknown[], unknown>>> = { [K
  * publisher.clear(); // "Publisher cleared"
  * ```
  */
-export type InternalsEventsMap = Record<`__${string}__:${string}`, (...args: unknown[]) => unknown>;
+export type InternalsEventsMap = Record<`__${string}__:${string}`, Callback<unknown[], unknown>>;
 
 /**
  * An utility interface that defines a wildcard event for listening to all events.

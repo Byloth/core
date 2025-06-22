@@ -27,7 +27,7 @@ const Disabler = () => { /* ... */ };
  *
  * ---
  *
- * @template T The type signature of the callback. Default is `(...args: any[]) => any`.
+ * @template T The type signature of the callback. Default is `() => void`.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class SwitchableCallback<T extends Callback<any[], any> = Callback> extends CallableObject<T>
