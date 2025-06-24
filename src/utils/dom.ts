@@ -1,3 +1,5 @@
+import { SmartPromise } from "../models/index.js";
+
 /**
  * Appends a script element to the document body.  
  * It can be used to load external scripts dynamically.
@@ -15,11 +17,11 @@
  * @param scriptType The type of the script to load. Default is `"text/javascript"`.
  *
  * @returns
- * A {@link Promise} that resolves when the script has been loaded successfully or rejects if an error occurs.
+ * A {@link SmartPromise} that resolves when the script has been loaded successfully or rejects if an error occurs.
  */
-export function loadScript(scriptUrl: string, scriptType = "text/javascript"): Promise<void>
+export function loadScript(scriptUrl: string, scriptType = "text/javascript"): SmartPromise<void>
 {
-    return new Promise<void>((resolve, reject) =>
+    return new SmartPromise<void>((resolve, reject) =>
     {
         const script = document.createElement("script");
 

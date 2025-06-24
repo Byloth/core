@@ -1,3 +1,5 @@
+import { SmartPromise } from "../models/index.js";
+
 /**
  * Returns a promise that resolves after a certain number of milliseconds.  
  * It can be used to pause or delay the execution of an asynchronous function.
@@ -15,11 +17,11 @@
  *
  * @param milliseconds The number of milliseconds to wait before resolving the promise.
  *
- * @returns A {@link Promise} that resolves after the specified number of milliseconds.
+ * @returns A {@link SmartPromise} that resolves after the specified number of milliseconds.
  */
-export function delay(milliseconds: number): Promise<void>
+export function delay(milliseconds: number): SmartPromise<void>
 {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+    return new SmartPromise((resolve) => setTimeout(resolve, milliseconds));
 }
 
 /**
@@ -39,11 +41,11 @@ export function delay(milliseconds: number): Promise<void>
  *
  * ---
  *
- * @returns A {@link Promise} that resolves on the next animation frame.
+ * @returns A {@link SmartPromise} that resolves on the next animation frame.
  */
-export function nextAnimationFrame(): Promise<void>
+export function nextAnimationFrame(): SmartPromise<void>
 {
-    return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+    return new SmartPromise((resolve) => requestAnimationFrame(() => resolve()));
 }
 
 /**
@@ -64,9 +66,9 @@ export function nextAnimationFrame(): Promise<void>
  *
  * ---
  *
- * @returns A {@link Promise} that resolves on the next microtask.
+ * @returns A {@link SmartPromise} that resolves on the next microtask.
  */
-export function yieldToEventLoop(): Promise<void>
+export function yieldToEventLoop(): SmartPromise<void>
 {
-    return new Promise((resolve) => setTimeout(resolve));
+    return new SmartPromise((resolve) => setTimeout(resolve));
 }

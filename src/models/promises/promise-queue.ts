@@ -103,9 +103,9 @@ export default class PromiseQueue extends SmartPromise<void>
      *
      * @param promise A `DeferredPromise<void, T>` instance to enqueue.
      *
-     * @returns A {@link Promise} that resolves to the value of the enqueued promise.
+     * @returns A {@link SmartPromise} that resolves to the value of the enqueued promise.
      */
-    public enqueue<T>(promise: DeferredPromise<void, T>): Promise<T>;
+    public enqueue<T>(promise: DeferredPromise<void, T>): SmartPromise<T>;
 
     /**
      * Enqueues a {@link DeferredPromise} into the queue with an optional timeout.
@@ -156,9 +156,9 @@ export default class PromiseQueue extends SmartPromise<void>
      *
      * @param executor A callback that returns a `MaybePromise<T>` value to enqueue.
      *
-     * @returns A {@link Promise} that resolves to the value of the enqueued executor.
+     * @returns A {@link SmartPromise} that resolves to the value of the enqueued executor.
      */
-    public enqueue<T>(executor: Callback<[], MaybePromise<T>>): Promise<T>;
+    public enqueue<T>(executor: Callback<[], MaybePromise<T>>): SmartPromise<T>;
 
     /**
      * Enqueues a callback that returns a {@link MaybePromise}
@@ -189,7 +189,7 @@ export default class PromiseQueue extends SmartPromise<void>
      */
     public enqueue<T>(executor: Callback<[], MaybePromise<T>>, timeout?: number): TimedPromise<T>;
     public enqueue<T>(executor: DeferredPromise<void, T> | Callback<[], MaybePromise<T>>, timeout?: number)
-        : Promise<T> | TimedPromise<T>
+        : SmartPromise<T> | TimedPromise<T>
     {
         this._count += 1;
 
@@ -215,7 +215,7 @@ export default class PromiseQueue extends SmartPromise<void>
 
         if (timeout) { return new TimedPromise<T>(_executor, timeout); }
 
-        return new Promise<T>(_executor);
+        return new SmartPromise<T>(_executor);
     }
 
     public override readonly [Symbol.toStringTag]: string = "PromiseQueue";
