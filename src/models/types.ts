@@ -10,6 +10,7 @@ export type {
 } from "./aggregators/types.js";
 
 export type { MapViewEventsMap, ReadonlyMapView, SetViewEventsMap, ReadonlySetView } from "./collections/types.js";
+export type { ErrorHandler, ExceptionMap } from "./exceptions/types.js";
 export type {
     GeneratorFunction,
     AsyncGeneratorFunction,

@@ -23,7 +23,8 @@ export {
     RuntimeException,
     TimeoutException,
     TypeException,
-    ValueException
+    ValueException,
+    ExceptionHandler
 
 } from "./exceptions/index.js";
 

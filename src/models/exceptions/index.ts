@@ -555,3 +555,6 @@ export class RangeException extends ValueException
 
 export { Exception };
 export { FatalErrorException, NotImplementedException } from "./core.js";
+
+import ExceptionHandler from "./handler.js";
+export { ExceptionHandler };
