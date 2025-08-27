@@ -271,3 +271,16 @@ export function getWeek(date: number | string | Date, firstDay = WeekDay.Sunday)
 
     return dateRound(new Date(firstDayTime));
 }
+
+export function getMonth(date: number | string | Date): Date
+{
+    date = new Date(date);
+
+    return dateRound(new Date(date.getFullYear(), date.getMonth(), 1));
+}
+export function getYear(date: number | string | Date): Date
+{
+    date = new Date(date);
+
+    return dateRound(new Date(date.getFullYear(), 0, 1));
+}
