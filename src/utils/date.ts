@@ -275,12 +275,10 @@ export function getWeek(date: number | string | Date, firstDay = WeekDay.Sunday)
 export function getMonth(date: number | string | Date): Date
 {
     date = new Date(date);
-
-    return dateRound(new Date(date.getFullYear(), date.getMonth(), 1));
+    return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth()));
 }
 export function getYear(date: number | string | Date): Date
 {
     date = new Date(date);
-
-    return dateRound(new Date(date.getFullYear(), 0, 1));
+    return new Date(Date.UTC(date.getUTCFullYear()));
 }
