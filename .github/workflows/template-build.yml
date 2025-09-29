@@ -11,6 +11,9 @@ jobs:
         uses: actions/checkout@v5
       - name: "`pnpm` installation"
         uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
       - name: Configuring Node.js 22 (LTS)
         uses: actions/setup-node@v5
         with:
