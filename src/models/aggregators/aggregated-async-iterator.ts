@@ -507,8 +507,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * @returns
      * A {@link Promise} resolving to a new {@link ReducedIterator} containing the reduced results for each group.
      */
-    public async reduce<A extends PropertyKey>(reducer: MaybeAsyncKeyedReducer<K, T, A>, initialValue: MaybePromise<A>)
-        : Promise<ReducedIterator<K, A>>;
+    public async reduce<A extends PropertyKey>(
+        reducer: MaybeAsyncKeyedReducer<K, T, A>, initialValue: MaybePromise<A>
+    ): Promise<ReducedIterator<K, A>>;
 
     /**
      * Reduces the elements of the iterator using a given reducer function.  
@@ -545,8 +546,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * @returns
      * A {@link Promise} resolving to a new {@link ReducedIterator} containing the reduced results for each group.
      */
-    public async reduce<A>(reducer: MaybeAsyncKeyedReducer<K, T, A>, initialValue: (key: K) => MaybePromise<A>)
-        : Promise<ReducedIterator<K, A>>;
+    public async reduce<A>(
+        reducer: MaybeAsyncKeyedReducer<K, T, A>, initialValue: (key: K) => MaybePromise<A>
+    ): Promise<ReducedIterator<K, A>>;
     public async reduce<A>(
         reducer: MaybeAsyncKeyedReducer<K, T, A>, initialValue?: MaybePromise<A> | ((key: K) => MaybePromise<A>)
     ): Promise<ReducedIterator<K, A>>
@@ -810,9 +812,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      * A {@link Promise} resolving to a new {@link ReducedIterator} containing
      * the first element that satisfies the condition for each group.
      */
-    public async find<S extends T>(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>)
-        : Promise<ReducedIterator<K, S | undefined>>;
-
+    public async find<S extends T>(
+        predicate: MaybeAsyncKeyedIteratee<K, T, boolean>
+    ): Promise<ReducedIterator<K, S | undefined>>;
     public async find(predicate: MaybeAsyncKeyedIteratee<K, T, boolean>): Promise<ReducedIterator<K, T | undefined>>
     {
         const values = new Map<K, [number, T | undefined]>();
@@ -1020,8 +1022,9 @@ export default class AggregatedAsyncIterator<K extends PropertyKey, T>
      *
      * @returns A new {@link AggregatedAsyncIterator} containing the elements reorganized by the new keys.
      */
-    public reorganizeBy<J extends PropertyKey>(iteratee: MaybeAsyncKeyedIteratee<K, T, J>)
-        : AggregatedAsyncIterator<J, T>
+    public reorganizeBy<J extends PropertyKey>(
+        iteratee: MaybeAsyncKeyedIteratee<K, T, J>
+    ): AggregatedAsyncIterator<J, T>
     {
         const elements = this._elements;
 

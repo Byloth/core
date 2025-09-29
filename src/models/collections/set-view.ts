@@ -167,8 +167,9 @@ export default class SetView<T> extends Set<T> implements Subscribable<SetViewEv
      *
      * @returns A function that can be used to unsubscribe the callback from the event.
      */
-    public subscribe<K extends keyof SetViewEventsMap<T>>(event: K & string, subscriber: SetViewEventsMap<T>[K])
-        : () => void
+    public subscribe<K extends keyof SetViewEventsMap<T>>(
+        event: K & string, subscriber: SetViewEventsMap<T>[K]
+    ): () => void
     {
         return this._publisher.subscribe(event, subscriber);
     }

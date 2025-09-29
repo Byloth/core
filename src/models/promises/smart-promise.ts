@@ -241,11 +241,12 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * @returns A new {@link Promise} resolved or rejected based on the callbacks.
      */
-    public then<F = T, R = never>(onFulfilled: FulfilledHandler<T, F>, onRejected: RejectedHandler<unknown, R>)
-        : Promise<F | R>;
     public then<F = T, R = never>(
-        onFulfilled?: FulfilledHandler<T, F> | null,
-        onRejected?: RejectedHandler<unknown, R> | null): Promise<F | R>
+        onFulfilled: FulfilledHandler<T, F>, onRejected: RejectedHandler<unknown, R>
+    ): Promise<F | R>;
+    public then<F = T, R = never>(
+        onFulfilled?: FulfilledHandler<T, F> | null, onRejected?: RejectedHandler<unknown, R> | null
+    ): Promise<F | R>
     {
         return this._promise.then(onFulfilled, onRejected);
     }

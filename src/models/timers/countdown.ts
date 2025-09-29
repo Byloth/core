@@ -1,8 +1,9 @@
 import { TimeUnit } from "../../utils/date.js";
 
-import Publisher from "../callbacks/publisher.js";
+import type Publisher from "../callbacks/publisher.js";
 import { FatalErrorException, RangeException, RuntimeException } from "../exceptions/index.js";
-import { DeferredPromise, SmartPromise } from "../promises/index.js";
+import type { SmartPromise } from "../promises/index.js";
+import { DeferredPromise } from "../promises/index.js";
 import type { Callback } from "../types.js";
 
 import GameLoop from "./game-loop.js";

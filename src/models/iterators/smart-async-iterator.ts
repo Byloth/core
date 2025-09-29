@@ -212,7 +212,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
 
                         next = [yield result.value];
                     }
-
                 })();
             }
         }
@@ -232,7 +231,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
 
                     yield result.value;
                 }
-
             })();
         }
         else
@@ -248,7 +246,6 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
 
                     next = [yield result.value];
                 }
-
             })();
         }
     }

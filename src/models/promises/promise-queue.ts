@@ -188,8 +188,9 @@ export default class PromiseQueue extends SmartPromise<void>
      * with a `TimeoutException` if the operation takes longer than the specified timeout.
      */
     public enqueue<T>(executor: Callback<[], MaybePromise<T>>, timeout?: number): TimedPromise<T>;
-    public enqueue<T>(executor: DeferredPromise<void, T> | Callback<[], MaybePromise<T>>, timeout?: number)
-        : SmartPromise<T> | TimedPromise<T>
+    public enqueue<T>(
+        executor: DeferredPromise<void, T> | Callback<[], MaybePromise<T>>, timeout?: number
+    ): SmartPromise<T> | TimedPromise<T>
     {
         this._count += 1;
 

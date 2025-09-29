@@ -13,7 +13,6 @@ describe("TimedPromise", () =>
         const promise = new TimedPromise<string>((resolve) =>
         {
             setTimeout(() => resolve("Hello, world!"), 100);
-
         }, 500);
 
         promise.then((result) => expect(result).toBe("Hello, world!"));
@@ -25,7 +24,6 @@ describe("TimedPromise", () =>
         const promise = new TimedPromise<string>((resolve) =>
         {
             setTimeout(() => resolve("Hello, world!"), 1_000);
-
         }, 500);
 
         promise.catch((error) =>
@@ -42,7 +40,6 @@ describe("TimedPromise", () =>
         const promise = new TimedPromise<string>((_, reject) =>
         {
             setTimeout(() => reject(reason), 100);
-
         }, 500);
 
         promise.catch((error) => expect(error).toBe(reason));

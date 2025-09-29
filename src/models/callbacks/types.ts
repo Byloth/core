@@ -94,7 +94,7 @@ export type InternalsEventsMap = Record<`__${string}__:${string}`, Callback<unkn
  * publisher.publish("player:death"); // "Event `player:death` was fired with args: []"
  * ```
  */
-export interface WildcardEventsMap { "*": (type: string, ...args: unknown[]) => void; }
+export interface WildcardEventsMap { "*": (type: string, ...args: unknown[]) => void }
 
 /**
  * An utility type that represents a {@link Publisher} object that can be published to.

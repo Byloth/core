@@ -130,7 +130,6 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
                     "The `SwitchableCallback` has no callback defined yet. " +
                     "Did you forget to call the `register` method?"
                 );
-
             }) as unknown) as T;
         }
 

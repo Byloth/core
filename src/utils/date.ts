@@ -174,8 +174,9 @@ export function dateDifference(start: number | string | Date, end: number | stri
  *
  * @returns A {@link SmartIterator} object that generates the dates in the range.
  */
-export function dateRange(start: number | string | Date, end: number | string | Date, step = TimeUnit.Day)
-    : SmartIterator<Date>
+export function dateRange(
+    start: number | string | Date, end: number | string | Date, step = TimeUnit.Day
+): SmartIterator<Date>
 {
     start = new Date(start);
     end = new Date(end);

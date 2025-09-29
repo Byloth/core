@@ -178,8 +178,7 @@ export default class JSONStorage
      * @returns The value with the specified key or the default value if the key doesn't exist.
      */
     public get<T extends JSONValue>(key: string, defaultValue?: T, persistent?: boolean): T | undefined;
-    public get<T extends JSONValue>(key: string, defaultValue?: T, persistent = this._preferPersistence)
-        : T | undefined
+    public get<T extends JSONValue>(key: string, defaultValue?: T, persistent = this._preferPersistence): T | undefined
     {
         const storage = persistent ? this._persistent : this._volatile;
 

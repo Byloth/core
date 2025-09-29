@@ -89,7 +89,6 @@ describe("ReducedIterator", () =>
             else { (acc as number) += value; }
 
             return acc;
-
         };
 
         const results = new SmartIterator([-3, -1, 0, 2, 3, 5, 6, 8])

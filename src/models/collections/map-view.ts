@@ -173,8 +173,9 @@ export default class MapView<K, V> extends Map<K, V> implements Subscribable<Map
      *
      * @returns A function that can be used to unsubscribe the callback from the event.
      */
-    public subscribe<T extends keyof MapViewEventsMap<K, V>>(event: T, subscriber: MapViewEventsMap<K, V>[T])
-        : () => void
+    public subscribe<T extends keyof MapViewEventsMap<K, V>>(
+        event: T, subscriber: MapViewEventsMap<K, V>[T]
+    ): () => void
     {
         return this._publisher.subscribe(event, subscriber);
     }
@@ -203,8 +204,9 @@ export default class MapView<K, V> extends Map<K, V> implements Subscribable<Map
      * @param event The name of the event to unsubscribe from.
      * @param subscriber The callback to remove from the event.
      */
-    public unsubscribe<T extends keyof MapViewEventsMap<K, V>>(event: T & string, subscriber: MapViewEventsMap<K, V>[T])
-        : void
+    public unsubscribe<T extends keyof MapViewEventsMap<K, V>>(
+        event: T & string, subscriber: MapViewEventsMap<K, V>[T]
+    ): void
     {
         this._publisher.unsubscribe(event, subscriber);
     }

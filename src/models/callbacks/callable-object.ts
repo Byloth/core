@@ -1,7 +1,7 @@
 import type { Callback } from "./types.js";
 
 const SmartFunction = (Function as unknown) as new<A extends unknown[] = [], R = void>(...args: string[])
-    => Callback<A, R>;
+=> Callback<A, R>;
 
 /**
  * An abstract class that can be used to implement callable objects.
@@ -41,7 +41,7 @@ export default abstract class CallableObject<T extends Callback<any[], any> = Ca
      */
     public constructor()
     {
-        super(`return this._invoke(...arguments);`);
+        super("return this._invoke(...arguments);");
 
         const self = this.bind(this);
         Object.setPrototypeOf(this, self);
