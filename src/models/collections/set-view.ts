@@ -1,5 +1,5 @@
 import Publisher from "../callbacks/publisher.js";
-import type { Subscribable } from "../types.js";
+import type { Callback, Subscribable } from "../types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type MapView from "./map-view.js";
@@ -169,7 +169,7 @@ export default class SetView<T> extends Set<T> implements Subscribable<SetViewEv
      */
     public subscribe<K extends keyof SetViewEventsMap<T>>(
         event: K & string, subscriber: SetViewEventsMap<T>[K]
-    ): () => void
+    ): Callback
     {
         return this._publisher.subscribe(event, subscriber);
     }

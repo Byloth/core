@@ -2,6 +2,7 @@ import { TimeUnit } from "../../utils/date.js";
 
 import type Publisher from "../callbacks/publisher.js";
 import { FatalErrorException, RangeException, RuntimeException } from "../exceptions/index.js";
+import type { Callback } from "../types.js";
 
 import GameLoop from "./game-loop.js";
 
@@ -136,7 +137,7 @@ export default class Clock extends GameLoop
      *
      * @returns A function that can be used to unsubscribe from the event.
      */
-    public onTick(callback: (elapsedTime: number) => void, tickStep = 0): () => void
+    public onTick(callback: (elapsedTime: number) => void, tickStep = 0): Callback
     {
         if (tickStep < 0) { throw new RangeException("The tick step must be a non-negative number."); }
         if (tickStep === 0) { return this._publisher.subscribe("tick", callback); }

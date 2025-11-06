@@ -1,3 +1,4 @@
+import type { Callback } from "../types.js";
 import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "./types.js";
 
 /**
@@ -333,7 +334,7 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * @returns A new {@link Promise} that executes the callback once the promise is settled.
      */
-    public finally(onFinally?: (() => void) | null): Promise<T>
+    public finally(onFinally?: Callback | null): Promise<T>
     {
         return this._promise.finally(onFinally);
     }

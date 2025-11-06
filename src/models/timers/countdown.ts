@@ -228,7 +228,7 @@ export default class Countdown extends GameLoop
      *
      * @returns A function that can be used to unsubscribe from the event.
      */
-    public onExpire(callback: () => void): () => void
+    public onExpire(callback: Callback): Callback
     {
         return this._publisher.subscribe("expire", callback);
     }
@@ -257,7 +257,7 @@ export default class Countdown extends GameLoop
      *
      * @returns A function that can be used to unsubscribe from the event.
      */
-    public onTick(callback: (remainingTime: number) => void, tickStep = 0): () => void
+    public onTick(callback: (remainingTime: number) => void, tickStep = 0): Callback
     {
         if (tickStep < 0) { throw new RangeException("The tick step must be a non-negative number."); }
         if (tickStep === 0) { return this._publisher.subscribe("tick", callback); }

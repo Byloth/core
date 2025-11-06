@@ -42,6 +42,29 @@ describe("Publisher", () =>
         expect(_moveHandler).not.toHaveBeenCalled();
     });
 
+    it("Should clear all subscribers for a specific event", () =>
+    {
+        const _spawnHandler = vi.fn();
+        const _moveHandler1 = vi.fn();
+        const _moveHandler2 = vi.fn();
+        const _deathHandler = vi.fn();
+
+        publisher.subscribe("player:spawn", _spawnHandler);
+        publisher.subscribe("player:move", _moveHandler1);
+        publisher.subscribe("player:move", _moveHandler2);
+        publisher.subscribe("player:death", _deathHandler);
+
+        publisher.unsubscribeAll("player:move");
+
+        publisher.publish("player:spawn", { x: 10, y: 20 });
+        publisher.publish("player:move", { x: 30, y: 40 });
+        publisher.publish("player:death");
+
+        expect(_spawnHandler).toHaveBeenCalledTimes(1);
+        expect(_moveHandler1).not.toHaveBeenCalled();
+        expect(_moveHandler2).not.toHaveBeenCalled();
+        expect(_deathHandler).toHaveBeenCalledTimes(1);
+    });
     it("Should clear all subscribers", () =>
     {
         const _spawnHandler = vi.fn();

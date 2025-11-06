@@ -1,9 +1,8 @@
-export const VERSION = "2.1.7";
+export const VERSION = "2.1.8";
 
 export type { Constructor, Interval, Timeout, ValueOf } from "./core/types.js";
 
 export { isBrowser, isNode, isWorker } from "./helpers.js";
-
 export {
     AggregatedIterator,
     AggregatedAsyncIterator,

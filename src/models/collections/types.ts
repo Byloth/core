@@ -1,3 +1,5 @@
+import type { Callback } from "../types.js";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type MapView from "./map-view.js";
 
@@ -66,7 +68,7 @@ export interface ReadonlyMapView<K, V> extends ReadonlyMap<K, V>
      *
      * @returns A function that can be used to unsubscribe the callback from the event.
      */
-    subscribe<T extends keyof MapViewEventsMap<K, V>>(event: T, callback: MapViewEventsMap<K, V>[T]): () => void;
+    subscribe<T extends keyof MapViewEventsMap<K, V>>(event: T & string, callback: MapViewEventsMap<K, V>[T]): Callback;
 
     /**
      * Unsubscribes from an event and removes a callback from being executed when the event is published.
@@ -92,7 +94,7 @@ export interface ReadonlyMapView<K, V> extends ReadonlyMap<K, V>
      * @param event The name of the event to unsubscribe from.
      * @param callback The callback to remove from the event.
      */
-    unsubscribe<T extends keyof MapViewEventsMap<K, V>>(event: T, callback: MapViewEventsMap<K, V>[T]): void;
+    unsubscribe<T extends keyof MapViewEventsMap<K, V>>(event: T & string, callback: MapViewEventsMap<K, V>[T]): void;
 }
 
 /**
@@ -155,7 +157,7 @@ export interface ReadonlySetView<T> extends ReadonlySet<T>
      *
      * @returns A function that can be used to unsubscribe the callback from the event.
      */
-    subscribe<K extends keyof SetViewEventsMap<T>>(event: K, callback: SetViewEventsMap<T>[K]): () => void;
+    subscribe<K extends keyof SetViewEventsMap<T>>(event: K & string, callback: SetViewEventsMap<T>[K]): Callback;
 
     /**
      * Unsubscribes from an event and removes a callback from being executed when the event is published.
@@ -181,5 +183,5 @@ export interface ReadonlySetView<T> extends ReadonlySet<T>
      * @param event The name of the event to unsubscribe from.
      * @param callback The callback to remove from the event.
      */
-    unsubscribe<K extends keyof SetViewEventsMap<T>>(event: K, callback: SetViewEventsMap<T>[K]): void;
+    unsubscribe<K extends keyof SetViewEventsMap<T>>(event: K & string, callback: SetViewEventsMap<T>[K]): void;
 }

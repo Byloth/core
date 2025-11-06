@@ -1,5 +1,5 @@
 import Publisher from "../callbacks/publisher.js";
-import type { Subscribable } from "../types.js";
+import type { Callback, Subscribable } from "../types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type SetView from "./set-view.js";
@@ -174,8 +174,8 @@ export default class MapView<K, V> extends Map<K, V> implements Subscribable<Map
      * @returns A function that can be used to unsubscribe the callback from the event.
      */
     public subscribe<T extends keyof MapViewEventsMap<K, V>>(
-        event: T, subscriber: MapViewEventsMap<K, V>[T]
-    ): () => void
+        event: T & string, subscriber: MapViewEventsMap<K, V>[T]
+    ): Callback
     {
         return this._publisher.subscribe(event, subscriber);
     }

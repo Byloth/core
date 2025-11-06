@@ -87,7 +87,7 @@ export type InternalsEventsMap = Record<`__${string}__:${string}`, Callback<unkn
  *
  * publisher.subscribe("*", (type: string, ...args: unknown[]) =>
  * {
- *     console.log(`Event \`${type}\` was fired with args:`, args));
+ *     console.log(`Event "${type}" was fired with args:`, args));
  * });
  * 
  * publisher.publish("player:move", { x: 10, y: 20 }); // "Event `player:move` was fired with args: [{ x: 10, y: 20 }]"
@@ -178,7 +178,7 @@ export interface Subscribable<T extends CallbackMap<T> = CallbackMap>
      *
      * @returns A function that can be used to unsubscribe the subscriber from the event.
      */
-    subscribe<K extends keyof T>(event: K & string, subscriber: T[K]): () => void;
+    subscribe<K extends keyof T>(event: K & string, subscriber: T[K]): Callback;
 
     /**
      * Unsubscribes from an event and removes a subscriber from being executed when the event is published.

@@ -3,6 +3,7 @@ import { isBrowser } from "../../helpers.js";
 
 import Publisher from "../callbacks/publisher.js";
 import { FatalErrorException, RuntimeException } from "../exceptions/index.js";
+import type { Callback } from "../types.js";
 
 interface GameLoopEventsMap
 {
@@ -102,7 +103,7 @@ export default class GameLoop
      * Depending on the current environment, it could use the
      * {@link requestAnimationFrame} or the {@link setInterval} function.
      */
-    protected readonly _start: () => void;
+    protected readonly _start: Callback;
 
     /**
      * The internal method actually responsible for stopping the game loop.
@@ -110,7 +111,7 @@ export default class GameLoop
      * Depending on the current environment, it could use the
      * {@link cancelAnimationFrame} or the {@link clearInterval} function.
      */
-    protected readonly _stop: () => void;
+    protected readonly _stop: Callback;
 
     /**
      * Initializes a new instance of the {@link GameLoop} class.
@@ -235,7 +236,7 @@ export default class GameLoop
      *
      * @returns A function that can be used to unsubscribe from the event.
      */
-    public onStart(callback: () => void): () => void
+    public onStart(callback: Callback): Callback
     {
         return this._publisher.subscribe("start", callback);
     }
@@ -256,7 +257,7 @@ export default class GameLoop
      *
      * @returns A function that can be used to unsubscribe from the event.
      */
-    public onStop(callback: () => void): () => void
+    public onStop(callback: Callback): Callback
     {
         return this._publisher.subscribe("stop", callback);
     }

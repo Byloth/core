@@ -69,33 +69,6 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
     }
 
     /**
-     * Unsubscribes all the subscribers from all the events.
-     *
-     * ---
-     *
-     * @example
-     * ```ts
-     * publisher.subscribe("player:spawn", (evt) => { [...] });
-     * publisher.subscribe("player:move", (coords) => { [...] });
-     * publisher.subscribe("player:move", () => { [...] });
-     * publisher.subscribe("player:move", ({ x, y }) => { [...] });
-     * publisher.subscribe("player:death", () => { [...] });
-     *
-     * // All these subscribers are working fine...
-     *
-     * publisher.clear();
-     *
-     * // ... but now they're all gone!
-     * ```
-     */
-    public clear(): void
-    {
-        this.publish("__internals__:clear");
-
-        this._subscribers.clear();
-    }
-
-    /**
      * Creates a new scoped instance of the {@link Publisher} class,
      * which can be used to publish and subscribe events within a specific context.
      *
@@ -110,8 +83,8 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      * const publisher = new Publisher();
      * const context = publisher.createScope();
      *
-     * publisher.subscribe("player:death", () => console.log(`Player has died.`));
-     * context.subscribe("player:spawn", () => console.log(`Player has spawned.`));
+     * publisher.subscribe("player:death", () => console.log("Player has died."));
+     * context.subscribe("player:spawn", () => console.log("Player has spawned."));
      *
      * publisher.publish("player:spawn"); // "Player has spawned."
      * context.publish("player:death"); // * no output *
@@ -239,7 +212,7 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      *
      * @returns A function that can be used to unsubscribe the subscriber from the event.
      */
-    public subscribe<K extends keyof T>(event: K & string, subscriber: T[K]): () => void;
+    public subscribe<K extends keyof T>(event: K & string, subscriber: T[K]): Callback;
 
     /**
      * Subscribes to the wildcard event to listen to all published events.
@@ -253,21 +226,21 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      * ```ts
      * publisher.subscribe("*", (type, ...args) =>
      * {
-     *     console.log(`Event \`${type}\` was fired with args:`, args);
+     *     console.log(`Event "${type}" was fired with args:`, args);
      * });
      * ```
      *
      * ---
      *
-     * @template K The key of the wildcard events map (always "*").
+     * @template K The key of the wildcard events map (always `*`).
      *
-     * @param event The wildcard event name ("*").
+     * @param event The wildcard event name (`*`).
      * @param subscriber The subscriber to execute for all published events.
      *
      * @returns A function that can be used to unsubscribe the subscriber from the wildcard event.
      */
-    public subscribe<K extends keyof S>(event: K & string, subscriber: S[K]): () => void;
-    public subscribe(event: string, subscriber: Callback<unknown[], unknown>): () => void
+    public subscribe<K extends keyof S>(event: K & string, subscriber: S[K]): Callback;
+    public subscribe(event: string, subscriber: Callback<unknown[], unknown>): Callback
     {
         const subscribers = this._subscribers.get(event) ?? [];
         subscribers.push(subscriber);
@@ -326,9 +299,9 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      *
      * ---
      *
-     * @template K The key of the wildcard events map (always "*").
+     * @template K The key of the wildcard events map (always `*`).
      *
-     * @param event The wildcard event name ("*").
+     * @param event The wildcard event name (`*`).
      * @param subscriber The wildcard subscriber to remove.
      */
     public unsubscribe<K extends keyof S>(event: K & string, subscriber: S[K]): void;
@@ -350,6 +323,95 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
 
         subscribers.splice(index, 1);
         if (subscribers.length === 0) { this._subscribers.delete(event); }
+    }
+
+    /**
+     * Unsubscribes all subscribers from a specific event and removes
+     * them from being executed when the event is published.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * publisher.subscribe("player:spawn", (evt) => { [...] });
+     * publisher.subscribe("player:move", (coords) => { [...] });
+     * publisher.subscribe("player:move", () => { [...] });
+     * publisher.subscribe("player:move", ({ x, y }) => { [...] });
+     * publisher.subscribe("player:death", () => { [...] });
+     *
+     * // All these subscribers are working fine...
+     *
+     * publisher.unsubscribeAll("player:move");
+     *
+     * // ... but now "player:move" subscribers are gone!
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the map containing the event to clear.
+     *
+     * @param event The name of the event to unsubscribe all subscribers from.
+     */
+    public unsubscribeAll<K extends keyof T>(event: K & string): void;
+
+    /**
+     * Unsubscribes all subscribers from the wildcard event and removes
+     * them from being executed for all published events.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * publisher.subscribe("player:spawn", (evt) => { [...] });
+     * publisher.subscribe("*", (type, ...args) => { [...] });
+     * publisher.subscribe("*", (type, arg1, arg2, arg3) => { [...] });
+     * publisher.subscribe("*", (_, arg, ...rest) => { [...] });
+     * publisher.subscribe("player:death", () => { [...] });
+     *
+     * // All these subscribers are working fine...
+     *
+     * publisher.unsubscribeAll("*");
+     *
+     * // ... but now wildcard subscribers are gone!
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the wildcard events map (`*`).
+     *
+     * @param event The wildcard event name (`*`).
+     */
+    public unsubscribeAll<K extends keyof S>(event: K & string): void;
+    public unsubscribeAll(event: string): void
+    {
+        this._subscribers.delete(event);
+    }
+
+    /**
+     * Unsubscribes all the subscribers from all the events.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * publisher.subscribe("player:spawn", (evt) => { [...] });
+     * publisher.subscribe("player:move", (coords) => { [...] });
+     * publisher.subscribe("*", () => { [...] });
+     * publisher.subscribe("player:move", ({ x, y }) => { [...] });
+     * publisher.subscribe("player:death", () => { [...] });
+     *
+     * // All these subscribers are working fine...
+     *
+     * publisher.clear();
+     *
+     * // ... but now they're all gone!
+     * ```
+     */
+    public clear(): void
+    {
+        this.publish("__internals__:clear");
+
+        this._subscribers.clear();
     }
 
     public readonly [Symbol.toStringTag]: string = "Publisher";
