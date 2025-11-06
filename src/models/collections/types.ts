@@ -7,25 +7,6 @@ import type MapView from "./map-view.js";
 import type SetView from "./set-view.js";
 
 /**
- * A type that represents the map of events published by a {@link MapView} object.
- * See also {@link SetViewEventsMap}.
- *
- * The keys of the map are the event names while the values are the callback function signatures.
- *
- * ---
- *
- * @template K The type of the keys in the map.
- * @template V The type of the values in the map.
- */
-export interface MapViewEventsMap<K, V>
-{
-    "entry:add": (key: K, value: V) => void;
-    "entry:remove": (key: K, value: V) => void;
-
-    "collection:clear": () => void;
-}
-
-/**
  * An utility type that represents a read-only {@link MapView} object.
  * See also {@link ReadonlySetView}.
  *
@@ -40,79 +21,65 @@ export interface MapViewEventsMap<K, V>
 export interface ReadonlyMapView<K, V> extends ReadonlyMap<K, V>
 {
     /**
-     * Subscribes to an event and adds a callback to be executed when the event is published.
+     * Subscribes to the `add` event of the map with a callback that will be executed when an entry is added.
      *
      * ---
      *
      * @example
      * ```ts
-     * const map = new MapView<string, number>();
-     * const unsubscribe = map.subscribe("entry:add", (key: string, value: number) =>
-     * {
-     *     if (key === "answer") { unsubscribe(); }
-     *     console.log(`Added ${key}: ${value}`);
-     * });
+     * map.onAdd((key, value) => console.log(`Added ${key}: ${value}`));
      *
      * map.set("key1", 2); // "Added key1: 2"
      * map.set("answer", 42); // "Added answer: 42"
-     * map.set("key2", 4);
-     * map.set("key3", 8);
      * ```
      *
      * ---
      *
-     * @template T The key of the map containing the callback signature to subscribe.
+     * @param callback The callback that will be executed when an entry is added to the map.
      *
-     * @param event The name of the event to subscribe to.
-     * @param callback The callback to execute when the event is published.
-     *
-     * @returns A function that can be used to unsubscribe the callback from the event.
+     * @returns A function that can be used to unsubscribe from the event.
      */
-    subscribe<T extends keyof MapViewEventsMap<K, V>>(event: T & string, callback: MapViewEventsMap<K, V>[T]): Callback;
+    onAdd(callback: (key: K, value: V) => void): Callback;
 
     /**
-     * Unsubscribes from an event and removes a callback from being executed when the event is published.
+     * Subscribes to the `remove` event of the map with a callback that will be executed when an entry is removed.
      *
      * ---
      *
      * @example
      * ```ts
-     * const callback = (key: string, value: number) => console.log(`Added ${key}: ${value}`);
-     * const map = new MapView<string, number>();
+     * map.onRemove((key, value) => console.log(`Removed ${key}: ${value}`));
      *
-     * map.subscribe("entry:add", callback);
-     * map.set("key1", 2); // "Added key1: 2"
-     *
-     * map.unsubscribe("entry:add", callback);
-     * map.set("key2", 4);
+     * map.delete("key1"); // "Removed key1: 2"
+     * map.delete("answer"); // "Removed answer: 42"
      * ```
      *
      * ---
      *
-     * @template T The key of the map containing the callback signature to unsubscribe.
+     * @param callback The callback that will be executed when an entry is removed from the map.
      *
-     * @param event The name of the event to unsubscribe from.
-     * @param callback The callback to remove from the event.
+     * @returns A function that can be used to unsubscribe from the event.
      */
-    unsubscribe<T extends keyof MapViewEventsMap<K, V>>(event: T & string, callback: MapViewEventsMap<K, V>[T]): void;
-}
+    onRemove(callback: (key: K, value: V) => void): Callback;
 
-/**
- * A type that represents the map of events published by a {@link SetView} object.
- * See also {@link MapViewEventsMap}.
- *
- * The keys of the map are the event names while the values are the callback function signatures.
- *
- * ---
- *
- * @template T The type of the values in the set.
- */
-export interface SetViewEventsMap<T>
-{
-    "entry:add": (value: T) => void;
-    "entry:remove": (value: T) => void;
-
-    "collection:clear": () => void;
+    /**
+     * Subscribes to the `clear` event of the map with a callback that will be executed when the map is cleared.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * map.onClear(() => console.log("The map has all been cleared."));
+     * map.clear();
+     * ```
+     *
+     * ---
+     *
+     * @param callback The callback that will be executed when the map is cleared.
+     *
+     * @returns A function that can be used to unsubscribe from the event.
+     */
+    onClear(callback: () => void): Callback;
 }
 
 /**
@@ -129,59 +96,63 @@ export interface SetViewEventsMap<T>
 export interface ReadonlySetView<T> extends ReadonlySet<T>
 {
     /**
-     * Subscribes to an event and adds a callback to be executed when the event is published.
+     * Subscribes to the `add` event of the set with a callback that will be executed when a value is added.
      *
      * ---
      *
      * @example
      * ```ts
-     * const set = new SetView<number>();
-     * const unsubscribe = set.subscribe("entry:add", (value: number) =>
-     * {
-     *     if (value === 42) { unsubscribe(); }
-     *     console.log(`Added ${value}`);
-     * });
+     * set.onAdd((value) => console.log(`Added ${value}`));
      *
      * set.add(2); // "Added 2"
      * set.add(42); // "Added 42"
-     * set.add(4);
-     * set.add(8);
      * ```
      *
      * ---
      *
-     * @template K The key of the map containing the callback signature to subscribe.
+     * @param callback The callback that will be executed when a value is added to the set.
      *
-     * @param event The name of the event to subscribe to.
-     * @param callback The callback to execute when the event is published.
-     *
-     * @returns A function that can be used to unsubscribe the callback from the event.
+     * @returns A function that can be used to unsubscribe from the event.
      */
-    subscribe<K extends keyof SetViewEventsMap<T>>(event: K & string, callback: SetViewEventsMap<T>[K]): Callback;
+    onAdd(callback: (value: T) => void): Callback;
 
     /**
-     * Unsubscribes from an event and removes a callback from being executed when the event is published.
+     * Subscribes to the `remove` event of the set with a callback that will be executed when a value is removed.
      *
      * ---
      *
      * @example
      * ```ts
-     * const callback = (value: number) => console.log(`Added ${value}`);
-     * const set = new SetView<number>();
+     * set.onRemove((value) => console.log(`Removed ${value}`));
      *
-     * set.subscribe("entry:add", callback);
-     * set.add(2); // "Added 2"
-     *
-     * set.unsubscribe("entry:add", callback);
-     * set.add(4);
+     * set.delete(2); // "Removed 2"
+     * set.delete(42); // "Removed 42"
      * ```
      *
      * ---
      *
-     * @template K The key of the map containing the callback signature to unsubscribe.
+     * @param callback The callback that will be executed when a value is removed from the set.
      *
-     * @param event The name of the event to unsubscribe from.
-     * @param callback The callback to remove from the event.
+     * @returns A function that can be used to unsubscribe from the event.
      */
-    unsubscribe<K extends keyof SetViewEventsMap<T>>(event: K & string, callback: SetViewEventsMap<T>[K]): void;
+    onRemove(callback: (value: T) => void): Callback;
+
+    /**
+     * Subscribes to the `clear` event of the set with a callback that will be executed when the set is cleared.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * set.onClear(() => console.log("The set has all been cleared."));
+     * set.clear(); // "The set has all been cleared."
+     * ```
+     *
+     * ---
+     *
+     * @param callback The callback that will be executed when the set is cleared.
+     *
+     * @returns A function that can be used to unsubscribe from the event.
+     */
+    onClear(callback: () => void): Callback;
 }

@@ -1,9 +1,16 @@
 import Publisher from "../callbacks/publisher.js";
-import type { Callback, Subscribable } from "../types.js";
+import type { Callback } from "../types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type MapView from "./map-view.js";
-import type { SetViewEventsMap } from "./types.js";
+
+interface SetViewEventsMap<T>
+{
+    "add": (value: T) => void;
+    "remove": (value: T) => void;
+
+    "clear": () => void;
+}
 
 /**
  * A wrapper class around the native {@link Set} class that provides additional functionality
@@ -17,7 +24,7 @@ import type { SetViewEventsMap } from "./types.js";
  * ```ts
  * const set = new SetView<number>();
  *
- * set.subscribe("entry:add", (value: number) => console.log(`Added ${value}`));
+ * set.onAdd((value: number) => console.log(`Added ${value}`));
  * set.add(42); // "Added 42"
  * ```
  *
@@ -25,7 +32,7 @@ import type { SetViewEventsMap } from "./types.js";
  *
  * @template T The type of the values in the set.
  */
-export default class SetView<T> extends Set<T> implements Subscribable<SetViewEventsMap<T>>
+export default class SetView<T> extends Set<T>
 {
     /**
      * The internal {@link Publisher} instance used to publish events.
@@ -84,7 +91,7 @@ export default class SetView<T> extends Set<T> implements Subscribable<SetViewEv
     {
         super.add(value);
 
-        this._publisher.publish("entry:add", value);
+        this._publisher.publish("add", value);
 
         return this;
     }
@@ -112,7 +119,7 @@ export default class SetView<T> extends Set<T> implements Subscribable<SetViewEv
     public override delete(value: T): boolean
     {
         const result = super.delete(value);
-        if (result) { this._publisher.publish("entry:remove", value); }
+        if (result) { this._publisher.publish("remove", value); }
 
         return result;
     }
@@ -135,72 +142,77 @@ export default class SetView<T> extends Set<T> implements Subscribable<SetViewEv
         const size = this.size;
 
         super.clear();
-        if (size > 0) { this._publisher.publish("collection:clear"); }
+        if (size > 0) { this._publisher.publish("clear"); }
     }
 
     /**
-     * Subscribes to an event and adds a callback to be executed when the event is published.
+     * Subscribes to the `add` event of the set with a callback that will be executed when a value is added.
      *
      * ---
      *
      * @example
      * ```ts
-     * const set = new SetView<number>();
-     * const unsubscribe = set.subscribe("entry:add", (value: number) =>
-     * {
-     *     if (value === 42) { unsubscribe(); }
-     *     console.log(`Added ${value}`);
-     * });
+     * set.onAdd((value) => console.log(`Added ${value}`));
      *
      * set.add(2); // "Added 2"
      * set.add(42); // "Added 42"
-     * set.add(4);
-     * set.add(8);
      * ```
      *
      * ---
      *
-     * @template K The key of the map containing the callback signature to subscribe.
+     * @param callback The callback that will be executed when a value is added to the set.
      *
-     * @param event The name of the event to subscribe to.
-     * @param subscriber The callback to execute when the event is published.
-     *
-     * @returns A function that can be used to unsubscribe the callback from the event.
+     * @returns A function that can be used to unsubscribe from the event.
      */
-    public subscribe<K extends keyof SetViewEventsMap<T>>(
-        event: K & string, subscriber: SetViewEventsMap<T>[K]
-    ): Callback
+    public onAdd(callback: (value: T) => void): Callback
     {
-        return this._publisher.subscribe(event, subscriber);
+        return this._publisher.subscribe("add", callback);
     }
 
     /**
-     * Unsubscribes from an event and removes a callback from being executed when the event is published.
+     * Subscribes to the `remove` event of the set with a callback that will be executed when a value is removed.
      *
      * ---
      *
      * @example
      * ```ts
-     * const callback = (value: number) => console.log(`Added ${value}`);
-     * const set = new SetView<number>();
+     * set.onRemove((value) => console.log(`Removed ${value}`));
      *
-     * set.subscribe("entry:add", callback);
-     * set.add(2); // "Added 2"
-     *
-     * set.unsubscribe("entry:add", callback);
-     * set.add(4);
+     * set.delete(2); // "Removed 2"
+     * set.delete(42); // "Removed 42"
      * ```
      *
      * ---
      *
-     * @template K The key of the map containing the callback signature to unsubscribe.
+     * @param callback The callback that will be executed when a value is removed from the set.
      *
-     * @param event The name of the event to unsubscribe from.
-     * @param subscriber The callback to remove from the event.
+     * @returns A function that can be used to unsubscribe from the event.
      */
-    public unsubscribe<K extends keyof SetViewEventsMap<T>>(event: K & string, subscriber: SetViewEventsMap<T>[K]): void
+    public onRemove(callback: (value: T) => void): Callback
     {
-        this._publisher.unsubscribe(event, subscriber);
+        return this._publisher.subscribe("remove", callback);
+    }
+
+    /**
+     * Subscribes to the `clear` event of the set with a callback that will be executed when the set is cleared.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * set.onClear(() => console.log("The set has all been cleared."));
+     * set.clear(); // "The set has all been cleared."
+     * ```
+     *
+     * ---
+     *
+     * @param callback The callback that will be executed when the set is cleared.
+     *
+     * @returns A function that can be used to unsubscribe from the event.
+     */
+    public onClear(callback: () => void): Callback
+    {
+        return this._publisher.subscribe("clear", callback);
     }
 
     public override readonly [Symbol.toStringTag]: string = "SetView";

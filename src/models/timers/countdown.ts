@@ -14,9 +14,6 @@ interface CountdownEventsMap
     stop: (reason: unknown) => void;
     tick: (remainingTime: number) => void;
     expire: () => void;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: Callback<any[], any>;
 }
 
 /**
@@ -212,28 +209,6 @@ export default class Countdown extends GameLoop
     }
 
     /**
-     * Subscribes to the `expire` event of the countdown.
-     *
-     * ---
-     *
-     * @example
-     * ```ts
-     * countdown.onExpire(() => { [...] }); // This callback will be executed once the countdown has expired.
-     * countdown.start();
-     * ```
-     *
-     * ---
-     *
-     * @param callback The callback that will be executed when the countdown expires.
-     *
-     * @returns A function that can be used to unsubscribe from the event.
-     */
-    public onExpire(callback: Callback): Callback
-    {
-        return this._publisher.subscribe("expire", callback);
-    }
-
-    /**
      * Subscribes to the `tick` event of the countdown.
      *
      * ---
@@ -271,6 +246,28 @@ export default class Countdown extends GameLoop
             callback(remainingTime);
             lastTick = remainingTime;
         });
+    }
+
+    /**
+     * Subscribes to the `expire` event of the countdown.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * countdown.onExpire(() => { [...] }); // This callback will be executed once the countdown has expired.
+     * countdown.start();
+     * ```
+     *
+     * ---
+     *
+     * @param callback The callback that will be executed when the countdown expires.
+     *
+     * @returns A function that can be used to unsubscribe from the event.
+     */
+    public onExpire(callback: Callback): Callback
+    {
+        return this._publisher.subscribe("expire", callback);
     }
 
     public override readonly [Symbol.toStringTag]: string = "Countdown";

@@ -16,7 +16,7 @@ describe("SetView", () =>
 
     it("Should set an entry and publish a 'entry:add' event", () =>
     {
-        setView.subscribe("entry:add", callback);
+        setView.onAdd(callback);
         expect(setView.size).toBe(3);
         expect(setView.has(42)).toBe(false);
 
@@ -29,7 +29,7 @@ describe("SetView", () =>
 
     it("Should delete an entry and publish a 'entry:remove' event", () =>
     {
-        setView.subscribe("entry:remove", callback);
+        setView.onRemove(callback);
         expect(setView.size).toBe(3);
         expect(setView.has(0)).toBe(true);
 
@@ -42,7 +42,7 @@ describe("SetView", () =>
     });
     it("Should not publish 'entry:remove' event if entry doesn't exist", () =>
     {
-        setView.subscribe("entry:remove", callback);
+        setView.onRemove(callback);
         expect(setView.size).toBe(3);
         expect(setView.has(42)).toBe(false);
 
@@ -53,7 +53,7 @@ describe("SetView", () =>
 
     it("Should clear all entries and publish a 'collection:clear' event", () =>
     {
-        setView.subscribe("collection:clear", callback);
+        setView.onClear(callback);
         expect(setView.size).toBe(3);
 
         setView.clear();
@@ -66,16 +66,16 @@ describe("SetView", () =>
         expect(setView.size).toBe(3);
         expect(setView.has(42)).toBe(false);
 
-        const unsubscribe = setView.subscribe("entry:add", callback);
-        unsubscribe();
+        const unsubscribeAdd = setView.onAdd(callback);
+        unsubscribeAdd();
 
         setView.add(42);
         expect(setView.size).toBe(4);
         expect(setView.has(42)).toBe(true);
         expect(callback).not.toHaveBeenCalled();
 
-        setView.subscribe("entry:remove", callback);
-        setView.unsubscribe("entry:remove", callback);
+        const unsubscribeRemove = setView.onRemove(callback);
+        unsubscribeRemove();
 
         setView.delete(42);
         expect(setView.has(42)).toBe(false);
@@ -86,8 +86,8 @@ describe("SetView", () =>
         const _callback1 = vi.fn();
         const _callback2 = vi.fn();
 
-        setView.subscribe("entry:add", _callback1);
-        setView.subscribe("entry:add", _callback2);
+        setView.onAdd(_callback1);
+        setView.onAdd(_callback2);
 
         expect(setView.size).toBe(3);
         expect(setView.has(42)).toBe(false);

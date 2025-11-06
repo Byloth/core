@@ -7,8 +7,8 @@ import type { Callback } from "../types.js";
 
 interface GameLoopEventsMap
 {
-    start: () => void;
-    stop: () => void;
+    "start": () => void;
+    "stop": () => void;
 }
 
 /**

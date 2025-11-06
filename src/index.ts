@@ -1,4 +1,4 @@
-export const VERSION = "2.1.8";
+export const VERSION = "2.2.0";
 
 export type { Constructor, Interval, Timeout, ValueOf } from "./core/types.js";
 
@@ -61,7 +61,6 @@ export type {
     KeyedIteratee,
     KeyedReducer,
     KeyedTypeGuardPredicate,
-    MapViewEventsMap,
     MaybeAsyncKeyedIteratee,
     MaybeAsyncKeyedReducer,
     MaybeAsyncGeneratorFunction,
@@ -77,7 +76,6 @@ export type {
     ReadonlySetView,
     Reducer,
     RejectedHandler,
-    SetViewEventsMap,
     Subscribable,
     TypeGuardPredicate,
     WildcardEventsMap

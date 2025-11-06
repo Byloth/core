@@ -1,9 +1,16 @@
 import Publisher from "../callbacks/publisher.js";
-import type { Callback, Subscribable } from "../types.js";
+import type { Callback } from "../types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type SetView from "./set-view.js";
-import type { MapViewEventsMap } from "./types.js";
+
+interface MapViewEventsMap<K, V>
+{
+    "add": (key: K, value: V) => void;
+    "remove": (key: K, value: V) => void;
+
+    "clear": () => void;
+}
 
 /**
  * A wrapper class around the native {@link Map} class that provides additional functionality
@@ -17,7 +24,7 @@ import type { MapViewEventsMap } from "./types.js";
  * ```ts
  * const map = new MapView<string, number>();
  *
- * map.subscribe("entry:add", (key: string, value: number) => console.log(`Added ${key}: ${value}`));
+ * map.onAdd((key: string, value: number) => console.log(`Added ${key}: ${value}`));
  * map.set("answer", 42); // "Added answer: 42"
  * ```
  *
@@ -26,7 +33,7 @@ import type { MapViewEventsMap } from "./types.js";
  * @template K The type of the keys in the map.
  * @template V The type of the values in the map.
  */
-export default class MapView<K, V> extends Map<K, V> implements Subscribable<MapViewEventsMap<K, V>>
+export default class MapView<K, V> extends Map<K, V>
 {
     /**
      * The internal {@link Publisher} instance used to publish events.
@@ -86,7 +93,7 @@ export default class MapView<K, V> extends Map<K, V> implements Subscribable<Map
     {
         super.set(key, value);
 
-        this._publisher.publish("entry:add", key, value);
+        this._publisher.publish("add", key, value);
 
         return this;
     }
@@ -118,7 +125,7 @@ export default class MapView<K, V> extends Map<K, V> implements Subscribable<Map
 
         super.delete(key);
 
-        this._publisher.publish("entry:remove", key, value);
+        this._publisher.publish("remove", key, value);
 
         return true;
     }
@@ -141,74 +148,77 @@ export default class MapView<K, V> extends Map<K, V> implements Subscribable<Map
         const size = this.size;
 
         super.clear();
-        if (size > 0) { this._publisher.publish("collection:clear"); }
+        if (size > 0) { this._publisher.publish("clear"); }
     }
 
     /**
-     * Subscribes to an event and adds a callback to be executed when the event is published.
+     * Subscribes to the `add` event of the map with a callback that will be executed when an entry is added.
      *
      * ---
      *
      * @example
      * ```ts
-     * const map = new MapView<string, number>();
-     * const unsubscribe = map.subscribe("entry:add", (key: string, value: number) =>
-     * {
-     *     if (key === "answer") { unsubscribe(); }
-     *     console.log(`Added ${key}: ${value}`);
-     * });
+     * map.onAdd((key, value) => console.log(`Added ${key}: ${value}`));
      *
      * map.set("key1", 2); // "Added key1: 2"
      * map.set("answer", 42); // "Added answer: 42"
-     * map.set("key2", 4);
-     * map.set("key3", 8);
      * ```
      *
      * ---
      *
-     * @template T The key of the map containing the callback signature to subscribe.
+     * @param callback The callback that will be executed when an entry is added to the map.
      *
-     * @param event The name of the event to subscribe to.
-     * @param subscriber The callback to execute when the event is published.
-     *
-     * @returns A function that can be used to unsubscribe the callback from the event.
+     * @returns A function that can be used to unsubscribe from the event.
      */
-    public subscribe<T extends keyof MapViewEventsMap<K, V>>(
-        event: T & string, subscriber: MapViewEventsMap<K, V>[T]
-    ): Callback
+    public onAdd(callback: (key: K, value: V) => void): Callback
     {
-        return this._publisher.subscribe(event, subscriber);
+        return this._publisher.subscribe("add", callback);
     }
 
     /**
-     * Unsubscribes from an event and removes a callback from being executed when the event is published.
+     * Subscribes to the `remove` event of the map with a callback that will be executed when an entry is removed.
      *
      * ---
      *
      * @example
      * ```ts
-     * const callback = (key: string, value: number) => console.log(`Added ${key}: ${value}`);
-     * const map = new MapView<string, number>();
+     * map.onRemove((key, value) => console.log(`Removed ${key}: ${value}`));
      *
-     * map.subscribe("entry:add", callback);
-     * map.set("key1", 2); // "Added key1: 2"
-     *
-     * map.unsubscribe("entry:add", callback);
-     * map.set("key2", 4);
+     * map.delete("key1"); // "Removed key1: 2"
+     * map.delete("answer"); // "Removed answer: 42"
      * ```
      *
      * ---
      *
-     * @template T The key of the map containing the callback signature to unsubscribe.
+     * @param callback The callback that will be executed when an entry is removed from the map.
      *
-     * @param event The name of the event to unsubscribe from.
-     * @param subscriber The callback to remove from the event.
+     * @returns A function that can be used to unsubscribe from the event.
      */
-    public unsubscribe<T extends keyof MapViewEventsMap<K, V>>(
-        event: T & string, subscriber: MapViewEventsMap<K, V>[T]
-    ): void
+    public onRemove(callback: (key: K, value: V) => void): Callback
     {
-        this._publisher.unsubscribe(event, subscriber);
+        return this._publisher.subscribe("remove", callback);
+    }
+
+    /**
+     * Subscribes to the `clear` event of the map with a callback that will be executed when the map is cleared.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * map.onClear(() => console.log("The map has all been cleared."));
+     * map.clear(); // "The map has all been cleared."
+     * ```
+     *
+     * ---
+     *
+     * @param callback The callback that will be executed when the map is cleared.
+     *
+     * @returns A function that can be used to unsubscribe from the event.
+     */
+    public onClear(callback: () => void): Callback
+    {
+        return this._publisher.subscribe("clear", callback);
     }
 
     public override readonly [Symbol.toStringTag]: string = "MapView";

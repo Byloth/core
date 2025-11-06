@@ -16,7 +16,7 @@ describe("MapView", () =>
 
     it("Should set an entry and publish a 'entry:add' event", () =>
     {
-        mapView.subscribe("entry:add", callback);
+        mapView.onAdd(callback);
         expect(mapView.size).toBe(3);
         expect(mapView.has("answer")).toBe(false);
 
@@ -29,7 +29,7 @@ describe("MapView", () =>
 
     it("Should delete an entry and publish a 'entry:remove' event", () =>
     {
-        mapView.subscribe("entry:remove", callback);
+        mapView.onRemove(callback);
         expect(mapView.size).toBe(3);
         expect(mapView.get("key1")).toBe(0);
 
@@ -42,7 +42,7 @@ describe("MapView", () =>
     });
     it("Should not publish 'entry:remove' event if entry doesn't exist", () =>
     {
-        mapView.subscribe("entry:remove", callback);
+        mapView.onRemove(callback);
         expect(mapView.size).toBe(3);
         expect(mapView.has("answer")).toBe(false);
 
@@ -53,7 +53,7 @@ describe("MapView", () =>
 
     it("Should clear all entries and publish a 'collection:clear' event", () =>
     {
-        mapView.subscribe("collection:clear", callback);
+        mapView.onClear(callback);
         expect(mapView.size).toBe(3);
 
         mapView.clear();
@@ -66,16 +66,16 @@ describe("MapView", () =>
         expect(mapView.size).toBe(3);
         expect(mapView.has("answer")).toBe(false);
 
-        const unsubscribe = mapView.subscribe("entry:add", callback);
-        unsubscribe();
+        const unsubscribeAdd = mapView.onAdd(callback);
+        unsubscribeAdd();
 
         mapView.set("answer", 42);
         expect(mapView.size).toBe(4);
         expect(mapView.get("answer")).toBe(42);
         expect(callback).not.toHaveBeenCalled();
 
-        mapView.subscribe("entry:remove", callback);
-        mapView.unsubscribe("entry:remove", callback);
+        const unsubscribeRemove = mapView.onRemove(callback);
+        unsubscribeRemove();
 
         mapView.delete("answer");
         expect(mapView.has("answer")).toBe(false);
@@ -86,8 +86,8 @@ describe("MapView", () =>
         const _callback1 = vi.fn();
         const _callback2 = vi.fn();
 
-        mapView.subscribe("entry:add", _callback1);
-        mapView.subscribe("entry:add", _callback2);
+        mapView.onAdd(_callback1);
+        mapView.onAdd(_callback2);
 
         expect(mapView.size).toBe(3);
         expect(mapView.has("answer")).toBe(false);

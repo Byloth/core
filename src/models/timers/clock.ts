@@ -8,9 +8,9 @@ import GameLoop from "./game-loop.js";
 
 interface ClockEventsMap
 {
-    start: () => void;
-    stop: () => void;
-    tick: (elapsedTime: number) => void;
+    "start": () => void;
+    "stop": () => void;
+    "tick": (elapsedTime: number) => void;
 }
 
 /**
