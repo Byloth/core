@@ -1,4 +1,4 @@
-export const VERSION = "2.2.0";
+export const VERSION = "2.2.1";
 
 export type { Constructor, Interval, Timeout, ValueOf } from "./core/types.js";
 
@@ -7,6 +7,7 @@ export {
     AggregatedIterator,
     AggregatedAsyncIterator,
     CallableObject,
+    CallbackChain,
     Clock,
     Countdown,
     DeferredPromise,
