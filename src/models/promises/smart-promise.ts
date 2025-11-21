@@ -261,10 +261,10 @@ export default class SmartPromise<T = void> implements Promise<T>
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
      * {
-     *     setTimeout(() => reject(new Error("An unknown error occurred.")), 1_000);
+     *     setTimeout(() => reject(new Exception("An unknown error occurred.")), 1_000);
      * });
      *
-     * promise.catch(); // Uncaught Error: An unknown error occurred.
+     * promise.catch(); // "Uncaught Exception: An unknown error occurred."
      * ```
      *
      * ---
@@ -288,10 +288,10 @@ export default class SmartPromise<T = void> implements Promise<T>
      * ```ts
      * const promise = new SmartPromise((resolve, reject) =>
      * {
-     *     setTimeout(() => reject(new Error("An unknown error occurred.")), 1_000);
+     *     setTimeout(() => reject(new Exception("An unknown error occurred.")), 1_000);
      * });
      *
-     * promise.catch((reason) => console.error(reason)); // "Error: An unknown error occurred."
+     * promise.catch((reason) => console.error(reason)); // "Uncaught Exception: An unknown error occurred."
      * ```
      *
      * ---

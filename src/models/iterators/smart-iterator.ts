@@ -939,7 +939,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * {
      *     try
      *     {
-     *         if (value > 5) { throw new Error("The index is too high."); }
+     *         if (value > 5) { throw new Exception("The index is too high."); }
      *
      *         console.log(value); // 1, 2, 3, 4, 5
      *     }

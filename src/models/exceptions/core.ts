@@ -16,8 +16,7 @@
  *     // Uncaught Exception: The game saves may be corrupted. Try to restart the game.
  *     //     at /src/game/index.ts:37:15
  *     //     at /src/main.ts:23:17
- *     //
- *     // Caused by SyntaxError: Unexpected end of JSON input
+ *     // Caused by: SyntaxError: Unexpected end of JSON input
  *     //     at /src/models/saves.ts:47:17
  *     //     at /src/game/index.ts:12:9
  *     //     at /src/main.ts:23:17
@@ -59,6 +58,7 @@ export default class Exception extends Error
             const exc = new Exception(error.message);
 
             exc.stack = error.stack;
+            exc.cause = error.cause;
             exc.name = error.name;
 
             return exc;
@@ -89,18 +89,6 @@ export default class Exception extends Error
 
         this.cause = cause;
         this.name = name;
-
-        if (cause)
-        {
-            if (cause instanceof Error)
-            {
-                this.stack += `\n\nCaused by ${cause.stack}`;
-            }
-            else
-            {
-                this.stack += `\n\nCaused by ${cause}`;
-            }
-        }
     }
 
     public readonly [Symbol.toStringTag]: string = "Exception";
