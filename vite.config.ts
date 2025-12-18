@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   build: {
+    minify: "esbuild",
     lib: {
       entry: fileURLToPath(new URL("src/index.ts", import.meta.url)),
       fileName: (format) =>
