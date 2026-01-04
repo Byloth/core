@@ -1,4 +1,2 @@
-import MapView from "./map-view.js";
-import SetView from "./set-view.js";
-
-export { MapView, SetView };
+export { default as MapView } from "./map-view.js";
+export { default as SetView } from "./set-view.js";

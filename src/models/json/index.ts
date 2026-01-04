@@ -1,3 +1,1 @@
-import JSONStorage from "./json-storage.js";
-
-export { JSONStorage };
+export { default as JSONStorage } from "./json-storage.js";

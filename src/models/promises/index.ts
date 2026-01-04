@@ -1,6 +1,4 @@
-import DeferredPromise from "./deferred-promise.js";
-import PromiseQueue from "./promise-queue.js";
-import SmartPromise from "./smart-promise.js";
-import TimedPromise from "./timed-promise.js";
-
-export { DeferredPromise, PromiseQueue, SmartPromise, TimedPromise };
+export { default as DeferredPromise } from "./deferred-promise.js";
+export { default as PromiseQueue } from "./promise-queue.js";
+export { default as SmartPromise } from "./smart-promise.js";
+export { default as TimedPromise } from "./timed-promise.js";

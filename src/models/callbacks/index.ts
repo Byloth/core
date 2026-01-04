@@ -1,6 +1,4 @@
-import CallableObject from "./callable-object.js";
-import CallbackChain from "./callback-chain.js";
-import Publisher from "./publisher.js";
-import SwitchableCallback from "./switchable-callback.js";
-
-export { CallableObject, CallbackChain, Publisher, SwitchableCallback };
+export { default as CallableObject } from "./callable-object.js";
+export { default as CallbackChain } from "./callback-chain.js";
+export { default as Publisher } from "./publisher.js";
+export { default as SwitchableCallback } from "./switchable-callback.js";

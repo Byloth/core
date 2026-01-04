@@ -1,5 +1,3 @@
-import Clock from "./clock.js";
-import Countdown from "./countdown.js";
-import GameLoop from "./game-loop.js";
-
-export { Clock, Countdown, GameLoop };
+export { default as Clock } from "./clock.js";
+export { default as Countdown } from "./countdown.js";
+export { default as GameLoop } from "./game-loop.js";

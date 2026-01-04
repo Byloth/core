@@ -1,4 +1,2 @@
-import SmartIterator from "./smart-iterator.js";
-import SmartAsyncIterator from "./smart-async-iterator.js";
-
-export { SmartIterator, SmartAsyncIterator };
+export { default as SmartIterator } from "./smart-iterator.js";
+export { default as SmartAsyncIterator } from "./smart-async-iterator.js";
