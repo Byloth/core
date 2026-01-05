@@ -79,7 +79,14 @@ export default class CallbackChain<
      */
     protected override _invoke(...args: Parameters<T>): ReturnType<T>[]
     {
-        return this._callbacks.map((callback) => callback(...args)) as ReturnType<T>[];
+        const length = this._callbacks.length;
+        const results = new Array<ReturnType<T>>(length);
+        for (let i = 0; i < length; i += 1)
+        {
+            results[i] = this._callbacks[i](...args);
+        }
+
+        return results;
     }
 
     /**

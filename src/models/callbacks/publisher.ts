@@ -170,8 +170,14 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
         let subscribers = this._subscribers.get(event);
         if (subscribers)
         {
-            results = subscribers.slice()
-                .map((subscriber) => subscriber(...args));
+            const _subscribers = subscribers.slice();
+            const _length = _subscribers.length;
+
+            results = new Array<unknown>(_length);
+            for (let i = 0; i < _length; i += 1)
+            {
+                results[i] = _subscribers[i](...args);
+            }
         }
         else { results = []; }
 
