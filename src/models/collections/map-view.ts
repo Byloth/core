@@ -2,6 +2,8 @@ import Publisher from "../callbacks/publisher.js";
 import type { Callback } from "../types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type ArrayView from "./array-view.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type SetView from "./set-view.js";
 
 interface MapViewEventsMap<K, V>
@@ -15,8 +17,8 @@ interface MapViewEventsMap<K, V>
 /**
  * A wrapper class around the native {@link Map} class that provides additional functionality
  * for publishing events when entries are added, removed or the collection is cleared.  
- * There's also a complementary class that works with the native `Set` class.
- * See also {@link SetView}.
+ * There are also complementary classes that work with the native `Array` and `Set` classes.
+ * See also {@link ArrayView} and {@link SetView}.
  *
  * ---
  *
