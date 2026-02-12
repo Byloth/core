@@ -63,7 +63,7 @@ export default class SetView<T> extends Set<T>
 
         if (iterable)
         {
-            for (const value of iterable) { this.add(value); }
+            for (const value of iterable) { super.add(value); }
         }
     }
 

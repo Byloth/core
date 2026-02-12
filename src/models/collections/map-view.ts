@@ -64,7 +64,7 @@ export default class MapView<K, V> extends Map<K, V>
 
         if (iterable)
         {
-            for (const [key, value] of iterable) { this.set(key, value); }
+            for (const [key, value] of iterable) { super.set(key, value); }
         }
     }
 

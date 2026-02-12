@@ -8,8 +8,8 @@ import type SetView from "./set-view.js";
 
 interface ArrayViewEventsMap<T>
 {
-    "add": (index: number, value: T) => void;
-    "remove": (index: number, value: T) => void;
+    "add": (value: T, index: number) => void;
+    "remove": (value: T, index: number) => void;
 
     "clear": () => void;
 }
@@ -26,7 +26,7 @@ interface ArrayViewEventsMap<T>
  * ```ts
  * const array = new ArrayView<number>();
  *
- * array.onAdd((index: number, value: number) => console.log(`Added ${value} at index ${index}`));
+ * array.onAdd((value: number, index: number) => console.log(`Added ${value} at index ${index}`));
  * array.push(42); // "Added 42 at index 0"
  * ```
  *
@@ -48,6 +48,34 @@ export default class ArrayView<T> extends Array<T>
      *
      * @example
      * ```ts
+     * const array = new ArrayView<number>();
+     * ```
+     */
+    public constructor();
+
+    /**
+     * Initializes a new instance of the {@link ArrayView} class.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const array = new ArrayView<number>(3);
+     * ```
+     *
+     * ---
+     *
+     * @param length The initial length of the {@link Array}.
+     */
+    public constructor(length: number);
+
+    /**
+     * Initializes a new instance of the {@link ArrayView} class.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
      * const array = new ArrayView<number>(2, 4, 8);
      * ```
      *
@@ -55,13 +83,12 @@ export default class ArrayView<T> extends Array<T>
      *
      * @param items The items to initialize the {@link Array} with.
      */
+    public constructor(...items: T[]);
     public constructor(...items: T[])
     {
-        super();
+        super(...items);
 
         this._publisher = new Publisher();
-
-        for (const item of items) { this.push(item); }
     }
 
     /**
@@ -90,7 +117,7 @@ export default class ArrayView<T> extends Array<T>
         const result = super.push(...items);
         for (let i = 0; i < items.length; i += 1)
         {
-            this._publisher.publish("add", startIndex + i, items[i]);
+            this._publisher.publish("add", items[i], startIndex + i);
         }
 
         return result;
@@ -119,39 +146,9 @@ export default class ArrayView<T> extends Array<T>
         if (index < 0) { return undefined; }
 
         const value = super.pop();
-        this._publisher.publish("remove", index, value!);
+        this._publisher.publish("remove", value!, index);
 
         return value;
-    }
-
-    /**
-     * Inserts new elements at the start of the {@link Array} and returns the new length of the array.
-     *
-     * ---
-     *
-     * @example
-     * ```ts
-     * const array = new ArrayView<number>(8);
-     * array.unshift(2, 4);
-     *
-     * console.log(array); // ArrayView(3) [2, 4, 8]
-     * ```
-     *
-     * ---
-     *
-     * @param items Elements to insert at the start of the array.
-     *
-     * @returns The new length of the array.
-     */
-    public override unshift(...items: T[]): number
-    {
-        const result = super.unshift(...items);
-        for (let i = 0; i < items.length; i += 1)
-        {
-            this._publisher.publish("add", i, items[i]);
-        }
-
-        return result;
     }
 
     /**
@@ -176,9 +173,39 @@ export default class ArrayView<T> extends Array<T>
         if (this.length === 0) { return undefined; }
 
         const value = super.shift();
-        this._publisher.publish("remove", 0, value!);
+        this._publisher.publish("remove", value!, 0);
 
         return value;
+    }
+
+    /**
+     * Inserts new elements at the start of the {@link Array} and returns the new length of the array.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const array = new ArrayView<number>(4, 8);
+     * array.unshift(2);
+     *
+     * console.log(array); // ArrayView(3) [2, 4, 8]
+     * ```
+     *
+     * ---
+     *
+     * @param items Elements to insert at the start of the array.
+     *
+     * @returns The new length of the array.
+     */
+    public override unshift(...items: T[]): number
+    {
+        const result = super.unshift(...items);
+        for (let i = 0; i < items.length; i += 1)
+        {
+            this._publisher.publish("add", items[i], i);
+        }
+
+        return result;
     }
 
     /**
@@ -190,7 +217,7 @@ export default class ArrayView<T> extends Array<T>
      * @example
      * ```ts
      * const array = new ArrayView<number>(2, 4, 8, 16);
-     * array.splice(1, 2, 32, 64); // [ 4, 8 ]
+     * array.splice(1, 2, 32, 64); // [4, 8]
      *
      * console.log(array); // ArrayView(4) [2, 32, 64, 16]
      * ```
@@ -205,23 +232,21 @@ export default class ArrayView<T> extends Array<T>
      */
     public override splice(start: number, deleteCount?: number, ...items: T[]): T[]
     {
-        const normalizedStart = start < 0 ?
-            Math.max(this.length + start, 0) :
-            Math.min(start, this.length);
+        const normalizedStart = start < 0 ? Math.max(this.length + start, 0) : Math.min(start, this.length);
 
         const actualDeleteCount = deleteCount === undefined ?
             this.length - normalizedStart :
             Math.min(Math.max(deleteCount, 0), this.length - normalizedStart);
 
         const removed = super.splice(start, actualDeleteCount, ...items);
-
         for (let i = 0; i < removed.length; i += 1)
         {
-            this._publisher.publish("remove", normalizedStart + i, removed[i]);
+            this._publisher.publish("remove", removed[i], normalizedStart + i);
         }
+
         for (let i = 0; i < items.length; i += 1)
         {
-            this._publisher.publish("add", normalizedStart + i, items[i]);
+            this._publisher.publish("add", items[i], normalizedStart + i);
         }
 
         return removed;
@@ -243,8 +268,8 @@ export default class ArrayView<T> extends Array<T>
     public clear(): void
     {
         const length = this.length;
+        this.length = 0;
 
-        super.splice(0, length);
         if (length > 0) { this._publisher.publish("clear"); }
     }
 
@@ -255,7 +280,7 @@ export default class ArrayView<T> extends Array<T>
      *
      * @example
      * ```ts
-     * array.onAdd((index, value) => console.log(`Added ${value} at index ${index}`));
+     * array.onAdd((value, index) => console.log(`Added ${value} at index ${index}`));
      *
      * array.push(2); // "Added 2 at index 0"
      * array.push(42); // "Added 42 at index 1"
@@ -267,7 +292,7 @@ export default class ArrayView<T> extends Array<T>
      *
      * @returns A function that can be used to unsubscribe from the event.
      */
-    public onAdd(callback: (index: number, value: T) => void): Callback
+    public onAdd(callback: (value: T, index: number) => void): Callback
     {
         return this._publisher.subscribe("add", callback);
     }
@@ -279,7 +304,7 @@ export default class ArrayView<T> extends Array<T>
      *
      * @example
      * ```ts
-     * array.onRemove((index, value) => console.log(`Removed ${value} at index ${index}`));
+     * array.onRemove((value, index) => console.log(`Removed ${value} at index ${index}`));
      *
      * array.pop(); // "Removed 8 at index 2"
      * array.shift(); // "Removed 2 at index 0"
@@ -291,7 +316,7 @@ export default class ArrayView<T> extends Array<T>
      *
      * @returns A function that can be used to unsubscribe from the event.
      */
-    public onRemove(callback: (index: number, value: T) => void): Callback
+    public onRemove(callback: (value: T, index: number) => void): Callback
     {
         return this._publisher.subscribe("remove", callback);
     }
