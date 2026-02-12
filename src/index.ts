@@ -6,6 +6,7 @@ export { isBrowser, isNode, isWorker } from "./helpers.js";
 export {
     AggregatedIterator,
     AggregatedAsyncIterator,
+    ArrayView,
     CallableObject,
     CallbackChain,
     Clock,

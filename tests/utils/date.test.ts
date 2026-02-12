@@ -77,7 +77,7 @@ describe("dateRange", () =>
         const iterator = dateRange(start, end);
         const dates = Array.from(iterator);
 
-        expect(dates.length).toBe(4);
+        expect(dates).toHaveLength(4);
 
         expect(dates[0].toISOString().slice(0, 10)).toBe("2025-01-01");
         expect(dates[3].toISOString().slice(0, 10)).toBe("2025-01-04");

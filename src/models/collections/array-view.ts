@@ -344,4 +344,5 @@ export default class ArrayView<T> extends Array<T>
     }
 
     public readonly [Symbol.toStringTag]: string = "ArrayView";
+    public static override readonly [Symbol.species]: typeof Array = Array;
 }

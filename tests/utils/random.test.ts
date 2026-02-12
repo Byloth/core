@@ -225,4 +225,98 @@ describe("Random", () =>
             });
         });
     });
+
+    describe("Split", () =>
+    {
+        describe("With a numeric total", () =>
+        {
+            it("Should return an array of parts that sum to the total", () =>
+            {
+                const total = 100;
+                const parts = 5;
+                const result = Random.Split(total, parts);
+
+                expect(result).toHaveLength(parts);
+                expect(result.reduce((sum, val) => sum + val, 0)).toBe(total);
+            });
+
+            it("Should return a single part equal to the total when parts is 1", () =>
+            {
+                const result = Random.Split(42, 1);
+
+                expect(result).toEqual([42]);
+            });
+            it("Should return all zeros when total is 0", () =>
+            {
+                const result = Random.Split(0, 3);
+
+                expect(result).toEqual([0, 0, 0]);
+            });
+            it("Should return non-negative values", () =>
+            {
+                const result = Random.Split(10, 10);
+
+                for (const value of result) { expect(value).toBeGreaterThanOrEqual(0); }
+            });
+
+            it("Should throw `ValueException` if the total is negative", () =>
+            {
+                expect(() => Random.Split(-1, 2)).toThrow(ValueException);
+            });
+            it("Should throw `ValueException` if parts is less than 1", () =>
+            {
+                expect(() => Random.Split(10, 0)).toThrow(ValueException);
+            });
+        });
+
+        describe("With an iterable of elements", () =>
+        {
+            it("Should return the correct number of groups", () =>
+            {
+                const elements = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+                const groups = Random.Split(elements, 3);
+
+                expect(groups).toHaveLength(3);
+            });
+
+            it("Should contain all original elements across all groups", () =>
+            {
+                const elements = [1, 2, 3, 4, 5, 6, 7, 8];
+                const groups = Random.Split(elements, 3);
+
+                const flattened = groups.flat();
+                expect(flattened).toEqual(elements);
+            });
+
+            it("Should return a single group with all elements when groups is 1", () =>
+            {
+                const elements = [1, 2, 3];
+                const groups = Random.Split(elements, 1);
+
+                expect(groups).toHaveLength(1);
+                expect(groups[0]).toEqual(elements);
+            });
+            it("Should work with a string iterable", () =>
+            {
+                const groups = Random.Split("abcdef", 2);
+                const flattened = groups.flat();
+
+                expect(groups).toHaveLength(2);
+                expect(flattened).toEqual(["a", "b", "c", "d", "e", "f"]);
+            });
+
+            it("Should throw `ValueException` if the iterable is empty", () =>
+            {
+                expect(() => Random.Split([], 1)).toThrow(ValueException);
+            });
+            it("Should throw `ValueException` if groups exceeds the number of elements", () =>
+            {
+                expect(() => Random.Split([1, 2, 3], 5)).toThrow(ValueException);
+            });
+            it("Should throw `ValueException` if groups is less than 1", () =>
+            {
+                expect(() => Random.Split([1, 2], 0)).toThrow(ValueException);
+            });
+        });
+    });
 });

@@ -259,7 +259,7 @@ export default class Random
 
         if (weights === undefined)
         {
-            const pool = [...elements];
+            const pool = Array.from(elements);
             const result: T[] = new Array(count);
 
             for (let index = 0; index < count; index += 1)
@@ -298,6 +298,131 @@ export default class Random
         }
 
         return result;
+    }
+
+    static #Split(total: number, parts: number): number[]
+    {
+        const cuts: number[] = new Array(parts - 1);
+        for (let index = 0; index < cuts.length; index += 1)
+        {
+            cuts[index] = Math.random() * total;
+        }
+
+        cuts.sort((a, b) => (a - b));
+
+        const boundaries = [0, ...cuts, total];
+        const values: number[] = new Array(parts);
+
+        for (let index = 0; index < parts; index += 1)
+        {
+            values[index] = Math.floor(boundaries[index + 1] - boundaries[index]);
+        }
+
+        let remainder = total - values.reduce((sum, val) => (sum + val), 0);
+        while (remainder > 0)
+        {
+            values[this.Integer(parts)] += 1;
+
+            remainder -= 1;
+        }
+
+        return values;
+    }
+
+    /**
+     * Splits a total amount into a given number of randomly balanced integer parts that sum to the total.
+     *
+     * Uses random cut-points to generate a uniform distribution of parts.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * Random.Split(100, 3);  // [28, 41, 31]
+     * Random.Split(10, 4);   // [3, 1, 4, 2]
+     * ```
+     *
+     * ---
+     *
+     * @param total
+     * The total amount to split.
+     *
+     * It must be non-negative. Otherwise, a {@link ValueException} will be thrown.
+     *
+     * @param parts
+     * The number of parts to split the total into.
+     *
+     * It must be at least `1`. Otherwise, a {@link ValueException} will be thrown.
+     *
+     * @returns An array of integers that sum to the given total.
+     */
+    public static Split(total: number, parts: number): number[];
+
+    /**
+     * Splits an iterable of elements into a given number of randomly balanced groups.
+     *
+     * The elements are distributed into groups whose sizes are
+     * determined by a random split of the total number of elements.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * Random.Split([1, 2, 3, 4, 5], 2);  // [[1, 2], [3, 4, 5]]
+     * Random.Split([1, 2, 3, 4, 5], 2);  // [[1, 2, 3, 4], [5]]
+     * Random.Split("abcdef", 3);         // [["a"], ["b", "c", "d"], ["e", "f"]]
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the elements in the iterable.
+     *
+     * @param elements
+     * The iterable of elements to split into groups.
+     *
+     * It must contain at least one element. Otherwise, a {@link ValueException} will be thrown.
+     *
+     * @param groups
+     * The number of groups to split the elements into.
+     *
+     * It must be between `1` and the number of elements.
+     * Otherwise, a {@link ValueException} will be thrown.
+     *
+     * @returns An array of arrays, each containing a subset of the original elements.
+     */
+    public static Split<T>(elements: Iterable<T>, groups: number): T[][];
+    public static Split<T>(totalOrElements: number | Iterable<T>, parts: number): number[] | T[][]
+    {
+        if (parts < 1) { throw new ValueException("The number of splits must be greater than zero."); }
+
+        if (typeof totalOrElements === "number")
+        {
+            if (totalOrElements < 0) { throw new ValueException("The total must be a non-negative number."); }
+
+            return this.#Split(totalOrElements, parts);
+        }
+
+        const elements = Array.from(totalOrElements);
+        const length = elements.length;
+
+        if (length === 0) { throw new ValueException("You must provide at least one element."); }
+        if (parts > length)
+        {
+            throw new ValueException("The number of splits cannot exceed the number of elements.");
+        }
+
+        const sizes = this.#Split(length, parts);
+        const groups: T[][] = new Array(parts);
+
+        let offset = 0;
+        for (let index = 0; index < parts; index += 1)
+        {
+            groups[index] = elements.slice(offset, offset + sizes[index]);
+
+            offset += sizes[index];
+        }
+
+        return groups;
     }
 
     private constructor() { /* ... */ }
