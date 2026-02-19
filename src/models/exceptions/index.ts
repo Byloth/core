@@ -177,18 +177,14 @@ export class KeyException extends Exception
  *
  * @example
  * ```ts
- * import axios, { isAxiosError } from "axios";
- *
- * try { await axios.get("https://api.example.com/data"); }
+ * try { await fetch("https://api.example.com/data"); }
  * catch (error)
  * {
- *     if (isAxiosError(error) && !error.response)
- *     {
- *         throw new NetworkException(
- *             "Unable to establish a connection to the server. " +
- *             "Please, check your internet connection and try again."
- *         );
- *     }
+ *     throw new NetworkException(
+ *         "Unable to establish a connection to the server. " +
+ *         "Please, check your internet connection and try again.",
+ *         error
+ *     );
  * }
  * ```
  */
@@ -216,6 +212,51 @@ export class NetworkException extends Exception
     }
 
     public override readonly [Symbol.toStringTag]: string = "NetworkException";
+}
+
+/**
+ * A class representing an exception that can be thrown when a response is not valid or fails.  
+ * It's commonly used when a request returns an error status code or when the response body is malformed.
+ *
+ * ---
+ *
+ * @example
+ * ```ts
+ * const response = await fetch("https://api.example.com/data");
+ * if (!response.ok)
+ * {
+ *     throw new ResponseException(response);
+ * }
+ * ```
+ */
+export class ResponseException extends NetworkException
+{
+    public readonly response: Response;
+
+    /**
+     * Initializes a new instance of the {@link ResponseException} class.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * throw new ResponseException(response);
+     * ```
+     *
+     * ---
+     *
+     * @param response The response that caused the error.
+     * @param cause The previous caught error that caused this one, if any.
+     * @param name The name of the exception. Default is `"ResponseException"`.
+     */
+    public constructor(response: Response, cause?: unknown, name = "ResponseException")
+    {
+        super(`The request failed with the status code ${response.status} (${response.statusText}).`, cause, name);
+
+        this.response = response;
+    }
+
+    public override readonly [Symbol.toStringTag]: string = "ResponseException";
 }
 
 /**

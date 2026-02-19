@@ -1,4 +1,4 @@
-export const VERSION = "2.2.3";
+export const VERSION = "2.2.4";
 
 export type { Constructor, Interval, Timeout, ValueOf } from "./core/types.js";
 
@@ -30,6 +30,7 @@ export {
     RangeException,
     ReducedIterator,
     ReferenceException,
+    ResponseException,
     RuntimeException,
     SetView,
     SmartIterator,

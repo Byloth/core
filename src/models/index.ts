@@ -20,6 +20,7 @@ export {
     PermissionException,
     RangeException,
     ReferenceException,
+    ResponseException,
     RuntimeException,
     TimeoutException,
     TypeException,
