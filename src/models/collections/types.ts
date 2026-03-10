@@ -29,7 +29,7 @@ export interface ReadonlyMapView<K, V> extends ReadonlyMap<K, V>
      * ```ts
      * map.onAdd((key, value) => console.log(`Added ${key}: ${value}`));
      *
-     * map.set("key1", 2); // "Added key1: 2"
+     * map.set("key1", 2);    // "Added key1: 2"
      * map.set("answer", 42); // "Added answer: 42"
      * ```
      *
@@ -50,7 +50,7 @@ export interface ReadonlyMapView<K, V> extends ReadonlyMap<K, V>
      * ```ts
      * map.onRemove((key, value) => console.log(`Removed ${key}: ${value}`));
      *
-     * map.delete("key1"); // "Removed key1: 2"
+     * map.delete("key1");   // "Removed key1: 2"
      * map.delete("answer"); // "Removed answer: 42"
      * ```
      *
@@ -104,7 +104,7 @@ export interface ReadonlySetView<T> extends ReadonlySet<T>
      * ```ts
      * set.onAdd((value) => console.log(`Added ${value}`));
      *
-     * set.add(2); // "Added 2"
+     * set.add(2);  // "Added 2"
      * set.add(42); // "Added 42"
      * ```
      *
@@ -125,7 +125,7 @@ export interface ReadonlySetView<T> extends ReadonlySet<T>
      * ```ts
      * set.onRemove((value) => console.log(`Removed ${value}`));
      *
-     * set.delete(2); // "Removed 2"
+     * set.delete(2);  // "Removed 2"
      * set.delete(42); // "Removed 42"
      * ```
      *

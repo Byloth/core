@@ -20,7 +20,7 @@ import type { MaybePromise, PromiseExecutor } from "./types.js";
  * }, 5_000);
  *
  * promise
- *     .then((result) => console.log(result))  // "Hello, World!"
+ *     .then((result) => console.log(result))   // "Hello, World!"
  *     .catch((error) => console.error(error)); // "Uncaught TimeoutException: The operation has timed out."
  * ```
  *

@@ -282,7 +282,7 @@ export default class ArrayView<T> extends Array<T>
      * ```ts
      * array.onAdd((value, index) => console.log(`Added ${value} at index ${index}`));
      *
-     * array.push(2); // "Added 2 at index 0"
+     * array.push(2);  // "Added 2 at index 0"
      * array.push(42); // "Added 42 at index 1"
      * ```
      *
@@ -306,7 +306,7 @@ export default class ArrayView<T> extends Array<T>
      * ```ts
      * array.onRemove((value, index) => console.log(`Removed ${value} at index ${index}`));
      *
-     * array.pop(); // "Removed 8 at index 2"
+     * array.pop();   // "Removed 8 at index 2"
      * array.shift(); // "Removed 2 at index 0"
      * ```
      *

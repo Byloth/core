@@ -106,7 +106,7 @@ export default class SetView<T> extends Set<T>
      * @example
      * ```ts
      * const set = new SetView<number>([2, 4, 8]);
-     * set.delete(4); // true
+     * set.delete(4);  // true
      * set.delete(16); // false
      *
      * console.log(set); // SetView(2) { 2, 8 }
@@ -156,7 +156,7 @@ export default class SetView<T> extends Set<T>
      * ```ts
      * set.onAdd((value) => console.log(`Added ${value}`));
      *
-     * set.add(2); // "Added 2"
+     * set.add(2);  // "Added 2"
      * set.add(42); // "Added 42"
      * ```
      *
@@ -180,7 +180,7 @@ export default class SetView<T> extends Set<T>
      * ```ts
      * set.onRemove((value) => console.log(`Removed ${value}`));
      *
-     * set.delete(2); // "Removed 2"
+     * set.delete(2);  // "Removed 2"
      * set.delete(42); // "Removed 42"
      * ```
      *

@@ -580,7 +580,7 @@ export default class SmartIterator<T, R = void, N = undefined> implements Iterat
      * const iterator = new SmartIterator<number>([-2, -1, 0, 1, 2]);
      * const result = iterator.take(3);
      *
-     * console.log(result.toArray()); // [-2, -1, 0]
+     * console.log(result.toArray());   // [-2, -1, 0]
      * console.log(iterator.toArray()); // [1, 2]
      * ```
      *

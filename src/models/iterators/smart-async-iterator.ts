@@ -696,7 +696,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * const iterator = new SmartAsyncIterator<number>([-2, -1, 0, 1, 2]);
      * const result = iterator.take(3);
      *
-     * console.log(await result.toArray()); // [-2, -1, 0]
+     * console.log(await result.toArray());   // [-2, -1, 0]
      * console.log(await iterator.toArray()); // [1, 2]
      * ```
      *

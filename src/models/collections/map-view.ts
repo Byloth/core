@@ -162,7 +162,7 @@ export default class MapView<K, V> extends Map<K, V>
      * ```ts
      * map.onAdd((key, value) => console.log(`Added ${key}: ${value}`));
      *
-     * map.set("key1", 2); // "Added key1: 2"
+     * map.set("key1", 2);    // "Added key1: 2"
      * map.set("answer", 42); // "Added answer: 42"
      * ```
      *
@@ -186,7 +186,7 @@ export default class MapView<K, V> extends Map<K, V>
      * ```ts
      * map.onRemove((key, value) => console.log(`Removed ${key}: ${value}`));
      *
-     * map.delete("key1"); // "Removed key1: 2"
+     * map.delete("key1");   // "Removed key1: 2"
      * map.delete("answer"); // "Removed answer: 42"
      * ```
      *

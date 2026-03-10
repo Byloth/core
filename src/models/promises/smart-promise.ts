@@ -17,12 +17,12 @@ import type { FulfilledHandler, PromiseExecutor, RejectedHandler } from "./types
  *     setTimeout(() => resolve("Hello, World!"), 1_000);
  * });
  *
- * console.log(promise.isPending); // true
+ * console.log(promise.isPending);   // true
  * console.log(promise.isFulfilled); // false
  *
  * console.log(await promise); // "Hello, World!"
  *
- * console.log(promise.isPending); // false
+ * console.log(promise.isPending);   // false
  * console.log(promise.isFulfilled); // true
  * ```
  *
@@ -39,14 +39,14 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      * @example
      * ```ts
-     * const request = fetch("https://api.example.com/data");
-     * const smartRequest = SmartPromise.FromPromise(request);
+     * const response = fetch("https://api.example.com/data");
+     * const smartResponse = SmartPromise.FromPromise(response);
      *
-     * console.log(request.isPending); // Throws an error: `isPending` is not a property of `Promise`.
-     * console.log(smartRequest.isPending); // true
+     * console.log(response.isPending);      // Throws an error: `isPending` is not a property of `Promise`.
+     * console.log(smartResponse.isPending); // true
      *
-     * const response = await request;
-     * console.log(smartRequest.isFulfilled); // true
+     * const response = await response;
+     * console.log(smartResponse.isFulfilled); // true
      * ```
      *
      * ---
@@ -323,8 +323,8 @@ export default class SmartPromise<T = void> implements Promise<T>
      *
      *
      * promise
-     *     .then(() => console.log("OK!")) // Logs "OK!" if the promise is fulfilled.
-     *     .catch(() => console.log("KO!")) // Logs "KO!" if the promise is rejected.
+     *     .then(() => console.log("OK!"))       // Logs "OK!" if the promise is fulfilled.
+     *     .catch(() => console.log("KO!"))      // Logs "KO!" if the promise is rejected.
      *     .finally(() => console.log("Done!")); // Always logs "Done!".
      * ```
      *

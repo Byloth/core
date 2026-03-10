@@ -338,8 +338,8 @@ export default class Random
      *
      * @example
      * ```ts
-     * Random.Split(100, 3);  // [28, 41, 31]
-     * Random.Split(10, 4);   // [3, 1, 4, 2]
+     * Random.Split(100, 3); // [28, 41, 31]
+     * Random.Split(10, 4);  // [3, 1, 4, 2]
      * ```
      *
      * ---
@@ -368,9 +368,9 @@ export default class Random
      *
      * @example
      * ```ts
-     * Random.Split([1, 2, 3, 4, 5], 2);  // [[1, 2], [3, 4, 5]]
-     * Random.Split([1, 2, 3, 4, 5], 2);  // [[1, 2, 3, 4], [5]]
-     * Random.Split("abcdef", 3);         // [["a"], ["b", "c", "d"], ["e", "f"]]
+     * Random.Split([1, 2, 3, 4, 5], 2); // [[1, 2], [3, 4, 5]]
+     * Random.Split([1, 2, 3, 4, 5], 2); // [[1, 2, 3, 4], [5]]
+     * Random.Split("abcdef", 3);        // [["a"], ["b", "c", "d"], ["e", "f"]]
      * ```
      *
      * ---

@@ -1,4 +1,4 @@
-export const VERSION = "2.2.4";
+export const VERSION = "2.2.5";
 
 export type { Constructor, Interval, Timeout, ValueOf } from "./core/types.js";
 
@@ -87,6 +87,7 @@ export type {
 
 export {
     average,
+    clamp,
     capitalize,
     chain,
     count,

@@ -87,7 +87,7 @@ export default class Publisher<T extends CallbackMap<T> = CallbackMap>
      * context.subscribe("player:spawn", () => console.log("Player has spawned."));
      *
      * publisher.publish("player:spawn"); // "Player has spawned."
-     * context.publish("player:death"); // * no output *
+     * context.publish("player:death");   // * no output *
      * ```
      *
      * ---

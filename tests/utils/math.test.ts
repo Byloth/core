@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { ValueException } from "../../src/index.js";
-import { average, hash, sum } from "../../src/index.js";
+import { average, clamp, hash, sum } from "../../src/index.js";
 
 describe("average", () =>
 {
@@ -26,6 +26,20 @@ describe("average", () =>
     it("Should throw `ValueException` if the sum of weights isn't greater than zero", () =>
     {
         expect(() => average([1, 2, 3], [0, 0, 0])).toThrow(ValueException);
+    });
+});
+
+describe("clamp", () =>
+{
+    it("Should clamp a value between the specified bounds", () =>
+    {
+        expect(clamp(5, 0, 10)).toBe(5);
+        expect(clamp(-3, 0, 10)).toBe(0);
+        expect(clamp(15, 0, 10)).toBe(10);
+    });
+    it("Should throw `ValueException` if the minimum bound is greater than the maximum bound", () =>
+    {
+        expect(() => clamp(5, 10, 0)).toThrow(ValueException);
     });
 });
 

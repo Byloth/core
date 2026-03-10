@@ -9,7 +9,7 @@ import { zip } from "./iterator.js";
  *
  * @example
  * ```ts
- * average([1, 2, 3, 4, 5]); // 3
+ * average([1, 2, 3, 4, 5]);        // 3
  * average([6, 8.5, 4], [3, 2, 1]); // 6.5
  * ```
  *
@@ -72,6 +72,39 @@ export function average<T extends number>(values: Iterable<T>, weights?: Iterabl
 }
 
 /**
+ * Clamps a given value between a minimum and a maximum bound.
+ *
+ * ---
+ *
+ * @example
+ * ```ts
+ * clamp(5, 0, 10);  // 5
+ * clamp(-3, 0, 10); // 0
+ * clamp(15, 0, 10); // 10
+ * ```
+ *
+ * ---
+ *
+ * @param value The value to clamp.
+ * @param min The minimum bound.
+ * @param max The maximum bound.
+ *
+ * @returns The clamped value between the specified bounds.
+ */
+export function clamp(value: number, min: number, max: number): number
+{
+    if (min > max)
+    {
+        throw new ValueException("The minimum bound must be less than or equal to the maximum bound.");
+    }
+
+    if (value < min) { return min; }
+    if (value > max) { return max; }
+
+    return value;
+}
+
+/**
  * An utility function to compute the hash of a given string.
  *
  * The hash is computed using a simple variation of the
@@ -83,7 +116,7 @@ export function average<T extends number>(values: Iterable<T>, weights?: Iterabl
  * @example
  * ```ts
  * hash("Hello, world!"); // -1880044555
- * hash("How are you?"); // 1761539132
+ * hash("How are you?");  // 1761539132
  * ```
  *
  * ---
