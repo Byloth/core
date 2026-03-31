@@ -175,7 +175,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             values.set(key, [index + 1, predicate(key, element, index)]);
         }
 
-        return new ReducedIterator(function* ()
+        return new ReducedIterator(function* (): Generator<[K, boolean]>
         {
             for (const [key, [_, result]] of values) { yield [key, result]; }
         });
@@ -224,7 +224,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             values.set(key, [index + 1, predicate(key, element, index)]);
         }
 
-        return new ReducedIterator(function* ()
+        return new ReducedIterator(function* (): Generator<[K, boolean]>
         {
             for (const [key, [_, result]] of values) { yield [key, result]; }
         });
@@ -303,7 +303,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements;
 
-        return new AggregatedIterator(function* ()
+        return new AggregatedIterator(function* (): Generator<[K, T]>
         {
             const indexes = new Map<K, number>();
             for (const [key, element] of elements)
@@ -352,7 +352,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements;
 
-        return new AggregatedIterator(function* ()
+        return new AggregatedIterator(function* (): Generator<[K, V]>
         {
             const indexes = new Map<K, number>();
             for (const [key, element] of elements)
@@ -496,7 +496,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             values.set(key, [index + 1, reducer(key, accumulator, element, index)]);
         }
 
-        return new ReducedIterator(function* ()
+        return new ReducedIterator(function* (): Generator<[K, A]>
         {
             for (const [key, [_, accumulator]] of values) { yield [key, accumulator]; }
         });
@@ -542,7 +542,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements;
 
-        return new AggregatedIterator(function* ()
+        return new AggregatedIterator(function* (): Generator<[K, V]>
         {
             const indexes = new Map<K, number>();
             for (const [key, element] of elements)
@@ -594,7 +594,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements;
 
-        return new AggregatedIterator(function* ()
+        return new AggregatedIterator(function* (): Generator<[K, T]>
         {
             const indexes = new Map<K, number>();
             for (const [key, element] of elements)
@@ -645,7 +645,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements;
 
-        return new AggregatedIterator(function* ()
+        return new AggregatedIterator(function* (): Generator<[K, T]>
         {
             const indexes = new Map<K, number>();
             for (const [key, element] of elements)
@@ -740,7 +740,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             values.set(key, [index + 1, finding]);
         }
 
-        return new ReducedIterator(function* ()
+        return new ReducedIterator(function* (): Generator<[K, T | undefined]>
         {
             for (const [key, [_, finding]] of values) { yield [key, finding]; }
         });
@@ -807,7 +807,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements;
 
-        return new AggregatedIterator(function* ()
+        return new AggregatedIterator(function* (): Generator<[K, T]>
         {
             const keys = new Map<K, Set<T>>();
             for (const [key, element] of elements)
@@ -855,7 +855,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
             counters.set(key, count + 1);
         }
 
-        return new ReducedIterator(function* ()
+        return new ReducedIterator(function* (): Generator<[K, number]>
         {
             for (const [key, count] of counters) { yield [key, count]; }
         });
@@ -932,7 +932,7 @@ export default class AggregatedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements;
 
-        return new AggregatedIterator(function* ()
+        return new AggregatedIterator(function* (): Generator<[J, T]>
         {
             const indexes = new Map<K, number>();
             for (const [key, element] of elements)

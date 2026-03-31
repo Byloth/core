@@ -51,7 +51,7 @@ describe("yieldToEventLoop", () =>
         const setTimeoutSpy = vi.spyOn(window, "setTimeout")
             .mockImplementation((callback): Timeout =>
             {
-                callback();
+                if ((typeof callback) === "function") { callback(); }
 
                 return (-1 as unknown) as Timeout;
             });

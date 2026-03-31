@@ -102,7 +102,7 @@ export function count<T>(elements: Iterable<T>): number
  */
 export function enumerate<T>(elements: Iterable<T>): SmartIterator<[number, T]>
 {
-    return new SmartIterator<[number, T]>(function* ()
+    return new SmartIterator<[number, T]>(function* (): Generator<[number, T]>
     {
         let index = 0;
         for (const element of elements)
@@ -314,7 +314,7 @@ export function zip<T, U>(first: Iterable<T>, second: Iterable<U>): SmartIterato
     const firstIterator = first[Symbol.iterator]();
     const secondIterator = second[Symbol.iterator]();
 
-    return new SmartIterator<[T, U]>(function* ()
+    return new SmartIterator<[T, U]>(function* (): Generator<[T, U]>
     {
         while (true)
         {

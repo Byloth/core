@@ -289,7 +289,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements.enumerate();
 
-        return new ReducedIterator(function* ()
+        return new ReducedIterator(function* (): Generator<[K, T]>
         {
             for (const [index, [key, element]] of elements)
             {
@@ -335,7 +335,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements.enumerate();
 
-        return new ReducedIterator(function* ()
+        return new ReducedIterator(function* (): Generator<[K, V]>
         {
             for (const [index, [key, element]] of elements)
             {
@@ -472,7 +472,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements.enumerate();
 
-        return new AggregatedIterator(function* ()
+        return new AggregatedIterator(function* (): Generator<[K, V]>
         {
             for (const [index, [key, element]] of elements)
             {
@@ -524,7 +524,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements.enumerate();
 
-        return new ReducedIterator(function* ()
+        return new ReducedIterator(function* (): Generator<[K, T]>
         {
             for (const [index, [key, element]] of elements)
             {
@@ -572,7 +572,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements.enumerate();
 
-        return new ReducedIterator(function* ()
+        return new ReducedIterator(function* (): Generator<[K, T]>
         {
             for (const [index, [key, element]] of elements)
             {
@@ -726,7 +726,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements;
 
-        return new ReducedIterator(function* ()
+        return new ReducedIterator(function* (): Generator<[K, T]>
         {
             const values = new Set<T>();
             for (const [key, element] of elements)
@@ -838,7 +838,7 @@ export default class ReducedIterator<K extends PropertyKey, T>
     {
         const elements = this._elements.enumerate();
 
-        return new AggregatedIterator(function* ()
+        return new AggregatedIterator(function* (): Generator<[J, T]>
         {
             for (const [index, [key, element]] of elements)
             {
