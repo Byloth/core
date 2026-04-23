@@ -3,10 +3,6 @@ on:
   release:
     types: [published]
 
-permissions:
-  contents: read
-  id-token: write
-
 jobs:
   artifact-build:
     name: Artifact
@@ -16,16 +12,20 @@ jobs:
     name: Publish on NPM
     needs: artifact-build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
       - name: Downloading the artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: byloth-core
 
-      - name: Configuring Node.js 22 (LTS)
+      - name: Configuring Node.js 24 (LTS)
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org/
 
       - name: Updating npm to the latest version
