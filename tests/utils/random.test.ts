@@ -1,321 +1,545 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 
 import { ValueException } from "../../src/index.js";
 import { Random } from "../../src/index.js";
 
 describe("Random", () =>
 {
-    describe("Boolean", () =>
+    describe("Static & Non-deterministic", () =>
     {
-        it("Should return a boolean value", () =>
+        describe("Boolean", () =>
         {
-            const result = Random.Boolean();
-
-            expect(typeof result).toBe("boolean");
-        });
-
-        it("Should return true approximately 50% of the time with default ratio", () =>
-        {
-            const results = Array.from({ length: 1000 }, () => Random.Boolean());
-            const trueCount = results.filter(Boolean).length;
-
-            expect(trueCount).toBeGreaterThan(400);
-            expect(trueCount).toBeLessThan(600);
-        });
-        it("Should return true approximately 70% of the time with ratio 0.7", () =>
-        {
-            const results = Array.from({ length: 1000 }, () => Random.Boolean(0.7));
-            const trueCount = results.filter(Boolean).length;
-
-            expect(trueCount).toBeGreaterThan(650);
-            expect(trueCount).toBeLessThan(750);
-        });
-    });
-
-    describe("Integer", () =>
-    {
-        it("Should return an integer between 0 and max (exclusive)", () =>
-        {
-            const max = 5;
-            const result = Random.Integer(max);
-
-            expect(result).toBeGreaterThanOrEqual(0);
-            expect(result).toBeLessThan(max);
-        });
-        it("Should return an integer between min and max (exclusive)", () =>
-        {
-            const min = 2;
-            const max = 7;
-            const result = Random.Integer(min, max);
-
-            expect(result).toBeGreaterThanOrEqual(min);
-            expect(result).toBeLessThan(max);
-        });
-    });
-
-    describe("Decimal", () =>
-    {
-        it("Should return a decimal between 0 and 1 (exclusive)", () =>
-        {
-            const result = Random.Decimal();
-
-            expect(result).toBeGreaterThanOrEqual(0);
-            expect(result).toBeLessThan(1);
-        });
-        it("Should return a decimal between 0 and max (exclusive)", () =>
-        {
-            const max = 5;
-            const result = Random.Decimal(max);
-
-            expect(result).toBeGreaterThanOrEqual(0);
-            expect(result).toBeLessThan(max);
-        });
-        it("Should return a decimal between min and max (exclusive)", () =>
-        {
-            const min = 2;
-            const max = 7;
-            const result = Random.Decimal(min, max);
-
-            expect(result).toBeGreaterThanOrEqual(min);
-            expect(result).toBeLessThan(max);
-        });
-    });
-
-    describe("Index", () =>
-    {
-        it("Should return a valid index from the array", () =>
-        {
-            const elements = [1, 2, 3, 4, 5];
-            const index = Random.Index(elements);
-
-            expect(index).toBeGreaterThanOrEqual(0);
-            expect(index).toBeLessThan(elements.length);
-        });
-
-        it("Should throw `ValueException` if the array is empty", () =>
-        {
-            expect(() => Random.Index([])).toThrow(ValueException);
-        });
-    });
-
-    describe("Choice", () =>
-    {
-        it("Should return a random element from the array", () =>
-        {
-            const elements = [1, 2, 3, 4, 5];
-            const choice = Random.Choice(elements);
-
-            expect(elements).toContain(choice);
-        });
-
-        it("Should throw `ValueException` if the array is empty", () =>
-        {
-            expect(() => Random.Choice([])).toThrow(ValueException);
-        });
-    });
-
-    describe("Sample", () =>
-    {
-        describe("Without weights", () =>
-        {
-            it("Should return an array with the specified number of elements from the original array", () =>
+            it("Should return a boolean value", () =>
             {
-                const elements = [1, 2, 3, 4, 5];
-                const sample = Random.Sample(elements, 3);
+                const result = Random.Boolean();
 
-                expect(sample).toHaveLength(3);
-
-                for (const element of sample)
-                {
-                    expect(elements).toContain(element);
-                }
+                expect(typeof result).toBe("boolean");
             });
 
-            it("Should return unique elements (no replacement)", () =>
+            it("Should return true approximately 50% of the time with default ratio", () =>
             {
-                const elements = [1, 2, 3, 4, 5];
-                const sample = Random.Sample(elements, 5);
+                const results = Array.from({ length: 1000 }, () => Random.Boolean());
+                const trueCount = results.filter(Boolean).length;
 
-                const uniqueElements = new Set(sample);
-                expect(uniqueElements.size).toBe(5);
+                expect(trueCount).toBeGreaterThan(400);
+                expect(trueCount).toBeLessThan(600);
             });
-            it("Should return an empty array when count is 0", () =>
+            it("Should return true approximately 70% of the time with ratio 0.7", () =>
             {
-                const elements = [1, 2, 3, 4, 5];
-                const sample = Random.Sample(elements, 0);
+                const results = Array.from({ length: 1000 }, () => Random.Boolean(0.7));
+                const trueCount = results.filter(Boolean).length;
 
-                expect(sample).toHaveLength(0);
+                expect(trueCount).toBeGreaterThan(650);
+                expect(trueCount).toBeLessThan(750);
             });
-            it("Should return all elements when count equals length", () =>
+        });
+
+        describe("Integer", () =>
+        {
+            it("Should return an integer between 0 and max (exclusive)", () =>
+            {
+                const max = 5;
+                const result = Random.Integer(max);
+
+                expect(result).toBeGreaterThanOrEqual(0);
+                expect(result).toBeLessThan(max);
+            });
+            it("Should return an integer between min and max (exclusive)", () =>
+            {
+                const min = 2;
+                const max = 7;
+                const result = Random.Integer(min, max);
+
+                expect(result).toBeGreaterThanOrEqual(min);
+                expect(result).toBeLessThan(max);
+            });
+        });
+
+        describe("Decimal", () =>
+        {
+            it("Should return a decimal between 0 and 1 (exclusive)", () =>
+            {
+                const result = Random.Decimal();
+
+                expect(result).toBeGreaterThanOrEqual(0);
+                expect(result).toBeLessThan(1);
+            });
+            it("Should return a decimal between 0 and max (exclusive)", () =>
+            {
+                const max = 5;
+                const result = Random.Decimal(max);
+
+                expect(result).toBeGreaterThanOrEqual(0);
+                expect(result).toBeLessThan(max);
+            });
+            it("Should return a decimal between min and max (exclusive)", () =>
+            {
+                const min = 2;
+                const max = 7;
+                const result = Random.Decimal(min, max);
+
+                expect(result).toBeGreaterThanOrEqual(min);
+                expect(result).toBeLessThan(max);
+            });
+        });
+
+        describe("Index", () =>
+        {
+            it("Should return a valid index from the array", () =>
             {
                 const elements = [1, 2, 3, 4, 5];
-                const sample = Random.Sample(elements, 5);
+                const index = Random.Index(elements);
 
-                expect(sample).toHaveLength(5);
-                expect(sample.sort()).toEqual(elements.sort());
+                expect(index).toBeGreaterThanOrEqual(0);
+                expect(index).toBeLessThan(elements.length);
             });
 
             it("Should throw `ValueException` if the array is empty", () =>
             {
-                expect(() => Random.Sample([], 1)).toThrow(ValueException);
-            });
-            it("Should throw `ValueException` if count is negative", () =>
-            {
-                expect(() => Random.Sample([1, 2, 3], -1)).toThrow(ValueException);
-            });
-            it("Should throw `ValueException` if count exceeds array length", () =>
-            {
-                expect(() => Random.Sample([1, 2, 3], 5)).toThrow(ValueException);
+                expect(() => Random.Index([])).toThrow(ValueException);
             });
         });
 
-        describe("With weights", () =>
+        describe("Choice", () =>
         {
-            it("Should return an array with the specified number of elements from the original array", () =>
+            it("Should return a random element from the array", () =>
             {
-                const elements = ["a", "b", "c"];
-                const weights = [1, 1, 1];
-                const sample = Random.Sample(elements, 2, weights);
+                const elements = [1, 2, 3, 4, 5];
+                const choice = Random.Choice(elements);
 
-                expect(sample).toHaveLength(2);
+                expect(elements).toContain(choice);
+            });
 
-                for (const element of sample)
+            it("Should throw `ValueException` if the array is empty", () =>
+            {
+                expect(() => Random.Choice([])).toThrow(ValueException);
+            });
+        });
+
+        describe("Sample", () =>
+        {
+            describe("Without weights", () =>
+            {
+                it("Should return an array with the specified number of elements from the original array", () =>
                 {
-                    expect(elements).toContain(element);
-                }
-            });
+                    const elements = [1, 2, 3, 4, 5];
+                    const sample = Random.Sample(elements, 3);
 
-            it("Should return unique elements (no replacement)", () =>
-            {
-                const elements = ["a", "b", "c", "d", "e"];
-                const weights = [1, 2, 3, 4, 5];
-                const sample = Random.Sample(elements, 5, weights);
+                    expect(sample).toHaveLength(3);
 
-                const uniqueElements = new Set(sample);
+                    for (const element of sample)
+                    {
+                        expect(elements).toContain(element);
+                    }
+                });
 
-                expect(uniqueElements.size).toBe(5);
-            });
-            it("Should favor elements with higher weights", () =>
-            {
-                const elements = ["rare", "common"];
-                const weights = [1, 100];
-
-                let commonFirstCount = 0;
-                for (let i = 0; i < 1000; i += 1)
+                it("Should return unique elements (no replacement)", () =>
                 {
-                    const sample = Random.Sample(elements, 1, weights);
+                    const elements = [1, 2, 3, 4, 5];
+                    const sample = Random.Sample(elements, 5);
 
-                    if (sample[0] === "common") { commonFirstCount += 1; }
-                }
+                    const uniqueElements = new Set(sample);
+                    expect(uniqueElements.size).toBe(5);
+                });
+                it("Should return an empty array when count is 0", () =>
+                {
+                    const elements = [1, 2, 3, 4, 5];
+                    const sample = Random.Sample(elements, 0);
 
-                expect(commonFirstCount).toBeGreaterThan(900);
+                    expect(sample).toHaveLength(0);
+                });
+                it("Should return all elements when count equals length", () =>
+                {
+                    const elements = [1, 2, 3, 4, 5];
+                    const sample = Random.Sample(elements, 5);
+
+                    expect(sample).toHaveLength(5);
+                    expect(sample.sort()).toEqual(elements.sort());
+                });
+
+                it("Should throw `ValueException` if the array is empty", () =>
+                {
+                    expect(() => Random.Sample([], 1)).toThrow(ValueException);
+                });
+                it("Should throw `ValueException` if count is negative", () =>
+                {
+                    expect(() => Random.Sample([1, 2, 3], -1)).toThrow(ValueException);
+                });
+                it("Should throw `ValueException` if count exceeds array length", () =>
+                {
+                    expect(() => Random.Sample([1, 2, 3], 5)).toThrow(ValueException);
+                });
             });
 
-            it("Should throw `ValueException` if weights length differs from elements length", () =>
+            describe("With weights", () =>
             {
-                expect(() => Random.Sample([1, 2, 3], 2, [1, 1])).toThrow(ValueException);
+                it("Should return an array with the specified number of elements from the original array", () =>
+                {
+                    const elements = ["a", "b", "c"];
+                    const weights = [1, 1, 1];
+                    const sample = Random.Sample(elements, 2, weights);
+
+                    expect(sample).toHaveLength(2);
+
+                    for (const element of sample)
+                    {
+                        expect(elements).toContain(element);
+                    }
+                });
+
+                it("Should return unique elements (no replacement)", () =>
+                {
+                    const elements = ["a", "b", "c", "d", "e"];
+                    const weights = [1, 2, 3, 4, 5];
+                    const sample = Random.Sample(elements, 5, weights);
+
+                    const uniqueElements = new Set(sample);
+
+                    expect(uniqueElements.size).toBe(5);
+                });
+                it("Should favor elements with higher weights", () =>
+                {
+                    const elements = ["rare", "common"];
+                    const weights = [1, 100];
+
+                    let commonFirstCount = 0;
+                    for (let i = 0; i < 1000; i += 1)
+                    {
+                        const sample = Random.Sample(elements, 1, weights);
+
+                        if (sample[0] === "common") { commonFirstCount += 1; }
+                    }
+
+                    expect(commonFirstCount).toBeGreaterThan(900);
+                });
+
+                it("Should throw `ValueException` if weights length differs from elements length", () =>
+                {
+                    expect(() => Random.Sample([1, 2, 3], 2, [1, 1])).toThrow(ValueException);
+                });
+                it("Should throw `ValueException` if any weight is zero", () =>
+                {
+                    expect(() => Random.Sample([1, 2, 3], 2, [1, 0, 1])).toThrow(ValueException);
+                });
+                it("Should throw `ValueException` if any weight is negative", () =>
+                {
+                    expect(() => Random.Sample([1, 2, 3], 2, [1, -1, 1])).toThrow(ValueException);
+                });
             });
-            it("Should throw `ValueException` if any weight is zero", () =>
+        });
+
+        describe("Split", () =>
+        {
+            describe("With a numeric total", () =>
             {
-                expect(() => Random.Sample([1, 2, 3], 2, [1, 0, 1])).toThrow(ValueException);
+                it("Should return an array of parts that sum to the total", () =>
+                {
+                    const total = 100;
+                    const parts = 5;
+                    const result = Random.Split(total, parts);
+
+                    expect(result).toHaveLength(parts);
+                    expect(result.reduce((sum, val) => sum + val, 0)).toBe(total);
+                });
+
+                it("Should return a single part equal to the total when parts is 1", () =>
+                {
+                    const result = Random.Split(42, 1);
+                    expect(result).toEqual([42]);
+                });
+                it("Should return all zeros when total is 0", () =>
+                {
+                    const result = Random.Split(0, 3);
+                    expect(result).toEqual([0, 0, 0]);
+                });
+                it("Should return non-negative values", () =>
+                {
+                    const result = Random.Split(10, 10);
+
+                    for (const value of result) { expect(value).toBeGreaterThanOrEqual(0); }
+                });
+
+                it("Should throw `ValueException` if the total is negative", () =>
+                {
+                    expect(() => Random.Split(-1, 2)).toThrow(ValueException);
+                });
+                it("Should throw `ValueException` if parts is less than 1", () =>
+                {
+                    expect(() => Random.Split(10, 0)).toThrow(ValueException);
+                });
             });
-            it("Should throw `ValueException` if any weight is negative", () =>
+
+            describe("With an iterable of elements", () =>
             {
-                expect(() => Random.Sample([1, 2, 3], 2, [1, -1, 1])).toThrow(ValueException);
+                it("Should return the correct number of groups", () =>
+                {
+                    const elements = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+                    const groups = Random.Split(elements, 3);
+
+                    expect(groups).toHaveLength(3);
+                });
+
+                it("Should contain all original elements across all groups", () =>
+                {
+                    const elements = [1, 2, 3, 4, 5, 6, 7, 8];
+                    const groups = Random.Split(elements, 3);
+
+                    const flattened = groups.flat();
+                    expect(flattened).toEqual(elements);
+                });
+
+                it("Should return a single group with all elements when groups is 1", () =>
+                {
+                    const elements = [1, 2, 3];
+                    const groups = Random.Split(elements, 1);
+
+                    expect(groups).toHaveLength(1);
+                    expect(groups[0]).toEqual(elements);
+                });
+                it("Should work with a string iterable", () =>
+                {
+                    const groups = Random.Split("abcdef", 2);
+                    const flattened = groups.flat();
+
+                    expect(groups).toHaveLength(2);
+                    expect(flattened).toEqual(["a", "b", "c", "d", "e", "f"]);
+                });
+
+                it("Should throw `ValueException` if the iterable is empty", () =>
+                {
+                    expect(() => Random.Split([], 1)).toThrow(ValueException);
+                });
+                it("Should throw `ValueException` if groups exceeds the number of elements", () =>
+                {
+                    expect(() => Random.Split([1, 2, 3], 5)).toThrow(ValueException);
+                });
+                it("Should throw `ValueException` if groups is less than 1", () =>
+                {
+                    expect(() => Random.Split([1, 2], 0)).toThrow(ValueException);
+                });
             });
         });
     });
 
-    describe("Split", () =>
+    describe("Seeded & Deterministic", () =>
     {
-        describe("With a numeric total", () =>
+        let rng: Random;
+        beforeEach(() => { rng = Random.FromSeed(42); });
+
+        describe("boolean", () =>
         {
-            it("Should return an array of parts that sum to the total", () =>
+            it("Should produce a deterministic sequence with default ratio", () =>
             {
-                const total = 100;
-                const parts = 5;
-                const result = Random.Split(total, parts);
-
-                expect(result).toHaveLength(parts);
-                expect(result.reduce((sum, val) => sum + val, 0)).toBe(total);
+                const results = Array.from({ length: 10 }, () => rng.boolean());
+                expect(results).toEqual([false, true, false, false, true, false, true, false, false, true]);
             });
-
-            it("Should return a single part equal to the total when parts is 1", () =>
+            it("Should produce a deterministic sequence with a custom ratio", () =>
             {
-                const result = Random.Split(42, 1);
-
-                expect(result).toEqual([42]);
-            });
-            it("Should return all zeros when total is 0", () =>
-            {
-                const result = Random.Split(0, 3);
-
-                expect(result).toEqual([0, 0, 0]);
-            });
-            it("Should return non-negative values", () =>
-            {
-                const result = Random.Split(10, 10);
-
-                for (const value of result) { expect(value).toBeGreaterThanOrEqual(0); }
-            });
-
-            it("Should throw `ValueException` if the total is negative", () =>
-            {
-                expect(() => Random.Split(-1, 2)).toThrow(ValueException);
-            });
-            it("Should throw `ValueException` if parts is less than 1", () =>
-            {
-                expect(() => Random.Split(10, 0)).toThrow(ValueException);
+                const results = Array.from({ length: 10 }, () => rng.boolean(0.7));
+                expect(results).toEqual([true, true, false, true, true, true, true, true, false, true]);
             });
         });
 
-        describe("With an iterable of elements", () =>
+        describe("integer", () =>
         {
-            it("Should return the correct number of groups", () =>
+            it("Should produce a deterministic sequence with max only", () =>
             {
-                const elements = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-                const groups = Random.Split(elements, 3);
-
-                expect(groups).toHaveLength(3);
+                const results = Array.from({ length: 10 }, () => rng.integer(100));
+                expect(results).toEqual([60, 44, 85, 66, 17, 52, 27, 62, 86, 47]);
             });
-
-            it("Should contain all original elements across all groups", () =>
+            it("Should produce a deterministic sequence with min and max", () =>
             {
-                const elements = [1, 2, 3, 4, 5, 6, 7, 8];
-                const groups = Random.Split(elements, 3);
-
-                const flattened = groups.flat();
-                expect(flattened).toEqual(elements);
+                const results = Array.from({ length: 10 }, () => rng.integer(10, 20));
+                expect(results).toEqual([16, 14, 18, 16, 11, 15, 12, 16, 18, 14]);
             });
+        });
 
-            it("Should return a single group with all elements when groups is 1", () =>
+        describe("decimal", () =>
+        {
+            it("Should produce a deterministic sequence without arguments", () =>
             {
-                const elements = [1, 2, 3];
-                const groups = Random.Split(elements, 1);
-
-                expect(groups).toHaveLength(1);
-                expect(groups[0]).toEqual(elements);
+                const results = Array.from({ length: 10 }, () => rng.decimal());
+                expect(results).toEqual([
+                    0.6011037519201636,
+                    0.44829055899754167,
+                    0.8524657934904099,
+                    0.6697340414393693,
+                    0.17481389874592423,
+                    0.5265925421845168,
+                    0.2732279943302274,
+                    0.6247446539346129,
+                    0.8654746483080089,
+                    0.4723170551005751
+                ]);
             });
-            it("Should work with a string iterable", () =>
+            it("Should produce a deterministic sequence with max only", () =>
             {
-                const groups = Random.Split("abcdef", 2);
-                const flattened = groups.flat();
-
-                expect(groups).toHaveLength(2);
-                expect(flattened).toEqual(["a", "b", "c", "d", "e", "f"]);
+                const results = Array.from({ length: 5 }, () => rng.decimal(5));
+                expect(results).toEqual([
+                    3.005518759600818,
+                    2.2414527949877083,
+                    4.262328967452049,
+                    3.3486702071968466,
+                    0.8740694937296212
+                ]);
             });
+            it("Should produce a deterministic sequence with min and max", () =>
+            {
+                const results = Array.from({ length: 5 }, () => rng.decimal(2, 7));
+                expect(results).toEqual([
+                    5.005518759600818,
+                    4.241452794987708,
+                    6.262328967452049,
+                    5.348670207196847,
+                    2.874069493729621
+                ]);
+            });
+        });
 
+        describe("index", () =>
+        {
+            it("Should produce a deterministic sequence", () =>
+            {
+                const elements = ["a", "b", "c", "d", "e"];
+                const results = Array.from({ length: 5 }, () => rng.index(elements));
+
+                expect(results).toEqual([3, 2, 4, 3, 0]);
+            });
+            it("Should throw `ValueException` if the array is empty", () =>
+            {
+                expect(() => rng.index([]))
+                    .toThrow(ValueException);
+            });
+        });
+
+        describe("choice", () =>
+        {
+            it("Should produce a deterministic sequence", () =>
+            {
+                const elements = ["a", "b", "c", "d", "e"];
+                const results = Array.from({ length: 5 }, () => rng.choice(elements));
+
+                expect(results).toEqual(["d", "c", "e", "d", "a"]);
+            });
+            it("Should throw `ValueException` if the array is empty", () =>
+            {
+                expect(() => rng.choice([]))
+                    .toThrow(ValueException);
+            });
+        });
+
+        describe("sample", () =>
+        {
+            it("Should produce a deterministic unweighted sample", () =>
+            {
+                const result = rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3);
+                expect(result).toEqual([7, 6, 9]);
+            });
+            it("Should produce a deterministic weighted sample", () =>
+            {
+                const result = rng.sample(["a", "b", "c", "d", "e"], 3, [5, 1, 1, 1, 1]);
+                expect(result).toEqual(["a", "c", "d"]);
+            });
+            it("Should return an empty array when count is 0", () =>
+            {
+                const result = rng.sample([1, 2, 3], 0);
+                expect(result).toEqual([]);
+            });
+            it("Should throw `ValueException` if the array is empty", () =>
+            {
+                expect(() => rng.sample([], 1))
+                    .toThrow(ValueException);
+            });
+            it("Should throw `ValueException` if count is negative", () =>
+            {
+                expect(() => rng.sample([1, 2, 3], -1))
+                    .toThrow(ValueException);
+            });
+            it("Should throw `ValueException` if count exceeds the number of elements", () =>
+            {
+                expect(() => rng.sample([1, 2], 3))
+                    .toThrow(ValueException);
+            });
+            it("Should throw `ValueException` if weights length doesn't match", () =>
+            {
+                expect(() => rng.sample([1, 2, 3], 2, [1, 1]))
+                    .toThrow(ValueException);
+            });
+            it("Should throw `ValueException` if any weight is non-positive", () =>
+            {
+                expect(() => rng.sample([1, 2, 3], 2, [1, 0, 1]))
+                    .toThrow(ValueException);
+            });
+        });
+
+        describe("split", () =>
+        {
+            it("Should produce a deterministic split of a number", () =>
+            {
+                expect(rng.split(100, 4)).toEqual([45, 15, 26, 14]);
+            });
+            it("Should produce a deterministic split of an array", () =>
+            {
+                expect(rng.split([1, 2, 3, 4, 5, 6, 7, 8], 3)).toEqual([[1, 2, 3], [4], [5, 6, 7, 8]]);
+            });
+            it("Should produce a deterministic split of a string iterable", () =>
+            {
+                expect(rng.split("abcdef", 2)).toEqual([["a", "b", "c", "d"], ["e", "f"]]);
+            });
+            it("Should throw `ValueException` if parts is less than 1", () =>
+            {
+                expect(() => rng.split(10, 0))
+                    .toThrow(ValueException);
+            });
+            it("Should throw `ValueException` if the total is negative", () =>
+            {
+                expect(() => rng.split(-1, 2))
+                    .toThrow(ValueException);
+            });
             it("Should throw `ValueException` if the iterable is empty", () =>
             {
-                expect(() => Random.Split([], 1)).toThrow(ValueException);
+                expect(() => rng.split([], 1))
+                    .toThrow(ValueException);
             });
-            it("Should throw `ValueException` if groups exceeds the number of elements", () =>
+            it("Should throw `ValueException` if parts exceeds the number of elements", () =>
             {
-                expect(() => Random.Split([1, 2, 3], 5)).toThrow(ValueException);
+                expect(() => rng.split([1, 2, 3], 5))
+                    .toThrow(ValueException);
             });
-            it("Should throw `ValueException` if groups is less than 1", () =>
+        });
+
+        describe("Reproducibility", () =>
+        {
+            it("Should produce identical sequences across two instances with the same seed", () =>
             {
-                expect(() => Random.Split([1, 2], 0)).toThrow(ValueException);
+                const a = Random.FromSeed(42);
+                const b = Random.FromSeed(42);
+
+                const sequenceA = Array.from({ length: 100 }, () => a.decimal());
+                const sequenceB = Array.from({ length: 100 }, () => b.decimal());
+
+                expect(sequenceA).toEqual(sequenceB);
+            });
+            it("Should produce different first values for different seeds", () =>
+            {
+                expect(Random.FromSeed(1).integer(1000)).toBe(627);
+                expect(Random.FromSeed(2).integer(1000)).toBe(734);
+            });
+            it("Should not share state with the static API", () =>
+            {
+                rng.decimal();
+                const _rng = Random.FromSeed(42);
+
+                const first = rng.decimal();
+
+                Random.Decimal();
+                Random.Decimal();
+                Random.Decimal();
+
+                _rng.decimal();
+                const second = _rng.decimal();
+
+                expect(second).toBe(first);
             });
         });
     });
