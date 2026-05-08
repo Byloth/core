@@ -198,4 +198,65 @@ describe("SwitchableCallback", () =>
 
         expect(() => callback.unregister("nonexistent")).toThrow(KeyException);
     });
+
+    it("Should reset all the registered callbacks", () =>
+    {
+        const _callback = vi.fn((point: Point) => { /* ... */ });
+
+        const callback = new SwitchableCallback(_callback);
+        callback.register("alternative", _callback);
+        callback.reset();
+
+        expect(callback.key).toBe("");
+        expect(callback.isEnabled).toBe(true);
+
+        expect(() => callback(_newPoint())).toThrow(NotImplementedException);
+        expect(() => callback.switch("default")).toThrow(KeyException);
+        expect(() => callback.switch("alternative")).toThrow(KeyException);
+
+        expect(_callback).not.toHaveBeenCalled();
+    });
+    it("Should reset the callback with a new default implementation", () =>
+    {
+        const _previous = vi.fn((point: Point) => { /* ... */ });
+        const _next = vi.fn((point: Point) => { /* ... */ });
+
+        const callback = new SwitchableCallback(_previous);
+
+        callback.reset(_next);
+        expect(callback.key).toBe("default");
+
+        callback(_newPoint());
+        expect(_previous).not.toHaveBeenCalled();
+        expect(_next).toHaveBeenCalledTimes(1);
+    });
+    it("Should reset the callback with a new default implementation and key", () =>
+    {
+        const _callback = vi.fn((point: Point) => { /* ... */ });
+
+        const callback = new SwitchableCallback<(point: Point) => void>();
+        callback.register("alternative", _callback);
+        callback.reset(_callback, "primary");
+
+        callback(_newPoint());
+
+        expect(callback.key).toBe("primary");
+        expect(() => callback.switch("alternative")).toThrow(KeyException);
+
+        expect(_callback).toHaveBeenCalledTimes(1);
+    });
+    it("Should re-enable the callback when resetting", () =>
+    {
+        const _callback = vi.fn((point: Point) => { /* ... */ });
+        const callback = new SwitchableCallback(_callback);
+
+        callback.disable();
+        expect(callback.isEnabled).toBe(false);
+
+        callback.reset();
+        expect(callback.isEnabled).toBe(true);
+
+        expect(() => callback(_newPoint())).toThrow(NotImplementedException);
+        expect(_callback).not.toHaveBeenCalled();
+    });
 });

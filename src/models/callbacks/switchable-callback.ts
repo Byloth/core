@@ -4,6 +4,12 @@ import CallableObject from "./callable-object.js";
 import type { Callback } from "./types.js";
 
 const Disabler = () => { /* ... */ };
+const NotImplemented = () =>
+{
+    throw new NotImplementedException(
+        "The `SwitchableCallback` has no callback defined yet. Did you forget to call the `register` method?"
+    );
+};
 
 /**
  * A class representing a callback that can be switched between multiple implementations.
@@ -123,14 +129,7 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
         else
         {
             key = "";
-
-            callback = ((() =>
-            {
-                throw new NotImplementedException(
-                    "The `SwitchableCallback` has no callback defined yet. " +
-                    "Did you forget to call the `register` method?"
-                );
-            }) as unknown) as T;
+            callback = (NotImplemented as unknown) as T;
         }
 
         this._key = key;
@@ -316,6 +315,64 @@ export default class SwitchableCallback<T extends Callback<any[], any> = Callbac
         {
             this._callback = this._callbacks.get(key)!;
         }
+    }
+
+    /**
+     * Resets the callback to its initial state, unregistering all the implementations at once.
+     *
+     * After calling this method, the callback will behave as if it had just been constructed:
+     * a {@link NotImplementedException} will be thrown when invoked before registering a new implementation.
+     *
+     * This will also re-enable the object, restoring the {@link SwitchableCallback.isEnabled} state to `true`.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * onPointerMove.reset();
+     * ```
+     */
+    public reset(): void;
+
+    /**
+     * Resets the callback to its initial state, unregistering all the previous
+     * implementations at once and setting the given one as the new default.
+     *
+     * After calling this method, the callback will behave as if it had just
+     * been constructed with the specified implementation enabled by default.
+     *
+     * This will also re-enable the object, restoring the {@link SwitchableCallback.isEnabled} state to `true`.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * onPointerMove.reset((evt) => { [...] });
+     * ```
+     *
+     * ---
+     *
+     * @param callback The callback that will be executed when the object is invoked as a function by default.
+     * @param key The key that is associated by default to the given callback. Default is `default`.
+     */
+    public reset(callback: T, key?: string): void;
+    public reset(callback?: T, key = "default"): void
+    {
+        this._callbacks.clear();
+        this._isEnabled = true;
+
+        if (callback)
+        {
+            this._callbacks.set(key, callback);
+        }
+        else
+        {
+            key = "";
+            callback = (NotImplemented as unknown) as T;
+        }
+
+        this._key = key;
+        this._callback = callback;
     }
 
     public override readonly [Symbol.toStringTag]: string = "SwitchableCallback";
