@@ -251,7 +251,20 @@ export class ResponseException extends NetworkException
      */
     public constructor(response: Response, cause?: unknown, name = "ResponseException")
     {
-        super(`The request failed with the status code ${response.status} (${response.statusText}).`, cause, name);
+        let message: string;
+
+        const url = response.url ? ` to "${response.url}"` : "";
+        const status = response.statusText ? `${response.status} (${response.statusText})` : response.status;
+        if (response.statusText)
+        {
+            message = `The request${url} failed with status ${status}.`;
+        }
+        else
+        {
+            message = `The request${url} failed with status ${status}.`;
+        }
+
+        super(message, cause, name);
 
         this.response = response;
     }
