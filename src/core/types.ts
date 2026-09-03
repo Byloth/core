@@ -40,6 +40,34 @@ export type Constructor<T extends object = object, P extends unknown[] = any[]> 
 export type Interval = ReturnType<typeof setInterval>;
 
 /**
+ * An utility type that allows to remove the `readonly` modifier from all the properties of a given type.  
+ * Is the counterpart of the native {@link Readonly} utility type.
+ *
+ * It's useful when you need to mutate an object that has been declared as immutable,
+ * for instance, during its initialization or when working with `as const` literals.
+ *
+ * ---
+ *
+ * @example
+ * ```ts
+ * interface Point
+ * {
+ *     readonly x: number;
+ *     readonly y: number;
+ * }
+ *
+ * const point: Mutable<Point> = { x: 0, y: 0 };
+ *
+ * point.x = 42; // OK
+ * ```
+ *
+ * ---
+ *
+ * @template T The type to make mutable.
+ */
+export type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+
+/**
  * A type that represents the return value of {@link setTimeout} function,
  * indipendently from the platform it's currently running on.
  *

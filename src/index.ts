@@ -1,6 +1,6 @@
-export const VERSION = "2.2.9";
+export const VERSION = "2.2.10";
 
-export type { Constructor, Interval, Timeout, ValueOf } from "./core/types.js";
+export type { Constructor, Interval, Mutable, Timeout, ValueOf } from "./core/types.js";
 
 export { isBrowser, isNode, isWorker } from "./helpers.js";
 export {

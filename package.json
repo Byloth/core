@@ -1,6 +1,6 @@
 {
   "name": "@byloth/core",
-  "version": "2.2.9",
+  "version": "2.2.10",
   "description": "An unopinionated collection of useful functions and classes that I use widely in all my projects. 🔧",
   "keywords": [
     "Core",
@@ -60,15 +60,14 @@
     "ci": "pnpm install --frozen-lockfile"
   },
   "devDependencies": {
-    "@byloth/eslint-config-typescript": "^4.0.1",
-    "@eslint/compat": "^2.1.0",
-    "@types/node": "^24.12.4",
-    "@vitest/coverage-v8": "^4.1.6",
-    "eslint": "^10.3.0",
+    "@byloth/eslint-config-typescript": "^4.0.2",
+    "@types/node": "^24.13.3",
+    "@vitest/coverage-v8": "^4.1.11",
+    "eslint": "^10.9.1",
     "husky": "^9.1.7",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.1",
     "typescript": "^6.0.3",
-    "vite": "^8.0.12",
-    "vitest": "^4.1.6"
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   }
 }

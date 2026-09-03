@@ -9,6 +9,16 @@ export type {
 
 } from "./aggregators/types.js";
 
+export type {
+    Callback,
+    CallbackMap,
+    InternalsEventsMap,
+    WildcardEventsMap,
+    Publishable,
+    Subscribable
+
+} from "./callbacks/types.js";
+
 export type { ReadonlyMapView, ReadonlySetView } from "./collections/types.js";
 export type {
     GeneratorFunction,
@@ -37,13 +47,3 @@ export type {
     PromiseExecutor
 
 } from "./promises/types.js";
-
-export type {
-    Callback,
-    CallbackMap,
-    InternalsEventsMap,
-    WildcardEventsMap,
-    Publishable,
-    Subscribable
-
-} from "./callbacks/types.js";
