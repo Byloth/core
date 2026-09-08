@@ -1,35 +1,27 @@
 import { ValueException } from "../models/index.js";
 
+const MIN_SIGNED_INT32 = -2_147_483_648;
+const MAX_SIGNED_INT32 = 2_147_483_647;
+
 /**
  * A wrapper class around the native {@link Math.random} function that
- * provides a set of methods to generate random values more easily.
+ * provides a set of methods to generate random values more easily.  
  * It can be used to generate random numbers, booleans and other different values.
  *
  * The class exposes two coexisting surfaces:
  * - A **static API** (`Random.Integer`, `Random.Boolean`, …) that uses
  *   {@link Math.random} and is therefore non-deterministic.
  * - An **instance API** with the same method names that uses a seeded PRNG
- *   (Mulberry32) for reproducible sequences. Instances are created via the
- *   {@link Random.FromSeed} factory; the constructor is private.
+ *   (Mulberry32) for reproducible sequences.  
+ *   Instances are created via the {@link Random.FromSeed} and
+ *   {@link Random.FromState} factories; the constructor is private.
+ *
+ * The whole state of a seeded instance is a single 32-bit integer, readable through {@link Random.state}.  
+ * Together with {@link Random.seed}, it's all that's needed to persist a generator and
+ * restore it later with {@link Random.FromState}, or to fork it with {@link Random.clone}.
  */
 export default class Random
 {
-    static #Mulberry32(seed: number): () => number
-    {
-        let state = seed | 0;
-
-        return () =>
-        {
-            state = (state + 0x6D2B79F5) | 0;
-
-            let t = state;
-            t = Math.imul(t ^ (t >>> 15), t | 1);
-            t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-
-            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-        };
-    }
-
     private static _Boolean(random: () => number, ratio: number): boolean
     {
         return (random() < ratio);
@@ -120,6 +112,20 @@ export default class Random
         return result;
     }
 
+    private static _Shuffle<T>(random: () => number, elements: Iterable<T>): T[]
+    {
+        const array = Array.from(elements);
+
+        for (let index = array.length - 1; index > 0; index -= 1)
+        {
+            const jndex = Math.floor(random() * (index + 1));
+
+            [array[index], array[jndex]] = [array[jndex], array[index]];
+        }
+
+        return array;
+    }
+
     static #Split(random: () => number, total: number, parts: number): number[]
     {
         const cuts: number[] = new Array(parts - 1);
@@ -185,6 +191,14 @@ export default class Random
         }
 
         return groups;
+    }
+
+    private static _ValidateInt32(value: number, name: string): void
+    {
+        if (!Number.isInteger(value) || (value < MIN_SIGNED_INT32) || (value > MAX_SIGNED_INT32))
+        {
+            throw new ValueException(`The ${name} must be a 32-bit signed integer.`);
+        }
     }
 
     /**
@@ -452,6 +466,38 @@ export default class Random
     }
 
     /**
+     * Shuffles the elements of a given iterable.  
+     * See also {@link Random.shuffle} for the seeded & deterministic counterpart.
+     *
+     * Uses the {@link https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle|Fisher-Yates}
+     * algorithm to produce a uniformly distributed permutation.
+     *
+     * Also note that:
+     * - If the iterable is an {@link Array}, it won't be modified since the shuffling isn't done in-place.
+     * - If the iterable isn't an {@link Array}, it will be consumed entirely in the process.
+     * - If the iterable is an infinite generator, the function will never return.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * Random.Shuffle([1, 2, 3, 4, 5]); // e.g. [3, 1, 5, 2, 4]
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the elements in the iterable.
+     *
+     * @param elements The iterable of elements to shuffle.
+     *
+     * @returns A new array containing the shuffled elements of the given iterable.
+     */
+    public static Shuffle<T>(elements: Iterable<T>): T[]
+    {
+        return Random._Shuffle(Math.random, elements);
+    }
+
+    /**
      * Splits a total amount into a given number of randomly balanced integer parts that sum to the total.  
      * See also {@link Random.split} for the seeded & deterministic counterpart.
      *
@@ -521,13 +567,16 @@ export default class Random
     }
 
     /**
-     * Creates a new seedable {@link Random} generator instance.
+     * Creates a new seeded {@link Random} generator instance. See also {@link Random.FromState}.
      *
      * The returned instance exposes the same API as the static {@link Random} class,
      * but produces deterministic sequences driven by the given seed.
      * Two instances built with the same seed will emit the same values in the same order.
      *
      * Internally, values are produced by a Mulberry32 PRNG.
+     *
+     * Also note that:
+     * - The seed must be a 32-bit signed integer. Otherwise, a {@link ValueException} will be thrown.
      *
      * ---
      *
@@ -541,20 +590,121 @@ export default class Random
      *
      * ---
      *
-     * @param seed The 32-bit integer seed used to initialize the generator.
+     * @param seed The 32-bit signed integer seed used to initialize the generator.
      *
      * @returns A new {@link Random} instance bound to the given seed.
      */
     public static FromSeed(seed: number): Random
     {
+        Random._ValidateInt32(seed, "seed");
+
         return new Random(seed);
     }
 
+    /**
+     * Restores a seeded {@link Random} generator instance from a previously captured
+     * {@link Random.seed} & {@link Random.state} pair.  
+     * See also {@link Random.FromSeed}.
+     *
+     * The returned instance will produce exactly the values the original generator
+     * would have produced from the moment its state was captured.
+     *
+     * Also note that:
+     * - Both the seed and the state must be 32-bit signed integers.
+     *   Otherwise, a {@link ValueException} will be thrown.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const rng = Random.FromSeed(42);
+     * rng.integer(100); // 60
+     * rng.integer(100); // 44
+     *
+     * const snapshot = { seed: rng.seed, state: rng.state };
+     * rng.integer(100); // 85
+     *
+     * [...]
+     *
+     * const restored = Random.FromState(snapshot.seed, snapshot.state);
+     * restored.integer(100); // 85
+     * ```
+     *
+     * ---
+     *
+     * @param seed The 32-bit signed integer seed the original generator was created with.
+     * @param state The 32-bit signed integer state captured from the original generator.
+     *
+     * @returns A new {@link Random} instance that resumes from the given state.
+     */
+    public static FromState(seed: number, state: number): Random
+    {
+        Random._ValidateInt32(seed, "seed");
+        Random._ValidateInt32(state, "state");
+
+        return new Random(seed, state);
+    }
+
+    private readonly _seed: number;
+
+    /**
+     * The seed this generator was created with.
+     *
+     * It never changes during the lifetime of the instance.
+     * See also {@link Random.state} for the value that advances with each draw.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const rng = Random.FromSeed(42);
+     *
+     * rng.seed; // 42
+     * ```
+     */
+    public get seed(): number { return this._seed; }
+
+    private _state: number;
+
+    /**
+     * The current internal state of the generator: a 32-bit signed integer.
+     *
+     * It starts equal to {@link Random.seed} and advances with every value drawn.  
+     * Together with the seed, it's all that's needed to persist the generator
+     * and restore it later with {@link Random.FromState}.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const rng = Random.FromSeed(42);
+     *
+     * rng.state; // 42
+     * rng.decimal();
+     * rng.state; // 1831565855
+     * ```
+     */
+    public get state(): number { return this._state; }
+
     private readonly _next: () => number;
 
-    private constructor(seed: number)
+    private constructor(seed: number, state = seed)
     {
-        this._next = Random.#Mulberry32(seed);
+        this._seed = seed;
+        this._state = state;
+
+        this._next = () => this._step();
+    }
+
+    private _step(): number
+    {
+        this._state = (this._state + 0x6D2B79F5) | 0;
+
+        let t = this._state;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     }
 
     /**
@@ -838,6 +988,40 @@ export default class Random
     }
 
     /**
+     * Shuffles the elements of a given iterable.  
+     * See also {@link Random.Shuffle} for the static & non-deterministic counterpart.
+     *
+     * Uses the {@link https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle|Fisher-Yates}
+     * algorithm to produce a uniformly distributed permutation.
+     *
+     * Also note that:
+     * - If the iterable is an {@link Array}, it won't be modified since the shuffling isn't done in-place.
+     * - If the iterable isn't an {@link Array}, it will be consumed entirely in the process.
+     * - If the iterable is an infinite generator, the function will never return.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const rng = Random.FromSeed(42);
+     *
+     * rng.shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]); // [1, 8, 4, 6, 3, 2, 9, 10, 5, 7]
+     * ```
+     *
+     * ---
+     *
+     * @template T The type of the elements in the iterable.
+     *
+     * @param elements The iterable of elements to shuffle.
+     *
+     * @returns A new array containing the shuffled elements of the given iterable.
+     */
+    public shuffle<T>(elements: Iterable<T>): T[]
+    {
+        return Random._Shuffle(this._next, elements);
+    }
+
+    /**
      * Splits a total amount into a given number of randomly balanced integer parts that sum to the total.  
      * See also {@link Random.Split} for the static & non-deterministic counterpart.
      *
@@ -908,6 +1092,33 @@ export default class Random
     public split<T>(totalOrElements: number | Iterable<T>, parts: number): number[] | T[][]
     {
         return Random._Split(this._next, totalOrElements, parts);
+    }
+
+    /**
+     * Creates an independent copy of this generator.
+     *
+     * The copy shares the same {@link Random.seed} and starts from the same {@link Random.state},
+     * so it will produce exactly the same upcoming values without consuming this generator's.  
+     * Useful to preview draws without affecting the main sequence.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const rng = Random.FromSeed(42);
+     * const preview = rng.clone();
+     *
+     * preview.integer(100); // 60
+     * rng.integer(100);     // 60
+     * ```
+     *
+     * ---
+     *
+     * @returns A new {@link Random} instance with the same seed and state as this one.
+     */
+    public clone(): Random
+    {
+        return new Random(this._seed, this._state);
     }
 
     public readonly [Symbol.toStringTag]: string = "Random";

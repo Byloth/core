@@ -207,46 +207,6 @@ export function range(start: number, end?: number, step = 1): SmartIterator<numb
 }
 
 /**
- * An utility function shuffles the elements of a given iterable.
- *
- * The function uses the {@link https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle|Fisher-Yates}
- * algorithm to shuffle the elements.
- *
- * Also note that:
- * - If the iterable is an {@link Array}, it won't be modified since the shuffling isn't done in-place.
- * - If the iterable isn't an {@link Array}, it will be consumed entirely in the process.
- * - If the iterable is an infinite generator, the function will never return.
- *
- * ---
- *
- * @example
- * ```ts
- * shuffle([1, 2, 3, 4, 5]); // [3, 1, 5, 2, 4]
- * ```
- *
- * ---
- *
- * @template T The type of elements in the iterable.
- *
- * @param iterable The iterable to shuffle.
- *
- * @returns A new `Array` containing the shuffled elements of the given iterable.
- */
-export function shuffle<T>(iterable: Iterable<T>): T[]
-{
-    const array = Array.from(iterable);
-
-    for (let index = array.length - 1; index > 0; index -= 1)
-    {
-        const jndex = Math.floor(Math.random() * (index + 1));
-
-        [array[index], array[jndex]] = [array[jndex], array[index]];
-    }
-
-    return array;
-}
-
-/**
  * An utility function that filters the elements of an iterable ensuring that they are all unique.
  *
  * ---

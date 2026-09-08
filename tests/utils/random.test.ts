@@ -228,6 +228,37 @@ describe("Random", () =>
             });
         });
 
+        describe("Shuffle", () =>
+        {
+            it("Should keep every element exactly once", () =>
+            {
+                const array = [1, 2, 3, 4, 5];
+                const shuffled = Random.Shuffle(array);
+
+                expect(shuffled).toHaveLength(array.length);
+                expect(new Set(shuffled)).toEqual(new Set(array));
+            });
+            it("Should return a new array without modifying the input", () =>
+            {
+                const array = [1, 2, 3, 4, 5];
+                const shuffled = Random.Shuffle(array);
+
+                expect(shuffled).not.toBe(array);
+                expect(array).toEqual([1, 2, 3, 4, 5]);
+            });
+            it("Should accept any iterable", () =>
+            {
+                const shuffled = Random.Shuffle("abcde");
+
+                expect(shuffled).toHaveLength(5);
+                expect(new Set(shuffled)).toEqual(new Set(["a", "b", "c", "d", "e"]));
+            });
+            it("Should return an empty array for an empty iterable", () =>
+            {
+                expect(Random.Shuffle([])).toEqual([]);
+            });
+        });
+
         describe("Split", () =>
         {
             describe("With a numeric total", () =>
@@ -472,6 +503,31 @@ describe("Random", () =>
             });
         });
 
+        describe("shuffle", () =>
+        {
+            it("Should produce a deterministic permutation", () =>
+            {
+                expect(rng.shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toEqual([1, 8, 4, 6, 3, 2, 9, 10, 5, 7]);
+            });
+            it("Should produce the same permutation across two instances with the same seed", () =>
+            {
+                const other = Random.FromSeed(42);
+
+                expect(rng.shuffle("abcdefghij")).toEqual(other.shuffle("abcdefghij"));
+            });
+            it("Should consume exactly `length - 1` draws", () =>
+            {
+                rng.shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+                expect(rng.state).toBe((42 + (9 * 0x6D2B79F5)) | 0);
+            });
+            it("Should not advance the state for an empty iterable", () =>
+            {
+                expect(rng.shuffle([])).toEqual([]);
+                expect(rng.state).toBe(42);
+            });
+        });
+
         describe("split", () =>
         {
             it("Should produce a deterministic split of a number", () =>
@@ -540,6 +596,136 @@ describe("Random", () =>
                 const second = _rng.decimal();
 
                 expect(second).toBe(first);
+            });
+        });
+
+        describe("seed & state", () =>
+        {
+            it("Should expose the seed the instance was created with", () =>
+            {
+                expect(rng.seed).toBe(42);
+            });
+            it("Should have a state equal to the seed before any draw", () =>
+            {
+                expect(rng.state).toBe(42);
+            });
+            it("Should advance the state by the Mulberry32 increment on each draw", () =>
+            {
+                for (let index = 0; index < 5; index += 1) { rng.decimal(); }
+
+                expect(rng.state).toBe((42 + (5 * 0x6D2B79F5)) | 0);
+            });
+            it("Should never change the seed while drawing", () =>
+            {
+                rng.decimal();
+
+                expect(rng.state).not.toBe(42);
+                expect(rng.seed).toBe(42);
+            });
+            it("Should accept the 32-bit signed integer boundaries as seed", () =>
+            {
+                expect(Random.FromSeed(2_147_483_647).seed).toBe(2_147_483_647);
+                expect(Random.FromSeed(-2_147_483_648).seed).toBe(-2_147_483_648);
+            });
+
+            it("Should throw `ValueException` when the seed isn't an integer", () =>
+            {
+                expect(() => Random.FromSeed(1.5))
+                    .toThrow(ValueException);
+            });
+            it("Should throw `ValueException` when the seed is `NaN`", () =>
+            {
+                expect(() => Random.FromSeed(NaN))
+                    .toThrow(ValueException);
+            });
+            it("Should throw `ValueException` when the seed exceeds the 32-bit signed integer range", () =>
+            {
+                expect(() => Random.FromSeed(2_147_483_648))
+                    .toThrow(ValueException);
+
+                expect(() => Random.FromSeed(-2_147_483_649))
+                    .toThrow(ValueException);
+            });
+        });
+
+        describe("FromState", () =>
+        {
+            it("Should resume the sequence from a captured state", () =>
+            {
+                for (let index = 0; index < 5; index += 1) { rng.decimal(); }
+
+                const state = rng.state;
+                const expected = [rng.decimal(), rng.decimal(), rng.decimal()];
+
+                const restored = Random.FromState(42, state);
+                const actual = [restored.decimal(), restored.decimal(), restored.decimal()];
+
+                expect(actual).toEqual(expected);
+            });
+            it("Should behave like `FromSeed` when the state equals the seed", () =>
+            {
+                const restored = Random.FromState(42, 42);
+
+                const sequenceA = Array.from({ length: 20 }, () => rng.decimal());
+                const sequenceB = Array.from({ length: 20 }, () => restored.decimal());
+
+                expect(sequenceA).toEqual(sequenceB);
+            });
+            it("Should expose the given seed and state", () =>
+            {
+                const restored = Random.FromState(42, 1_831_565_855);
+
+                expect(restored.seed).toBe(42);
+                expect(restored.state).toBe(1_831_565_855);
+            });
+
+            it("Should throw `ValueException` when the seed isn't a 32-bit signed integer", () =>
+            {
+                expect(() => Random.FromState(1.5, 42))
+                    .toThrow(ValueException);
+            });
+            it("Should throw `ValueException` when the state isn't a 32-bit signed integer", () =>
+            {
+                expect(() => Random.FromState(42, 1.5))
+                    .toThrow(ValueException);
+
+                expect(() => Random.FromState(42, 2_147_483_648))
+                    .toThrow(ValueException);
+            });
+        });
+
+        describe("clone", () =>
+        {
+            it("Should produce the same upcoming values as the original", () =>
+            {
+                for (let index = 0; index < 3; index += 1) { rng.decimal(); }
+
+                const copy = rng.clone();
+
+                const sequenceA = Array.from({ length: 20 }, () => rng.decimal());
+                const sequenceB = Array.from({ length: 20 }, () => copy.decimal());
+
+                expect(sequenceA).toEqual(sequenceB);
+            });
+            it("Should not advance the original's state when drawing from the copy", () =>
+            {
+                const copy = rng.clone();
+                const state = rng.state;
+
+                copy.decimal();
+                copy.decimal();
+
+                expect(rng.state).toBe(state);
+                expect(copy.state).not.toBe(state);
+            });
+            it("Should share the same seed and state at creation time", () =>
+            {
+                rng.decimal();
+
+                const copy = rng.clone();
+
+                expect(copy.seed).toBe(rng.seed);
+                expect(copy.state).toBe(rng.state);
             });
         });
     });

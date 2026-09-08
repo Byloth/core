@@ -105,38 +105,66 @@ export function clamp(value: number, min: number, max: number): number
 }
 
 /**
- * An utility function to compute the hash of a given string.
+ * Linearly interpolates between two values.
  *
- * The hash is computed using a simple variation of the
- * {@link http://www.cse.yorku.ca/~oz/hash.html#djb2|djb2} algorithm.  
- * However, the hash is garanteed to be a 32-bit signed integer.
+ * Also note that:
+ * - The ratio isn't clamped: values outside `[0, 1]` extrapolate beyond the two bounds.
  *
  * ---
  *
  * @example
  * ```ts
- * hash("Hello, world!"); // -1880044555
- * hash("How are you?");  // 1761539132
+ * lerp(0, 10, 0.5); // 5
+ * lerp(0, 10, 2);   // 20
+ * lerp(10, 0, 0.25); // 7.5
  * ```
  *
  * ---
  *
- * @param value The string to hash.
+ * @param from The value returned when `ratio` is `0`.
+ * @param to The value returned when `ratio` is `1`.
+ * @param ratio The interpolation ratio.
  *
- * @returns The hash of the specified string.
+ * @returns The interpolated value.
  */
-export function hash(value: string): number
+export function lerp(from: number, to: number, ratio: number): number
 {
-    let hashedValue = 0;
-    for (let index = 0; index < value.length; index += 1)
-    {
-        const char = value.charCodeAt(index);
+    return (from + ((to - from) * ratio));
+}
 
-        hashedValue = ((hashedValue << 5) - hashedValue) + char;
-        hashedValue |= 0;
-    }
+/**
+ * Performs a smooth Hermite interpolation between `0` and `1` as `value` moves from `min` to `max`.
+ *
+ * It's the same function as GLSL's `smoothstep`: the value is normalized within the two bounds,
+ * clamped to `[0, 1]` and then eased with the cubic `t * t * (3 - 2 * t)`.
+ *
+ * Also note that:
+ * - Values below `min` return `0` and values above `max` return `1`.
+ * - The minimum bound must be less than the maximum bound. Otherwise, a {@link ValueException} will be thrown.
+ *
+ * ---
+ *
+ * @example
+ * ```ts
+ * smoothstep(0, 1, 0.25); // 0.15625
+ * smoothstep(0, 1, 0.5);  // 0.5
+ * smoothstep(10, 20, 25); // 1
+ * ```
+ *
+ * ---
+ *
+ * @param min The lower bound, where the result starts rising from `0`.
+ * @param max The upper bound, where the result reaches `1`.
+ * @param value The value to interpolate.
+ *
+ * @returns A number in the `[0, 1]` range.
+ */
+export function smoothstep(min: number, max: number, value: number): number
+{
+    if (min >= max) { throw new ValueException("The minimum bound must be less than the maximum bound."); }
 
-    return hashedValue;
+    const ratio = clamp((value - min) / (max - min), 0, 1);
+    return ((ratio * ratio) * (3 - (2 * ratio)));
 }
 
 /**

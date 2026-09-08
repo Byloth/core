@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { ValueException } from "../../src/index.js";
-import { average, clamp, hash, sum } from "../../src/index.js";
+import { average, clamp, lerp, smoothstep, sum } from "../../src/index.js";
 
 describe("average", () =>
 {
@@ -43,12 +43,54 @@ describe("clamp", () =>
     });
 });
 
-describe("hash", () =>
+describe("lerp", () =>
 {
-    it("Should compute the hash of a given string", () =>
+    it("Should interpolate between two values", () =>
     {
-        expect(hash("Hello, world!")).toBe(-1880044555);
-        expect(hash("How are you?")).toBe(1761539132);
+        expect(lerp(0, 10, 0.5)).toBe(5);
+        expect(lerp(10, 0, 0.25)).toBe(7.5);
+    });
+    it("Should return the bounds for a ratio of `0` and `1`", () =>
+    {
+        expect(lerp(3, 7, 0)).toBe(3);
+        expect(lerp(3, 7, 1)).toBe(7);
+    });
+    it("Should extrapolate for ratios outside `[0, 1]`", () =>
+    {
+        expect(lerp(0, 10, 2)).toBe(20);
+        expect(lerp(0, 10, -1)).toBe(-10);
+    });
+});
+
+describe("smoothstep", () =>
+{
+    it("Should interpolate smoothly between the bounds", () =>
+    {
+        expect(smoothstep(0, 1, 0)).toBe(0);
+        expect(smoothstep(0, 1, 0.25)).toBe(0.15625);
+        expect(smoothstep(0, 1, 0.5)).toBe(0.5);
+        expect(smoothstep(0, 1, 1)).toBe(1);
+    });
+    it("Should clamp values outside the bounds", () =>
+    {
+        expect(smoothstep(0, 1, -3)).toBe(0);
+        expect(smoothstep(0, 1, 7)).toBe(1);
+    });
+    it("Should work with arbitrary bounds", () =>
+    {
+        expect(smoothstep(10, 20, 15)).toBe(0.5);
+        expect(smoothstep(10, 20, 25)).toBe(1);
+    });
+
+    it("Should throw `ValueException` if the minimum bound is greater than the maximum bound", () =>
+    {
+        expect(() => smoothstep(1, 0, 0.5))
+            .toThrow(ValueException);
+    });
+    it("Should throw `ValueException` if the bounds are equal", () =>
+    {
+        expect(() => smoothstep(1, 1, 0.5))
+            .toThrow(ValueException);
     });
 });
 

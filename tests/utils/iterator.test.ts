@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { RangeException, SmartIterator } from "../../src/index.js";
-import { chain, count, enumerate, range, shuffle, unique, zip } from "../../src/index.js";
+import { chain, count, enumerate, range, unique, zip } from "../../src/index.js";
 
 describe("chain", () =>
 {
@@ -79,18 +79,6 @@ describe("range", () =>
     {
         expect(Array.from(range(10, 0, 2))).toEqual([10, 8, 6, 4, 2]);
         expect(Array.from(range(13, 2, 3))).toEqual([13, 10, 7, 4]);
-    });
-});
-
-describe("shuffle", () =>
-{
-    it("Should shuffle the elements of an iterable", () =>
-    {
-        const array = [1, 2, 3, 4, 5];
-        const shuffled = shuffle(array);
-
-        expect(shuffled).toHaveLength(array.length);
-        expect(new Set(shuffled)).toEqual(new Set(array));
     });
 });
 
