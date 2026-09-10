@@ -13,7 +13,7 @@ export const isBrowser = ((typeof window !== "undefined") && (typeof window.docu
 export const isNode = ((typeof process !== "undefined") && !!(process.versions?.node));
 
 /**
- * An utility constant that indicates whether the current environment is a Web Worker.
+ * An utility constant that indicates whether the current environment is a Web Worker
+ * of any kind: dedicated, shared or service worker.
  */
-// @ts-ignore
-export const isWorker = ((typeof self === "object") && (self.constructor?.name === "DedicatedWorkerGlobalScope"));
+export const isWorker = ((typeof WorkerGlobalScope !== "undefined") && (self instanceof WorkerGlobalScope));
