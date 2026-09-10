@@ -41,6 +41,48 @@ describe("EventEmitter", () =>
 
         expect(_moveHandler).not.toHaveBeenCalled();
     });
+    it("Should tolerate the handle being called once after `clear`", () =>
+    {
+        const unsubscribe = emitter.on("player:move", vi.fn());
+
+        emitter.clear();
+
+        expect(() => unsubscribe()).not.toThrow();
+        expect(() => unsubscribe()).toThrow(ReferenceException);
+    });
+    it("Should tolerate the handle being called once after `off(event)`", () =>
+    {
+        const unsubscribe = emitter.on("player:move", vi.fn());
+
+        emitter.off("player:move");
+
+        expect(() => unsubscribe()).not.toThrow();
+        expect(() => unsubscribe()).toThrow(ReferenceException);
+    });
+    it("Should throw when the handle is called after `off(event, listener)`", () =>
+    {
+        const _moveHandler = vi.fn();
+        const unsubscribe = emitter.on("player:move", _moveHandler);
+
+        emitter.off("player:move", _moveHandler);
+
+        expect(() => unsubscribe()).toThrow(ReferenceException);
+    });
+    it("Should keep a stale handle harmless after the event gets new listeners", () =>
+    {
+        const _oldHandler = vi.fn();
+        const _newHandler = vi.fn();
+
+        const unsubscribe = emitter.on("player:move", _oldHandler);
+        emitter.clear();
+        emitter.on("player:move", _newHandler);
+
+        unsubscribe();
+        emitter.emit("player:move", { x: 1, y: 2 });
+
+        expect(_oldHandler).not.toHaveBeenCalled();
+        expect(_newHandler).toHaveBeenCalledTimes(1);
+    });
     it("Should detach a listener through `off`", () =>
     {
         const _moveHandler = vi.fn();
@@ -331,13 +373,15 @@ describe("EventEmitter", () =>
         {
             const _moveHandler = vi.fn();
 
-            emitter.once("player:move", _moveHandler);
+            const unsubscribe = emitter.once("player:move", _moveHandler);
             emitter.clear();
 
             emitter.emit("player:move", { x: 1, y: 2 });
 
             expect(_moveHandler).not.toHaveBeenCalled();
             expect(emitter["_wrappers"].size).toBe(0);
+            expect(() => unsubscribe()).not.toThrow();
+            expect(() => unsubscribe()).toThrow(ReferenceException);
         });
 
         it("Should listen to the next event only with the wildcard", () =>

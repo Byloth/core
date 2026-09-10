@@ -101,8 +101,18 @@ export default class EventEmitter<T extends CallbackMap<T> = CallbackMap>
 
         this._listeners.set(event, listeners);
 
+        let detached = false;
+
         return () =>
         {
+            if (detached)
+            {
+                throw new ReferenceException("Unable to detach the required listener. " +
+                    "The listener was already detached.");
+            }
+
+            detached = true;
+
             const index = listeners.indexOf(listener);
             if (index < 0)
             {
@@ -110,7 +120,7 @@ export default class EventEmitter<T extends CallbackMap<T> = CallbackMap>
                     "The listener was already detached.");
             }
 
-            listeners.splice(index, 1);
+            if (this._listeners.get(event) === listeners) { listeners.splice(index, 1); }
         };
     }
 
@@ -281,7 +291,10 @@ export default class EventEmitter<T extends CallbackMap<T> = CallbackMap>
      * @param event The name of the event to listen to.
      * @param listener The listener to execute when the event is emitted.
      *
-     * @returns A function that can be used to detach the listener from the event.
+     * @returns
+     * A function that can be used to detach the listener from the event.  
+     * It tolerates a single call after the listener has been discarded by `clear()` or `off(event)`;
+     * calling it twice, or after `off(event, listener)`, throws a {@link ReferenceException}.
      */
     public on<K extends keyof T>(event: K & string, listener: T[K]): Callback;
 
