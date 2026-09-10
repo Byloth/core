@@ -19,7 +19,7 @@ export type {
 
 } from "./callbacks/types.js";
 
-export type { ReadonlyMapView, ReadonlySetView } from "./collections/types.js";
+export type { Comparator, ReadonlyMapView, ReadonlySetView } from "./collections/types.js";
 export type {
     GeneratorFunction,
     AsyncGeneratorFunction,

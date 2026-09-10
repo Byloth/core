@@ -6,7 +6,7 @@ export {
 } from "./aggregators/index.js";
 
 export { CallableObject, CallbackChain, EventEmitter, SwitchableCallback } from "./callbacks/index.js";
-export { ArrayView, MapView, SetView } from "./collections/index.js";
+export { ArrayView, BinaryHeap, MapView, SetView } from "./collections/index.js";
 export {
     Exception,
     FatalErrorException,

@@ -7,6 +7,28 @@ import type MapView from "./map-view.js";
 import type SetView from "./set-view.js";
 
 /**
+ * A function comparing two values, with the semantics of {@link Array.prototype.sort}:
+ * a negative result places `a` before `b`, a positive one places it after, zero means they're equal.
+ *
+ * ---
+ *
+ * @example
+ * ```ts
+ * const byPriority: Comparator<Task> = (a, b) => a.priority - b.priority;
+ * ```
+ *
+ * ---
+ *
+ * @template T The type of the compared values.
+ *
+ * @param a The first value.
+ * @param b The second value.
+ *
+ * @returns A negative number, zero or a positive number.
+ */
+export type Comparator<T> = (a: T, b: T) => number;
+
+/**
  * An utility type that represents a read-only {@link MapView} object.
  * See also {@link ReadonlySetView}.
  *
