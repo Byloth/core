@@ -120,7 +120,7 @@ export default class BinaryHeap<T>
      *
      * @example
      * ```ts
-     * while (!(heap.isEmpty))
+     * while (heap.size)
      * {
      *     const item = heap.pop();
      *

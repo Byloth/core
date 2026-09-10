@@ -144,7 +144,7 @@ export default class SetView<T> extends Set<T>
         const size = this.size;
 
         super.clear();
-        if (size > 0) { this._emitter.emit("clear"); }
+        if (size) { this._emitter.emit("clear"); }
     }
 
     /**

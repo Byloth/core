@@ -150,7 +150,7 @@ export default class MapView<K, V> extends Map<K, V>
         const size = this.size;
 
         super.clear();
-        if (size > 0) { this._emitter.emit("clear"); }
+        if (size) { this._emitter.emit("clear"); }
     }
 
     /**

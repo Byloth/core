@@ -1,6 +1,6 @@
 {
   "name": "@byloth/core",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "An unopinionated collection of useful functions and classes that I use widely in all my projects. 🔧",
   "keywords": [
     "Core",
@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@byloth/eslint-config-typescript": "^4.0.2",
-    "@types/node": "^24.13.3",
+    "@types/node": "^24.13.4",
     "@vitest/coverage-v8": "^5.0.0",
     "eslint": "^10.10.0",
     "fake-indexeddb": "^6.2.5",
