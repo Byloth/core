@@ -1,4 +1,4 @@
-export const VERSION = "2.2.10";
+export const VERSION = "3.0.0";
 
 export type {
     Constructor,
