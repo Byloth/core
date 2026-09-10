@@ -1,7 +1,6 @@
+import type { JSONValue } from "../../core/types.js";
 import { isBrowser } from "../../helpers.js";
 import { EnvironmentException } from "../exceptions/index.js";
-
-import type { JSONValue } from "./types.js";
 
 /**
  * A wrapper around the {@link Storage} API to better store and easily retrieve

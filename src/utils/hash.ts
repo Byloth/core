@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type Random from "./random.js";
+
 /**
  * An utility class that provides a set of methods to compute deterministic hashes.  
  * It can be used to derive stable integers or decimals from strings and tuples of values.

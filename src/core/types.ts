@@ -40,6 +40,21 @@ export type Constructor<T extends object = object, P extends unknown[] = any[]> 
 export type Interval = ReturnType<typeof setInterval>;
 
 /**
+ * A type that represents a JSON array.
+ */
+export type JSONArray = JSONValue[];
+
+/**
+ * A type that represents a JSON object.
+ */
+export type JSONObject<T extends object = object> = { [K in keyof T]: JSONValue };
+
+/**
+ * A type that represents all the possible values of a JSON value.
+ */
+export type JSONValue = boolean | number | string | null | JSONObject | JSONArray;
+
+/**
  * An utility type that allows to remove the `readonly` modifier from all the properties of a given type.  
  * Is the counterpart of the native {@link Readonly} utility type.
  *

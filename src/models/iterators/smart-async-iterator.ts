@@ -489,7 +489,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * The last accumulator value will be the final result of the reduction.
      *
      * Also note that:
-     * - If an empty iterator is provided, a {@link ValueException} will be thrown.
+     * - If an empty iterator is provided, the returned promise will be rejected with a {@link ValueException}.
      * - If the iterator is infinite, the method will never return.
      *
      * ---
@@ -1047,6 +1047,9 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
      * free the resources and perform any cleanup operation.  
      * It may also be used to signal that an error occurred during the iteration process or to handle it.
      *
+     * Also note that:
+     * - If the underlying iterator doesn't implement `throw`, the returned promise is rejected with the given error.
+     *
      * ---
      *
      * @example
@@ -1087,7 +1090,7 @@ export default class SmartAsyncIterator<T, R = void, N = undefined> implements A
     {
         if (this._iterator.throw) { return this._iterator.throw(error); }
 
-        throw error;
+        return Promise.reject(error);
     }
 
     /**

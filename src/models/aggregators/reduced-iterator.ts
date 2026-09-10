@@ -2,7 +2,10 @@ import { ValueException } from "../exceptions/index.js";
 import { SmartIterator } from "../iterators/index.js";
 import type { GeneratorFunction } from "../iterators/types.js";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type AggregatedAsyncIterator from "./aggregated-async-iterator.js";
 import AggregatedIterator from "./aggregated-iterator.js";
+
 import type { KeyedIteratee, KeyedReducer, KeyedTypeGuardPredicate } from "./types.js";
 
 /**

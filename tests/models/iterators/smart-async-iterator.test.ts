@@ -257,18 +257,12 @@ describe("SmartAsyncIterator", () =>
         expect(resolved).toBe(true);
     });
 
-    it("Should throw `ValueException` when reducing an empty iterator without initial value", async () =>
+    it("Should reject with `ValueException` when reducing an empty iterator without initial value", async () =>
     {
         const iterator = new SmartAsyncIterator<number>(_toAsync([]));
 
-        try
-        {
-            await iterator.reduce((acc, value) => acc + value);
-        }
-        catch (error)
-        {
-            expect(error).toBeInstanceOf(ValueException);
-        }
+        await expect(iterator.reduce((acc, value) => acc + value))
+            .rejects.toThrow(ValueException);
     });
 
     it("Should flatten values using a transformation function", async () =>
@@ -499,6 +493,19 @@ describe("SmartAsyncIterator", () =>
         {
             expect(error).toBe(reason);
         }
+    });
+
+    it("Should reject with the error when the underlying iterator doesn't implement `throw`", async () =>
+    {
+        const _iterator: AsyncIterator<number, string> = { next: async () => ({ done: false, value: 1 }) };
+
+        const iterator = new SmartAsyncIterator(_iterator);
+        const reason = new Error("Something went wrong!");
+
+        let promise: Promise<unknown> | undefined;
+        expect(() => { promise = iterator.throw(reason); }).not.toThrow();
+
+        await expect(promise).rejects.toBe(reason);
     });
 
     it("Should group values by key", async () =>

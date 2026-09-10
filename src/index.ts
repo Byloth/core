@@ -1,6 +1,16 @@
 export const VERSION = "2.2.10";
 
-export type { Constructor, Interval, Mutable, Timeout, ValueOf } from "./core/types.js";
+export type {
+    Constructor,
+    Interval,
+    JSONArray,
+    JSONObject,
+    JSONValue,
+    Mutable,
+    Timeout,
+    ValueOf
+
+} from "./core/types.js";
 
 export { isBrowser, isNode, isWorker } from "./helpers.js";
 export {
@@ -19,6 +29,7 @@ export {
     FileExistsException,
     FileNotFoundException,
     GameLoop,
+    IndexedDatabase,
     JSONStorage,
     KeyException,
     MapView,
@@ -55,12 +66,12 @@ export type {
     CallbackMap,
     FulfilledHandler,
     GeneratorFunction,
+    IndexDefinition,
+    InlineMigrationHandler,
+    InlineStoreDefinition,
     InternalsEventsMap,
     Iteratee,
     IteratorLike,
-    JSONArray,
-    JSONObject,
-    JSONValue,
     KeyedIteratee,
     KeyedReducer,
     KeyedTypeGuardPredicate,
@@ -71,6 +82,8 @@ export type {
     MaybeAsyncIteratorLike,
     MaybeAsyncReducer,
     MaybePromise,
+    OutOfLineMigrationHandler,
+    OutOfLineStoreDefinition,
     PromiseExecutor,
     PromiseRejecter,
     PromiseResolver,
@@ -79,8 +92,10 @@ export type {
     ReadonlySetView,
     Reducer,
     RejectedHandler,
+    StoreDefinition,
     Subscribable,
     TypeGuardPredicate,
+    UpgradeHandler,
     WildcardEventsMap
 
 } from "./models/types.js";

@@ -37,7 +37,6 @@ export type {
 
 } from "./iterators/types.js";
 
-export type { JSONArray, JSONObject, JSONValue } from "./json/types.js";
 export type {
     MaybePromise,
     FulfilledHandler,
@@ -47,3 +46,14 @@ export type {
     PromiseExecutor
 
 } from "./promises/types.js";
+
+export type {
+    IndexDefinition,
+    InlineMigrationHandler,
+    InlineStoreDefinition,
+    OutOfLineMigrationHandler,
+    OutOfLineStoreDefinition,
+    StoreDefinition,
+    UpgradeHandler
+
+} from "./storage/types.js";

@@ -165,7 +165,7 @@ export default class Countdown extends GameLoop
      */
     public override start(remainingTime: number = this.duration): SmartPromise<void>
     {
-        if (this._isRunning) { throw new RuntimeException("The countdown had already stopped or hadn't yet started."); }
+        if (this._isRunning) { throw new RuntimeException("The countdown has already been started."); }
         if (this._deferrer) { throw new FatalErrorException(); }
 
         this._deferrer = new DeferredPromise();
