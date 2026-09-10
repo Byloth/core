@@ -135,4 +135,35 @@ describe("JSONStorage", () =>
         expect(localStorageValue).toBeUndefined();
         expect(sessionStorageValue).toBeUndefined();
     });
+
+    it("Should check the preferred storage by default with `has`", () =>
+    {
+        jsonStorage.write("persistentKey", "value");
+        jsonStorage.remember("volatileKey", "value");
+
+        expect(jsonStorage.has("persistentKey")).toBe(true);
+        expect(jsonStorage.has("volatileKey")).toBe(false);
+
+        const volatileFirst = new JSONStorage(false);
+
+        expect(volatileFirst.has("persistentKey")).toBe(false);
+        expect(volatileFirst.has("volatileKey")).toBe(true);
+    });
+    it("Should remove from the preferred storage by default with `delete`", () =>
+    {
+        jsonStorage.write("key", "value");
+        jsonStorage.remember("key", "value");
+
+        jsonStorage.delete("key");
+
+        expect(jsonStorage.exists("key")).toBe(false);
+        expect(jsonStorage.knows("key")).toBe(true);
+    });
+    it("Should find a key stored only in `localStorage`", () =>
+    {
+        jsonStorage.write("key", "value");
+
+        expect(jsonStorage.knows("key")).toBe(false);
+        expect(jsonStorage.find("key")).toBe(true);
+    });
 });

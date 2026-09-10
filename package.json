@@ -31,15 +31,17 @@
     "dist",
     "src"
   ],
-  "main": "dist/core.umd.cjs",
-  "module": "dist/core.cjs",
+  "sideEffects": false,
+  "main": "dist/core.cjs",
+  "module": "dist/core.esm.bundler.js",
   "unpkg": "dist/core.global.js",
   "jsdelivr": "dist/core.global.js",
   "exports": {
     ".": {
       "import": {
         "types": "./src/index.ts",
-        "default": "./dist/core.esm.js"
+        "node": "./dist/core.esm.js",
+        "default": "./dist/core.esm.bundler.js"
       },
       "require": {
         "types": "./src/index.ts",
@@ -50,7 +52,7 @@
   "types": "src/index.ts",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && vite build --mode bundler",
     "preview": "vite preview",
     "typecheck": "tsc",
     "lint": "eslint .",

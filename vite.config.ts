@@ -1,26 +1,36 @@
 import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 
-export default defineConfig({
-  build: {
-    minify: "esbuild",
-    lib: {
-      entry: fileURLToPath(new URL("src/index.ts", import.meta.url)),
-      fileName: (format) =>
-      {
-        if (format === "cjs") { return "core.cjs"; }
-        if (format === "es") { return "core.esm.js"; }
-        if (format === "iife") { return "core.global.js"; }
-        if (format === "umd") { return "core.umd.cjs"; }
+import type { LibraryFormats } from "vite";
 
-        throw new Error(`Unknown build format: ${format}`);
+export default defineConfig(({ mode }) =>
+{
+  const isBundler = (mode === "bundler");
+
+  const suffix = isBundler ? "bundler." : "";
+  const formats: LibraryFormats[] = isBundler ? ["es"] : ["es", "cjs", "iife"];
+
+  return {
+    build: {
+      minify: !(isBundler),
+      lib: {
+        entry: fileURLToPath(new URL("src/index.ts", import.meta.url)),
+        fileName: (format) =>
+        {
+          if (format === "cjs") { return "core.cjs"; }
+          if (format === "es") { return `core.esm.${suffix}js`; }
+          if (format === "iife") { return "core.global.js"; }
+
+          throw new Error(`Unknown build format: ${format}`);
+        },
+        formats: formats,
+        name: "Core"
       },
-      formats: ["cjs", "es", "iife", "umd"],
-      name: "Core"
-    },
-    rollupOptions: {
-      output: { exports: "named" }
-    },
-    sourcemap: true
-  }
+      rollupOptions: {
+        output: { exports: "named" }
+      },
+      sourcemap: true,
+      emptyOutDir: !(isBundler)
+    }
+  };
 });

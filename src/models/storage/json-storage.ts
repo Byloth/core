@@ -407,7 +407,7 @@ export default class JSONStorage
      *
      * @returns `true` if the key exists, `false` otherwise.
      */
-    public has(key: string, persistent?: boolean): boolean
+    public has(key: string, persistent = this._preferPersistence): boolean
     {
         const storage = persistent ? this._persistent : this._volatile;
 
@@ -460,7 +460,7 @@ export default class JSONStorage
      */
     public find(key: string): boolean
     {
-        return this.knows(key) ?? this.exists(key);
+        return this.knows(key) || this.exists(key);
     }
 
     /**
@@ -584,7 +584,7 @@ export default class JSONStorage
      * Whether to prefer the persistent {@link localStorage} over the volatile {@link sessionStorage}.  
      * If omitted, it defaults to the `preferPersistence` value set in the constructor.
      */
-    public delete(key: string, persistent?: boolean): void
+    public delete(key: string, persistent = this._preferPersistence): void
     {
         const storage = persistent ? this._persistent : this._volatile;
 
