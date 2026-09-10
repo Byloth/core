@@ -37,6 +37,8 @@ export type {
 
 } from "./iterators/types.js";
 
+export type { RegExpMatchCallback } from "./matchers/types.js";
+
 export type {
     MaybePromise,
     FulfilledHandler,
@@ -57,3 +59,15 @@ export type {
     UpgradeHandler
 
 } from "./storage/types.js";
+
+export type {
+    Browser,
+    BrowserContext,
+    BrowserEngine,
+    BrowserName,
+    OperatingSystem,
+    OperatingSystemName,
+    OperatingSystemVendor,
+    SystemHints
+
+} from "./system-info/types.js";

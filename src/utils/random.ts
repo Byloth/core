@@ -659,7 +659,7 @@ export default class Random
      * ```ts
      * const rng = Random.FromSeed(42);
      *
-     * rng.seed; // 42
+     * console.log(rng.seed); // 42
      * ```
      */
     public get seed(): number { return this._seed; }
@@ -679,9 +679,9 @@ export default class Random
      * ```ts
      * const rng = Random.FromSeed(42);
      *
-     * rng.state; // 42
+     * console.log(rng.state); // 42
      * rng.decimal();
-     * rng.state; // 1831565855
+     * console.log(rng.state); // 1831565855
      * ```
      */
     public get state(): number { return this._state; }

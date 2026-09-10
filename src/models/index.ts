@@ -29,6 +29,8 @@ export {
 } from "./exceptions/index.js";
 
 export { SmartIterator, SmartAsyncIterator } from "./iterators/index.js";
+export { RegExpMatcher } from "./matchers/index.js";
 export { DeferredPromise, PromiseQueue, SmartPromise, TimedPromise } from "./promises/index.js";
 export { IndexedDatabase, JSONStorage } from "./storage/index.js";
+export { default as SystemInfo } from "./system-info/index.js";
 export { Clock, Countdown, GameLoop } from "./timers/index.js";
