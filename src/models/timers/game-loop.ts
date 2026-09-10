@@ -1,7 +1,7 @@
 import type { Interval } from "../../core/types.js";
 import { isBrowser } from "../../helpers.js";
 
-import Publisher from "../callbacks/publisher.js";
+import EventEmitter from "../callbacks/event-emitter.js";
 import { FatalErrorException, RuntimeException } from "../exceptions/index.js";
 import type { Callback } from "../types.js";
 
@@ -93,9 +93,9 @@ export default class GameLoop
     }
 
     /**
-     * The {@link Publisher} object that will be used to publish the events of the game loop.
+     * The {@link EventEmitter} object that will be used to publish the events of the game loop.
      */
-    protected readonly _publisher: Publisher<GameLoopEventsMap>;
+    protected readonly _emitter: EventEmitter<GameLoopEventsMap>;
 
     /**
      * The internal method actually responsible for starting the game loop.
@@ -161,7 +161,7 @@ export default class GameLoop
             this._stop = () => clearInterval(this._handle as Interval);
         }
 
-        this._publisher = new Publisher();
+        this._emitter = new EventEmitter();
     }
 
     /**
@@ -189,7 +189,7 @@ export default class GameLoop
         this._start();
         this._isRunning = true;
 
-        this._publisher.publish("start");
+        this._emitter.emit("start");
     }
 
     /**
@@ -217,7 +217,7 @@ export default class GameLoop
         this._handle = undefined;
         this._isRunning = false;
 
-        this._publisher.publish("stop");
+        this._emitter.emit("stop");
     }
 
     /**
@@ -238,7 +238,7 @@ export default class GameLoop
      */
     public onStart(callback: Callback): Callback
     {
-        return this._publisher.subscribe("start", callback);
+        return this._emitter.on("start", callback);
     }
 
     /**
@@ -259,7 +259,7 @@ export default class GameLoop
      */
     public onStop(callback: Callback): Callback
     {
-        return this._publisher.subscribe("stop", callback);
+        return this._emitter.on("stop", callback);
     }
 
     public readonly [Symbol.toStringTag]: string = "GameLoop";

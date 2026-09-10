@@ -1,6 +1,6 @@
 import { TimeUnit } from "../../utils/date.js";
 
-import type Publisher from "../callbacks/publisher.js";
+import type EventEmitter from "../callbacks/event-emitter.js";
 import { FatalErrorException, RangeException, RuntimeException } from "../exceptions/index.js";
 import type { SmartPromise } from "../promises/index.js";
 import { DeferredPromise } from "../promises/index.js";
@@ -39,9 +39,9 @@ interface CountdownEventsMap
 export default class Countdown extends GameLoop
 {
     /**
-     * The {@link Publisher} object that will be used to publish the events of the countdown.
+     * The {@link EventEmitter} object that will be used to publish the events of the countdown.
      */
-    declare protected readonly _publisher: Publisher<CountdownEventsMap>;
+    declare protected readonly _emitter: EventEmitter<CountdownEventsMap>;
 
     /**
      * The total duration of the countdown in milliseconds.
@@ -101,12 +101,12 @@ export default class Countdown extends GameLoop
             {
                 this._deferrerStop();
 
-                this._publisher.publish("tick", 0);
-                this._publisher.publish("expire");
+                this._emitter.emit("tick", 0);
+                this._emitter.emit("expire");
             }
             else
             {
-                this._publisher.publish("tick", remainingTime);
+                this._emitter.emit("tick", remainingTime);
             }
         };
 
@@ -171,7 +171,7 @@ export default class Countdown extends GameLoop
         this._deferrer = new DeferredPromise();
         super.start(this.duration - remainingTime);
 
-        this._publisher.publish("start");
+        this._emitter.emit("start");
 
         return this._deferrer;
     }
@@ -205,7 +205,7 @@ export default class Countdown extends GameLoop
         //
         this._deferrerStop(reason);
 
-        this._publisher.publish("stop", reason);
+        this._emitter.emit("stop", reason);
     }
 
     /**
@@ -235,11 +235,11 @@ export default class Countdown extends GameLoop
     public onTick(callback: (remainingTime: number) => void, tickStep = 0): Callback
     {
         if (tickStep < 0) { throw new RangeException("The tick step must be a non-negative number."); }
-        if (tickStep === 0) { return this._publisher.subscribe("tick", callback); }
+        if (tickStep === 0) { return this._emitter.on("tick", callback); }
 
         let lastTick = this.remainingTime;
 
-        return this._publisher.subscribe("tick", (remainingTime: number) =>
+        return this._emitter.on("tick", (remainingTime: number) =>
         {
             if ((lastTick - remainingTime) < tickStep) { return; }
 
@@ -267,7 +267,7 @@ export default class Countdown extends GameLoop
      */
     public onExpire(callback: Callback): Callback
     {
-        return this._publisher.subscribe("expire", callback);
+        return this._emitter.on("expire", callback);
     }
 
     public override readonly [Symbol.toStringTag]: string = "Countdown";

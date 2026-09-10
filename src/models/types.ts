@@ -14,8 +14,8 @@ export type {
     CallbackMap,
     InternalsEventsMap,
     WildcardEventsMap,
-    Publishable,
-    Subscribable
+    Emittable,
+    Listenable
 
 } from "./callbacks/types.js";
 

@@ -1,4 +1,4 @@
-import Publisher from "../callbacks/publisher.js";
+import EventEmitter from "../callbacks/event-emitter.js";
 import type { Callback } from "../types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -37,9 +37,9 @@ interface ArrayViewEventsMap<T>
 export default class ArrayView<T> extends Array<T>
 {
     /**
-     * The internal {@link Publisher} instance used to publish events.
+     * The internal {@link EventEmitter} instance used to publish events.
      */
-    protected readonly _publisher: Publisher<ArrayViewEventsMap<T>>;
+    protected readonly _emitter: EventEmitter<ArrayViewEventsMap<T>>;
 
     /**
      * Initializes a new instance of the {@link ArrayView} class.
@@ -88,7 +88,7 @@ export default class ArrayView<T> extends Array<T>
     {
         super(...items);
 
-        this._publisher = new Publisher();
+        this._emitter = new EventEmitter();
     }
 
     /**
@@ -117,7 +117,7 @@ export default class ArrayView<T> extends Array<T>
         const result = super.push(...items);
         for (let i = 0; i < items.length; i += 1)
         {
-            this._publisher.publish("add", items[i], startIndex + i);
+            this._emitter.emit("add", items[i], startIndex + i);
         }
 
         return result;
@@ -146,7 +146,7 @@ export default class ArrayView<T> extends Array<T>
         if (index < 0) { return undefined; }
 
         const value = super.pop();
-        this._publisher.publish("remove", value!, index);
+        this._emitter.emit("remove", value!, index);
 
         return value;
     }
@@ -173,7 +173,7 @@ export default class ArrayView<T> extends Array<T>
         if (this.length === 0) { return undefined; }
 
         const value = super.shift();
-        this._publisher.publish("remove", value!, 0);
+        this._emitter.emit("remove", value!, 0);
 
         return value;
     }
@@ -202,7 +202,7 @@ export default class ArrayView<T> extends Array<T>
         const result = super.unshift(...items);
         for (let i = 0; i < items.length; i += 1)
         {
-            this._publisher.publish("add", items[i], i);
+            this._emitter.emit("add", items[i], i);
         }
 
         return result;
@@ -241,12 +241,12 @@ export default class ArrayView<T> extends Array<T>
         const removed = super.splice(start, actualDeleteCount, ...items);
         for (let i = 0; i < removed.length; i += 1)
         {
-            this._publisher.publish("remove", removed[i], normalizedStart + i);
+            this._emitter.emit("remove", removed[i], normalizedStart + i);
         }
 
         for (let i = 0; i < items.length; i += 1)
         {
-            this._publisher.publish("add", items[i], normalizedStart + i);
+            this._emitter.emit("add", items[i], normalizedStart + i);
         }
 
         return removed;
@@ -270,7 +270,7 @@ export default class ArrayView<T> extends Array<T>
         const length = this.length;
         this.length = 0;
 
-        if (length > 0) { this._publisher.publish("clear"); }
+        if (length > 0) { this._emitter.emit("clear"); }
     }
 
     /**
@@ -294,7 +294,7 @@ export default class ArrayView<T> extends Array<T>
      */
     public onAdd(callback: (value: T, index: number) => void): Callback
     {
-        return this._publisher.subscribe("add", callback);
+        return this._emitter.on("add", callback);
     }
 
     /**
@@ -318,7 +318,7 @@ export default class ArrayView<T> extends Array<T>
      */
     public onRemove(callback: (value: T, index: number) => void): Callback
     {
-        return this._publisher.subscribe("remove", callback);
+        return this._emitter.on("remove", callback);
     }
 
     /**
@@ -340,7 +340,7 @@ export default class ArrayView<T> extends Array<T>
      */
     public onClear(callback: () => void): Callback
     {
-        return this._publisher.subscribe("clear", callback);
+        return this._emitter.on("clear", callback);
     }
 
     public readonly [Symbol.toStringTag]: string = "ArrayView";

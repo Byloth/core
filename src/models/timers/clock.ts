@@ -1,6 +1,6 @@
 import { TimeUnit } from "../../utils/date.js";
 
-import type Publisher from "../callbacks/publisher.js";
+import type EventEmitter from "../callbacks/event-emitter.js";
 import { FatalErrorException, RangeException, RuntimeException } from "../exceptions/index.js";
 import type { Callback } from "../types.js";
 
@@ -35,9 +35,9 @@ interface ClockEventsMap
 export default class Clock extends GameLoop
 {
     /**
-     * The {@link Publisher} object that will be used to publish the events of the clock.
+     * The {@link EventEmitter} object that will be used to publish the events of the clock.
      */
-    declare protected readonly _publisher: Publisher<ClockEventsMap>;
+    declare protected readonly _emitter: EventEmitter<ClockEventsMap>;
 
     /**
      * Initializes a new instance of the {@link Clock} class.
@@ -57,7 +57,7 @@ export default class Clock extends GameLoop
      */
     public constructor(msIfNotBrowser: number = TimeUnit.Second)
     {
-        super((elapsedTime) => this._publisher.publish("tick", elapsedTime), msIfNotBrowser);
+        super((elapsedTime) => this._emitter.emit("tick", elapsedTime), msIfNotBrowser);
     }
 
     /**
@@ -85,7 +85,7 @@ export default class Clock extends GameLoop
         this._start();
         this._isRunning = true;
 
-        this._publisher.publish("start");
+        this._emitter.emit("start");
     }
 
     /**
@@ -110,7 +110,7 @@ export default class Clock extends GameLoop
         this._handle = undefined;
         this._isRunning = false;
 
-        this._publisher.publish("stop");
+        this._emitter.emit("stop");
     }
 
     /**
@@ -140,11 +140,11 @@ export default class Clock extends GameLoop
     public onTick(callback: (elapsedTime: number) => void, tickStep = 0): Callback
     {
         if (tickStep < 0) { throw new RangeException("The tick step must be a non-negative number."); }
-        if (tickStep === 0) { return this._publisher.subscribe("tick", callback); }
+        if (tickStep === 0) { return this._emitter.on("tick", callback); }
 
         let lastTick = 0;
 
-        return this._publisher.subscribe("tick", (elapsedTime: number) =>
+        return this._emitter.on("tick", (elapsedTime: number) =>
         {
             if ((elapsedTime - lastTick) < tickStep) { return; }
 

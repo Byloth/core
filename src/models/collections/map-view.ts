@@ -1,4 +1,4 @@
-import Publisher from "../callbacks/publisher.js";
+import EventEmitter from "../callbacks/event-emitter.js";
 import type { Callback } from "../types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -38,9 +38,9 @@ interface MapViewEventsMap<K, V>
 export default class MapView<K, V> extends Map<K, V>
 {
     /**
-     * The internal {@link Publisher} instance used to publish events.
+     * The internal {@link EventEmitter} instance used to publish events.
      */
-    protected readonly _publisher: Publisher<MapViewEventsMap<K, V>>;
+    protected readonly _emitter: EventEmitter<MapViewEventsMap<K, V>>;
 
     /**
      * Initializes a new instance of the {@link MapView} class.
@@ -60,7 +60,7 @@ export default class MapView<K, V> extends Map<K, V>
     {
         super();
 
-        this._publisher = new Publisher();
+        this._emitter = new EventEmitter();
 
         if (iterable)
         {
@@ -95,7 +95,7 @@ export default class MapView<K, V> extends Map<K, V>
     {
         super.set(key, value);
 
-        this._publisher.publish("add", key, value);
+        this._emitter.emit("add", key, value);
 
         return this;
     }
@@ -127,7 +127,7 @@ export default class MapView<K, V> extends Map<K, V>
 
         super.delete(key);
 
-        this._publisher.publish("remove", key, value);
+        this._emitter.emit("remove", key, value);
 
         return true;
     }
@@ -150,7 +150,7 @@ export default class MapView<K, V> extends Map<K, V>
         const size = this.size;
 
         super.clear();
-        if (size > 0) { this._publisher.publish("clear"); }
+        if (size > 0) { this._emitter.emit("clear"); }
     }
 
     /**
@@ -174,7 +174,7 @@ export default class MapView<K, V> extends Map<K, V>
      */
     public onAdd(callback: (key: K, value: V) => void): Callback
     {
-        return this._publisher.subscribe("add", callback);
+        return this._emitter.on("add", callback);
     }
 
     /**
@@ -198,7 +198,7 @@ export default class MapView<K, V> extends Map<K, V>
      */
     public onRemove(callback: (key: K, value: V) => void): Callback
     {
-        return this._publisher.subscribe("remove", callback);
+        return this._emitter.on("remove", callback);
     }
 
     /**
@@ -220,7 +220,7 @@ export default class MapView<K, V> extends Map<K, V>
      */
     public onClear(callback: () => void): Callback
     {
-        return this._publisher.subscribe("clear", callback);
+        return this._emitter.on("clear", callback);
     }
 
     public override readonly [Symbol.toStringTag]: string = "MapView";

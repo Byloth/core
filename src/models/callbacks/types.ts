@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type Publisher from "./publisher.js";
+import type EventEmitter from "./event-emitter.js";
 
 /**
  * A type that represents a generic function.
@@ -27,7 +27,7 @@ export type Callback<A extends unknown[] = [], R = void> = (...args: A) => R;
 /**
  * An utility type that is required to represents a map of callbacks.
  *
- * It is used for type inheritance on the {@link Publisher} class signature.  
+ * It is used for type inheritance on the {@link EventEmitter} class signature.  
  * Whenever you'll need to extend that class, you may need to use this type too.
  *
  * ---
@@ -41,7 +41,7 @@ export type Callback<A extends unknown[] = [], R = void> = (...args: A) => R;
  *     "player:death": () => void;
  * }
  *
- * class EventManager<T extends CallbackMap<T> = { }> extends Publisher<T> { [...] }
+ * class EventManager<T extends CallbackMap<T> = { }> extends EventEmitter<T> { [...] }
  * ```
  *
  * ---
@@ -53,20 +53,20 @@ export type CallbackMap<T = Record<string, Callback<unknown[], unknown>>> = { [K
 
 /**
  * An utility type that represents a map of internal events that may
- * be used by the {@link Publisher} class or its child classes.
+ * be used by the {@link EventEmitter} class or its child classes.
  *
  * Internal events follow the pattern `__${string}__:${string}` and
- * are used for internal communication within the publisher system.  
- * These events are not part of the public API but can be subscribed to for advanced use cases.
+ * are used for internal communication within the emitter system.  
+ * These events are not part of the public API but can be listened to for advanced use cases.
  *
  * ---
  *
  * @example
  * ```ts
- * const publisher = new Publisher<EventsMap>();
+ * const emitter = new EventEmitter<EventsMap>();
  *
- * publisher.subscribe("__internals__:clear", () => console.log("Publisher cleared"));
- * publisher.clear(); // "Publisher cleared"
+ * emitter.on("__internals__:clear", () => console.log("Emitter cleared"));
+ * emitter.clear(); // "Emitter cleared"
  * ```
  */
 export type InternalsEventsMap = Record<`__${string}__:${string}`, Callback<unknown[], unknown>>;
@@ -77,111 +77,144 @@ export type InternalsEventsMap = Record<`__${string}__:${string}`, Callback<unkn
  * The wildcard event uses the `"*"` key and provides a callback that receives
  * the event type as the first parameter, followed by all the event arguments.
  *
- * It's natively used by the {@link Publisher} class to allow subscribers to listen to all events.
+ * It's natively used by the {@link EventEmitter} class to allow listeners to listen to all events.
  *
  * ---
  *
  * @example
  * ```ts
- * const publisher = new Publisher<EventsMap>();
+ * const emitter = new EventEmitter<EventsMap>();
  *
- * publisher.subscribe("*", (type: string, ...args: unknown[]) =>
+ * emitter.on("*", (type: string, ...args: unknown[]) =>
  * {
  *     console.log(`Event "${type}" was fired with args:`, args));
  * });
- * 
- * publisher.publish("player:move", { x: 10, y: 20 }); // "Event `player:move` was fired with args: [{ x: 10, y: 20 }]"
- * publisher.publish("player:death"); // "Event `player:death` was fired with args: []"
+ *
+ * emitter.emit("player:move", { x: 10, y: 20 }); // "Event `player:move` was fired with args: [{ x: 10, y: 20 }]"
+ * emitter.emit("player:death"); // "Event `player:death` was fired with args: []"
  * ```
  */
 export interface WildcardEventsMap { "*": (type: string, ...args: unknown[]) => void }
 
 /**
- * An utility type that represents a {@link Publisher} object that can be published to.
- * See also {@link Subscribable}.
+ * An utility type that represents an {@link EventEmitter} object that can only emit events.
+ * See also {@link Listenable}.
  *
- * It can be used to prevent the user from modifying the publisher while
- * still allowing them to subscribe to events and publish them.
+ * It can be used to hand out the emitting side of an emitter
+ * without exposing the ability to attach or detach listeners.
  *
  * ---
  *
  * @template T
  * A map containing the names of the emittable events and the
- * related callback signatures that can be subscribed to them.  
+ * related listener signatures that can be attached to them.  
  * Default is `Record<string, (...args: unknown[]) => unknown>`.
  */
-export interface Publishable<T extends CallbackMap<T> = CallbackMap>
+export interface Emittable<T extends CallbackMap<T> = CallbackMap>
 {
     /**
-     * Publishes an event to all the subscribers.
+     * Emits an event to all its listeners.
      *
      * ---
      *
      * @example
      * ```ts
-     * publishable.subscribe("player:move", (coords) => { [...] });
-     * publishable.subscribe("player:move", ({ x, y }) => { [...] });
-     * publishable.subscribe("player:move", (evt) => { [...] });
-     *
-     * publishable.publish("player:move", { x: 10, y: 20 });
+     * emittable.emit("player:move", { x: 10, y: 20 });
      * ```
      *
      * ---
      *
-     * @template K The key of the map containing the callback signature to publish.
+     * @template K The key of the map containing the listener signature to emit.
      *
-     * @param event The name of the event to publish.
-     * @param args The arguments to pass to the subscribers.
+     * @param event The name of the event to emit.
+     * @param args The arguments to pass to the listeners.
      *
-     * @returns An array containing the return values of all the subscribers.
+     * @returns An array containing the return values of all the listeners.
      */
-    publish<K extends keyof T>(event: K & string, ...args: Parameters<T[K]>): ReturnType<T[K]>[];
+    emit<K extends keyof T>(event: K & string, ...args: Parameters<T[K]>): ReturnType<T[K]>[];
 }
 
 /**
- * An utility type that represents a {@link Publisher} object that can be subscribed to.
- * See also {@link Publishable}.
- * 
- * It can be used to prevent the user from modifying the publisher while
- * still allowing them to subscribe to events and publish them.
+ * An utility type that represents an {@link EventEmitter} object that can only be listened to.
+ * See also {@link Emittable}.
+ *
+ * It can be used to hand out the listening side of an emitter without
+ * exposing the ability to emit events or to detach other listeners.
  *
  * ---
  *
  * @template T
  * A map containing the names of the emittable events and the
- * related callback signatures that can be subscribed to them.  
+ * related listener signatures that can be attached to them.  
  * Default is `Record<string, (...args: unknown[]) => unknown>`.
  */
-export interface Subscribable<T extends CallbackMap<T> = CallbackMap>
+export interface Listenable<T extends CallbackMap<T> = CallbackMap>
 {
     /**
-     * Subscribes to an event and adds a subscriber to be executed when the event is published.
+     * Attaches a listener to an event, to be executed every time the event is emitted.
      *
      * ---
      *
      * @example
      * ```ts
-     * let unsubscribe: () => void;
-     * subscribable.subscribe("player:death", unsubscribe);
-     * subscribable.subscribe("player:spawn", (evt) =>
-     * {
-     *     unsubscribe = subscribable.subscribe("player:move", ({ x, y }) => { [...] });
-     * });
+     * const unsubscribe = listenable.on("player:move", ({ x, y }) => { [...] });
      * ```
      *
      * ---
      *
-     * @template K The key of the map containing the callback signature to subscribe.
+     * @template K The key of the map containing the listener signature to attach.
      *
-     * @param event The name of the event to subscribe to.
-     * @param subscriber The subscriber to execute when the event is published.
+     * @param event The name of the event to listen to.
+     * @param listener The listener to execute when the event is emitted.
      *
-     * @returns A function that can be used to unsubscribe the subscriber from the event.
+     * @returns A function that can be used to detach the listener from the event.
      */
-    subscribe<K extends keyof T>(event: K & string, subscriber: T[K]): Callback;
+    on<K extends keyof T>(event: K & string, listener: T[K]): Callback;
 
     /**
-     * Unsubscribes from an event and removes a subscriber from being executed when the event is published.
+     * Attaches a listener to an event, to be executed only the first time the event is emitted.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * listenable.once("game:start", () => { [...] });
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the map containing the listener signature to attach.
+     *
+     * @param event The name of the event to listen to.
+     * @param listener The listener to execute the first time the event is emitted.
+     *
+     * @returns A function that can be used to detach the listener from the event.
+     */
+    once<K extends keyof T>(event: K & string, listener: T[K]): Callback;
+
+    /**
+     * Waits for the next emission of an event, resolving with its arguments.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * const [{ x, y }] = await listenable.wait("player:move");
+     * ```
+     *
+     * ---
+     *
+     * @template K The key of the map containing the listener signature to wait for.
+     *
+     * @param event The name of the event to wait for.
+     * @param timeout The maximum number of milliseconds to wait for the event. Default is no timeout.
+     *
+     * @returns A promise resolving with the arguments the event was emitted with.
+     */
+    wait<K extends keyof T>(event: K & string, timeout?: number): Promise<Parameters<T[K]>>;
+
+    /**
+     * Detaches a listener from an event, so it won't be executed anymore when the event is emitted.
      *
      * ---
      *
@@ -189,16 +222,16 @@ export interface Subscribable<T extends CallbackMap<T> = CallbackMap>
      * ```ts
      * const onPlayerMove = ({ x, y }: Point) => { [...] };
      *
-     * publisher.subscribe("player:spawn", (evt) => publisher.subscribe("player:move", onPlayerMove));
-     * publisher.subscribe("player:death", () => publisher.unsubscribe("player:move", onPlayerMove));
+     * listenable.on("player:spawn", (evt) => listenable.on("player:move", onPlayerMove));
+     * listenable.on("player:death", () => listenable.off("player:move", onPlayerMove));
      * ```
      *
      * ---
      *
-     * @template K The key of the map containing the callback signature to unsubscribe.
+     * @template K The key of the map containing the listener signature to detach.
      *
-     * @param event The name of the event to unsubscribe from.
-     * @param subscriber The subscriber to remove from the event.
+     * @param event The name of the event to detach the listener from.
+     * @param listener The listener to detach.
      */
-    unsubscribe<K extends keyof T>(event: K & string, subscriber: T[K]): void;
+    off<K extends keyof T>(event: K & string, listener: T[K]): void;
 }

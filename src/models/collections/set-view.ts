@@ -1,4 +1,4 @@
-import Publisher from "../callbacks/publisher.js";
+import EventEmitter from "../callbacks/event-emitter.js";
 import type { Callback } from "../types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -37,9 +37,9 @@ interface SetViewEventsMap<T>
 export default class SetView<T> extends Set<T>
 {
     /**
-     * The internal {@link Publisher} instance used to publish events.
+     * The internal {@link EventEmitter} instance used to publish events.
      */
-    protected readonly _publisher: Publisher<SetViewEventsMap<T>>;
+    protected readonly _emitter: EventEmitter<SetViewEventsMap<T>>;
 
     /**
      * Initializes a new instance of the {@link SetView} class.
@@ -59,7 +59,7 @@ export default class SetView<T> extends Set<T>
     {
         super();
 
-        this._publisher = new Publisher();
+        this._emitter = new EventEmitter();
 
         if (iterable)
         {
@@ -93,7 +93,7 @@ export default class SetView<T> extends Set<T>
     {
         super.add(value);
 
-        this._publisher.publish("add", value);
+        this._emitter.emit("add", value);
 
         return this;
     }
@@ -121,7 +121,7 @@ export default class SetView<T> extends Set<T>
     public override delete(value: T): boolean
     {
         const result = super.delete(value);
-        if (result) { this._publisher.publish("remove", value); }
+        if (result) { this._emitter.emit("remove", value); }
 
         return result;
     }
@@ -144,7 +144,7 @@ export default class SetView<T> extends Set<T>
         const size = this.size;
 
         super.clear();
-        if (size > 0) { this._publisher.publish("clear"); }
+        if (size > 0) { this._emitter.emit("clear"); }
     }
 
     /**
@@ -168,7 +168,7 @@ export default class SetView<T> extends Set<T>
      */
     public onAdd(callback: (value: T) => void): Callback
     {
-        return this._publisher.subscribe("add", callback);
+        return this._emitter.on("add", callback);
     }
 
     /**
@@ -192,7 +192,7 @@ export default class SetView<T> extends Set<T>
      */
     public onRemove(callback: (value: T) => void): Callback
     {
-        return this._publisher.subscribe("remove", callback);
+        return this._emitter.on("remove", callback);
     }
 
     /**
@@ -214,7 +214,7 @@ export default class SetView<T> extends Set<T>
      */
     public onClear(callback: () => void): Callback
     {
-        return this._publisher.subscribe("clear", callback);
+        return this._emitter.on("clear", callback);
     }
 
     public override readonly [Symbol.toStringTag]: string = "SetView";
