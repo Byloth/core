@@ -1,7 +1,13 @@
 import type { MaybePromise } from "../../promises/types.js";
+import type { Callback } from "../../types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type IndexedDatabase from "./index.js";
+
+export interface IndexedDatabaseEventsMap
+{
+    "close": Callback;
+}
 
 /**
  * The definition of an index of an object store of an {@link IndexedDatabase}.
@@ -217,6 +223,8 @@ export type StoreDefinition<K extends string = string> = InlineStoreDefinition<K
  *
  * Also note that:
  * - Throwing, or returning a promise that rejects, aborts the whole upgrade.
+ * - Once the transaction has committed underneath, nothing can be aborted anymore: a failure after that point
+ *   rejects with a `RuntimeException` stating that the database is already at the new version.
  *
  * ---
  *

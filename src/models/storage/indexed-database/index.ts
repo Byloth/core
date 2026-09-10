@@ -1,11 +1,13 @@
-import { EnvironmentException } from "../../exceptions/index.js";
+import { EnvironmentException, RuntimeException } from "../../exceptions/index.js";
+import EventEmitter from "../../callbacks/event-emitter.js";
+import type { Callback } from "../../callbacks/types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type JSONStorage from "../json-storage.js";
 import SmartPromise from "../../promises/smart-promise.js";
 
 import { asyncRequest, asyncTransaction, reconcileStores } from "./core.js";
-import type { StoreDefinition, UpgradeHandler } from "./types.js";
+import type { IndexedDatabaseEventsMap, StoreDefinition, UpgradeHandler } from "./types.js";
 
 /**
  * A thin, promise-based wrapper around the native {@link indexedDB} API:
@@ -58,10 +60,10 @@ export default class IndexedDatabase<T extends object = Record<string, unknown>>
      * - It cannot be used outside of an environment that supports IndexedDB
      *   or an {@link EnvironmentException} is thrown.
      * - Requesting a version lower than the current one rejects with a `VersionError`.
-     * - If another connection to the same database is still open, the returned promise
-     *   stays pending until that connection is closed.
-     * - The returned connection closes itself as soon as another connection requests an upgrade,
-     *   so it never blocks a newer version of the application.
+     * - If another connection keeps the database open at an older version and doesn't close itself,
+     *   the returned promise rejects with a {@link RuntimeException} instead of waiting forever.
+     * - The returned connection closes itself as soon as another connection requests an upgrade
+     *   (see {@link IndexedDatabase.onClose}), so it never blocks a newer version of the application.
      *
      * ---
      *
@@ -94,18 +96,21 @@ export default class IndexedDatabase<T extends object = Record<string, unknown>>
      * Opens a database, creating or upgrading it so that it matches the declared stores,
      * then runs a custom migration within the same upgrade transaction.
      *
-     * The whole upgrade is atomic: if the handler throws or rejects, the returned promise rejects
-     * with that very error and the database is left untouched at its previous version.
-     * See {@link UpgradeHandler} for what the handler is allowed to await.
+     * The whole upgrade is atomic as long as the handler awaits nothing but IndexedDB requests:
+     * if it throws or rejects, the returned promise rejects with that very error and the database
+     * is left untouched at its previous version.
+     * Awaiting anything else lets the upgrade transaction commit underneath: a failure after that point
+     * rejects with a {@link RuntimeException} stating that the database is already at the new version.
+     * See {@link UpgradeHandler} for the details.
      *
      * Also note that:
      * - It cannot be used outside of an environment that supports IndexedDB
      *   or an {@link EnvironmentException} is thrown.
      * - Requesting a version lower than the current one rejects with a `VersionError`.
-     * - If another connection to the same database is still open, the returned promise
-     *   stays pending until that connection is closed.
-     * - The returned connection closes itself as soon as another connection requests an upgrade,
-     *   so it never blocks a newer version of the application.
+     * - If another connection keeps the database open at an older version and doesn't close itself,
+     *   the returned promise rejects with a {@link RuntimeException} instead of waiting forever.
+     * - The returned connection closes itself as soon as another connection requests an upgrade
+     *   (see {@link IndexedDatabase.onClose}), so it never blocks a newer version of the application.
      *
      * ---
      *
@@ -155,12 +160,24 @@ export default class IndexedDatabase<T extends object = Record<string, unknown>>
             let failure: unknown;
 
             const request = indexedDB.open(name, version);
+            request.onblocked = () =>
+            {
+                failure = new RuntimeException(
+                    `The "${name}" database is blocked by another connection that hasn't been closed yet.`
+                );
+
+                reject(failure);
+            };
+
             request.onupgradeneeded = async (evt) =>
             {
                 const database = request.result;
                 const transaction = request.transaction!;
                 const oldVersion = evt.oldVersion;
                 const newVersion = evt.newVersion ?? version;
+
+                let committed = false;
+                transaction.addEventListener("complete", () => { committed = true; });
 
                 try
                 {
@@ -171,6 +188,17 @@ export default class IndexedDatabase<T extends object = Record<string, unknown>>
                 }
                 catch (error)
                 {
+                    if (committed)
+                    {
+                        failure = new RuntimeException(
+                            `The upgrade of the "${name}" database failed after its transaction had already ` +
+                            `been committed: the database is now at version ${newVersion} with a partial ` +
+                            "migration. The upgrade handler must only await IndexedDB requests.", error
+                        );
+
+                        return;
+                    }
+
                     failure = error;
 
                     try
@@ -192,8 +220,6 @@ export default class IndexedDatabase<T extends object = Record<string, unknown>>
                     return;
                 }
 
-                database.onversionchange = () => database.close();
-
                 resolve(new IndexedDatabase<T>(database));
             };
 
@@ -207,8 +233,8 @@ export default class IndexedDatabase<T extends object = Record<string, unknown>>
      * Also note that:
      * - It cannot be used outside of an environment that supports IndexedDB
      *   or an {@link EnvironmentException} is thrown.
-     * - If a connection to the database is still open, the returned promise
-     *   stays pending until that connection is closed.
+     * - If a connection keeps the database open and doesn't close itself, the returned promise
+     *   rejects with a {@link RuntimeException} instead of waiting forever.
      *
      * ---
      *
@@ -232,6 +258,12 @@ export default class IndexedDatabase<T extends object = Record<string, unknown>>
         return new SmartPromise((resolve, reject) =>
         {
             const request = indexedDB.deleteDatabase(name);
+            request.onblocked = () =>
+            {
+                reject(new RuntimeException(
+                    `The \`${name}\` database is blocked by another connection that hasn't been closed yet.`
+                ));
+            };
 
             request.onsuccess = () => resolve();
             request.onerror = () => reject(request.error);
@@ -260,10 +292,35 @@ export default class IndexedDatabase<T extends object = Record<string, unknown>>
     public static Request<T>(request: IDBRequest<T>): SmartPromise<T> { return asyncRequest(() => request); }
 
     protected readonly _database: IDBDatabase;
+    protected readonly _emitter: EventEmitter<IndexedDatabaseEventsMap>;
+
+    protected _isOpen: boolean;
+
+    /**
+     * Whether the connection to the database is still open.  
+     * It becomes `false` after {@link IndexedDatabase.close} or when another
+     * connection upgrades the database and this one closes itself.
+     */
+    public get isOpen(): boolean { return this._isOpen; }
 
     private constructor(database: IDBDatabase)
     {
         this._database = database;
+        this._database.onversionchange = () => this._close();
+
+        this._emitter = new EventEmitter();
+
+        this._isOpen = true;
+    }
+
+    protected _close(): void
+    {
+        if (!(this._isOpen)) { return; }
+
+        this._database.close();
+        this._isOpen = false;
+
+        this._emitter.emit("close");
     }
 
     /**
@@ -495,7 +552,7 @@ export default class IndexedDatabase<T extends object = Record<string, unknown>>
     }
 
     /**
-     * Closes the connection to the database.
+     * Closes the connection to the database, firing the `close` event.
      * Any operation attempted afterwards rejects with an `InvalidStateError`.
      *
      * ---
@@ -505,7 +562,29 @@ export default class IndexedDatabase<T extends object = Record<string, unknown>>
      * database.close();
      * ```
      */
-    public close(): void { this._database.close(); }
+    public close(): void { this._close(); }
+
+    /**
+     * Subscribes to the `close` event of the database, fired once when the connection closes:
+     * either through {@link IndexedDatabase.close} or because another connection upgraded the database.
+     *
+     * ---
+     *
+     * @example
+     * ```ts
+     * database.onClose(() => console.log("The connection has been closed."));
+     * ```
+     *
+     * ---
+     *
+     * @param callback The function that will be executed when the connection closes.
+     *
+     * @returns A function that can be used to unsubscribe from the event.
+     */
+    public onClose(callback: Callback): Callback
+    {
+        return this._emitter.on("close", callback);
+    }
 
     public readonly [Symbol.toStringTag]: string = "IndexedDatabase";
 }

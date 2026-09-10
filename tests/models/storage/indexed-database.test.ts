@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { IDBFactory, IDBObjectStore } from "fake-indexeddb";
 
-import { EnvironmentException } from "../../../src/index.js";
+import { EnvironmentException, RuntimeException } from "../../../src/index.js";
 import { IndexedDatabase } from "../../../src/index.js";
 
 import type { InlineMigrationHandler, StoreDefinition, UpgradeHandler } from "../../../src/index.js";
@@ -27,6 +27,15 @@ const Definitions: readonly StoreDefinition<keyof Stores>[] = [
 const _open = (version = 1, onUpgrade?: UpgradeHandler) => ((onUpgrade) ?
     IndexedDatabase.Open<Stores>(DatabaseName, Definitions, version, onUpgrade) :
     IndexedDatabase.Open<Stores>(DatabaseName, Definitions, version));
+
+const _openRaw = (version = 1): Promise<IDBDatabase> => new Promise((resolve, reject) =>
+{
+    const request = indexedDB.open(DatabaseName, version);
+
+    request.onupgradeneeded = () => { request.result.createObjectStore("saves", { keyPath: "slot" }); };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+});
 
 describe("IndexedDatabase", () =>
 {
@@ -130,6 +139,41 @@ describe("IndexedDatabase", () =>
 
             await expect(_open(1))
                 .rejects.toMatchObject({ name: "VersionError" });
+        });
+        it("Should reject with `RuntimeException` when another connection blocks the upgrade", async () =>
+        {
+            const raw = await _openRaw(1);
+
+            await expect(_open(2))
+                .rejects.toThrow(RuntimeException);
+
+            raw.close();
+
+            const database = await _open(2);
+
+            expect(database.version).toBe(2);
+
+            database.close();
+        });
+        it("Should reject with `RuntimeException` when the upgrade fails after its transaction committed", async () =>
+        {
+            const onUpgrade: UpgradeHandler = async (_database, _oldVersion, _newVersion, transaction) =>
+            {
+                await new Promise((resolve) => transaction.addEventListener("complete", resolve));
+
+                throw new Error("Nope.");
+            };
+
+            await expect(_open(2, onUpgrade))
+                .rejects.toThrow(/already been committed/);
+
+            const spy = vi.fn();
+            const database = await _open(2, spy);
+
+            expect(spy).not.toHaveBeenCalled();
+            expect(database.version).toBe(2);
+
+            database.close();
         });
     });
 
@@ -697,6 +741,51 @@ describe("IndexedDatabase", () =>
 
             expect(() => database.close()).not.toThrow();
         });
+        it("Should report whether the connection is open and fire the `close` event once", async () =>
+        {
+            const database = await _open();
+            const onClose = vi.fn();
+
+            database.onClose(onClose);
+
+            expect(database.isOpen).toBe(true);
+
+            database.close();
+            database.close();
+
+            expect(database.isOpen).toBe(false);
+            expect(onClose).toHaveBeenCalledTimes(1);
+        });
+        it("Should allow unsubscribing from the `close` event", async () =>
+        {
+            const database = await _open();
+            const onClose = vi.fn();
+
+            const unsubscribe = database.onClose(onClose);
+            unsubscribe();
+
+            database.close();
+
+            expect(onClose).not.toHaveBeenCalled();
+        });
+        it("Should close itself and notify when another connection upgrades the database", async () =>
+        {
+            const first = await _open(1);
+            const onClose = vi.fn();
+
+            first.onClose(onClose);
+
+            const second = await _open(2);
+
+            expect(first.isOpen).toBe(false);
+            expect(onClose).toHaveBeenCalledTimes(1);
+            expect(second.isOpen).toBe(true);
+
+            await expect(first.get("saves", 1))
+                .rejects.toMatchObject({ name: "InvalidStateError" });
+
+            second.close();
+        });
     });
 
     describe("Delete", () =>
@@ -724,6 +813,15 @@ describe("IndexedDatabase", () =>
 
             expect(() => IndexedDatabase.Delete(DatabaseName))
                 .toThrow(EnvironmentException);
+        });
+        it("Should reject with `RuntimeException` when another connection blocks the deletion", async () =>
+        {
+            const raw = await _openRaw(1);
+
+            await expect(IndexedDatabase.Delete(DatabaseName))
+                .rejects.toThrow(RuntimeException);
+
+            raw.close();
         });
     });
 });
