@@ -41,7 +41,7 @@ describe("EventEmitter", () =>
 
         expect(_moveHandler).not.toHaveBeenCalled();
     });
-    it("Should tolerate the handle being called once after `clear`", () =>
+    it("Should make the handle a no-op after `clear`", () =>
     {
         const unsubscribe = emitter.on("player:move", vi.fn());
 
@@ -50,7 +50,7 @@ describe("EventEmitter", () =>
         expect(() => unsubscribe()).not.toThrow();
         expect(() => unsubscribe()).toThrow(ReferenceException);
     });
-    it("Should tolerate the handle being called once after `off(event)`", () =>
+    it("Should make the handle a no-op after `off(event)`", () =>
     {
         const unsubscribe = emitter.on("player:move", vi.fn());
 
@@ -59,13 +59,14 @@ describe("EventEmitter", () =>
         expect(() => unsubscribe()).not.toThrow();
         expect(() => unsubscribe()).toThrow(ReferenceException);
     });
-    it("Should throw when the handle is called after `off(event, listener)`", () =>
+    it("Should make the handle a no-op after `off(event, listener)`", () =>
     {
         const _moveHandler = vi.fn();
         const unsubscribe = emitter.on("player:move", _moveHandler);
 
         emitter.off("player:move", _moveHandler);
 
+        expect(() => unsubscribe()).not.toThrow();
         expect(() => unsubscribe()).toThrow(ReferenceException);
     });
     it("Should keep a stale handle harmless after the event gets new listeners", () =>
@@ -119,14 +120,21 @@ describe("EventEmitter", () =>
         expect(_moveHandler2).not.toHaveBeenCalled();
         expect(_deathHandler).toHaveBeenCalledTimes(1);
     });
-    it("Should throw when detaching all the listeners of an event that has none", () =>
+    it("Should do nothing when detaching all the listeners of an event that has none", () =>
     {
-        expect(() => emitter.off("player:move")).toThrow(ReferenceException);
+        expect(() => emitter.off("player:move")).not.toThrow();
 
         const unsubscribe = emitter.on("player:move", vi.fn());
         unsubscribe();
 
-        expect(() => emitter.off("player:move")).toThrow(ReferenceException);
+        expect(() => emitter.off("player:move")).not.toThrow();
+
+        emitter.once("player:move", vi.fn());
+        emitter.emit("player:move", { x: 1, y: 2 });
+
+        expect(() => emitter.off("player:move")).not.toThrow();
+        expect(emitter["_listeners"].has("player:move")).toBe(false);
+        expect(emitter["_wrappers"].has("player:move")).toBe(false);
     });
     it("Should detach all the listeners", () =>
     {
@@ -334,13 +342,14 @@ describe("EventEmitter", () =>
 
             expect(() => emitter.off("player:move", _moveHandler)).toThrow(ReferenceException);
         });
-        it("Should throw when the handle is called after `off` detached the listener", () =>
+        it("Should make the handle a no-op after `off` detached the listener", () =>
         {
             const _moveHandler = vi.fn();
 
             const unsubscribe = emitter.once("player:move", _moveHandler);
             emitter.off("player:move", _moveHandler);
 
+            expect(() => unsubscribe()).not.toThrow();
             expect(() => unsubscribe()).toThrow(ReferenceException);
         });
 

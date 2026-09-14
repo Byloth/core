@@ -92,7 +92,10 @@ export default class EventEmitter<T extends CallbackMap<T> = CallbackMap>
      * @param event The name of the event to listen to.
      * @param listener The listener to execute when the event is emitted.
      *
-     * @returns A function that can be used to detach the listener from the event.
+     * @returns
+     * A function that can be used to detach the listener from the event.  
+     * It does nothing if the listener has already been detached by other means (`off`, `clear`, …),
+     * and throws a {@link ReferenceException} only when called twice.
      */
     protected _attach(event: string, listener: Listener): Callback
     {
@@ -113,14 +116,10 @@ export default class EventEmitter<T extends CallbackMap<T> = CallbackMap>
 
             detached = true;
 
-            const index = listeners.indexOf(listener);
-            if (index < 0)
-            {
-                throw new ReferenceException("Unable to detach the required listener. " +
-                    "The listener was already detached.");
-            }
+            if (this._listeners.get(event) !== listeners) { return; }
 
-            if (this._listeners.get(event) === listeners) { listeners.splice(index, 1); }
+            const index = listeners.indexOf(listener);
+            if (index >= 0) { listeners.splice(index, 1); }
         };
     }
 
@@ -293,8 +292,8 @@ export default class EventEmitter<T extends CallbackMap<T> = CallbackMap>
      *
      * @returns
      * A function that can be used to detach the listener from the event.  
-     * It tolerates a single call after the listener has been discarded by `clear()` or `off(event)`;
-     * calling it twice, or after `off(event, listener)`, throws a {@link ReferenceException}.
+     * It does nothing if the listener has already been detached by other means (`off`, `clear`, …),
+     * and throws a {@link ReferenceException} only when called twice.
      */
     public on<K extends keyof T>(event: K & string, listener: T[K]): Callback;
 
@@ -501,7 +500,8 @@ export default class EventEmitter<T extends CallbackMap<T> = CallbackMap>
     }
 
     /**
-     * Detaches all the listeners from an event.
+     * Detaches all the listeners from an event.  
+     * It does nothing if the event has no listeners attached.
      *
      * ---
      *
@@ -606,12 +606,6 @@ export default class EventEmitter<T extends CallbackMap<T> = CallbackMap>
 
         if (listener === undefined)
         {
-            if (!(listeners?.length))
-            {
-                throw new ReferenceException(`Unable to detach the listeners of the "${event}" event. ` +
-                    "There are none.");
-            }
-
             this._listeners.delete(event);
             this._wrappers.delete(event);
 
